@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
             'category' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
-                'comment' => 'e-liquid, device, accessory, etc.',
+                'comment' => 'e-liquid, device, accessory, pods etc.',
             ],
             'brand' => [
                 'type' => 'VARCHAR',

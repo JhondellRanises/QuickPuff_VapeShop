@@ -22,11 +22,21 @@
     }
 }
 
+#receiptContent {
+    background-color: #ffffff !important;
+    color: #333 !important;
+}
+
+#receiptContent * {
+    color: inherit;
+}
+
 .receipt-header {
     text-align: center;
     border-bottom: 2px dashed #333;
     padding-bottom: 20px;
     margin-bottom: 20px;
+    background-color: #ffffff !important;
 }
 
 .receipt-shop-name {
@@ -44,6 +54,7 @@
 
 .receipt-sale-info {
     background: #f8f9fa;
+    background-color: #f8f9fa !important;
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
@@ -60,10 +71,12 @@
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    background-color: #ffffff !important;
 }
 
 .receipt-items-table th {
     background: #f8f9fa;
+    background-color: #f8f9fa !important;
     font-weight: bold;
     color: #333 !important;
 }
@@ -82,6 +95,7 @@
     justify-content: space-between;
     margin-bottom: 5px;
     color: #333 !important;
+    background-color: #ffffff !important;
 }
 
 .receipt-grand-total {
@@ -98,6 +112,7 @@
     padding-top: 20px;
     margin-top: 20px;
     color: #666 !important;
+    background-color: #ffffff !important;
 }
 
 .receipt-success-badge {
@@ -109,24 +124,45 @@
     text-align: center;
     margin-bottom: 20px;
 }
+
+.receipt-actions {
+    background-color: #1d2238 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+}
+
+.receipt-print-btn {
+    background: linear-gradient(135deg, #5d9bff 0%, #6f6bff 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    padding: 0.6rem 1.35rem;
+}
+
+.receipt-print-btn:hover {
+    transform: translateY(-1px);
+    color: #ffffff !important;
+}
+
+.receipt-text-btn {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 700;
+    padding: 0.6rem 0.75rem;
+}
+
+.receipt-text-btn:hover {
+    color: #9fc0ff !important;
+}
 </style>
 
 <div class="container-fluid py-4">
-    <!-- Action Buttons (Hidden when printing) -->
-    <div class="no-print mb-4">
-        <div class="d-flex gap-2 justify-content-center">
-            <button onclick="window.print()" class="btn btn-primary">
-                <i class="fas fa-print me-2"></i>Print Receipt
-            </button>
-            <a href="<?= site_url('/pos') ?>" class="btn btn-success">
-                <i class="fas fa-shopping-cart me-2"></i>New Sale
-            </a>
-            <a href="<?= site_url('/reports/sales') ?>" class="btn btn-info">
-                <i class="fas fa-chart-bar me-2"></i>View Reports
-            </a>
-        </div>
-    </div>
-
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card">
@@ -224,6 +260,19 @@
                             <small>This is a computer-generated receipt</small>
                         </div>
                     </div>
+                </div>
+
+                <div class="card-footer no-print receipt-actions">
+                    <button type="button" class="btn receipt-print-btn" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Print Receipt
+                    </button>
+                    <a href="<?= site_url('/pos') ?>" class="btn receipt-text-btn">
+                        <i class="fas fa-shopping-cart me-2"></i>New Sale
+                    </a>
+                    <button type="button" class="btn receipt-text-btn"
+                            onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='<?= site_url('/pos') ?>'; }">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

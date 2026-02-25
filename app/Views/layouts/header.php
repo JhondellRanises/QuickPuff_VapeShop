@@ -528,6 +528,7 @@
 
         .product-card:hover {
             background: rgba(255, 255, 255, 0.12) !important;
+        }
 
 .product-card .card-footer {
             background: rgba(255, 255, 255, 0.02) !important;
@@ -1017,6 +1018,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= site_url('/staff') ?>">
                             <i class="fas fa-users"></i> Staff
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= site_url('/products') ?>">
+                            <i class="fas fa-boxes-stacked"></i> Stock
                         </a>
                     </li>
                     <?php endif; ?>

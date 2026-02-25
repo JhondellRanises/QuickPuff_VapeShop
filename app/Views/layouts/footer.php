@@ -47,21 +47,6 @@
             }
         });
 
-        // Add loading state to buttons
-        $('button[type="submit"]').on('click', function() {
-            var $btn = $(this);
-            var originalText = $btn.html();
-            
-            $btn.prop('disabled', true);
-            $btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Processing...');
-            
-            // Re-enable after 10 seconds as fallback
-            setTimeout(function() {
-                $btn.prop('disabled', false);
-                $btn.html(originalText);
-            }, 10000);
-        });
-
         // Confirm delete actions
         $('.btn-delete').on('click', function(e) {
             if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
@@ -90,6 +75,7 @@
         $('form').on('submit', function() {
             var $form = $(this);
             var isValid = true;
+            var method = String($form.attr('method') || 'GET').toUpperCase();
 
             $form.find('input[required], select[required], textarea[required]').each(function() {
                 var $input = $(this);
@@ -101,7 +87,27 @@
                 }
             });
 
-            return isValid;
+            if (!isValid) {
+                return false;
+            }
+
+            // Loading state for non-GET forms only
+            if (method !== 'GET') {
+                var $btn = $form.find('button[type="submit"]').first();
+                if ($btn.length) {
+                    var originalText = $btn.html();
+                    $btn.prop('disabled', true);
+                    $btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Processing...');
+
+                    // Re-enable after 10 seconds as fallback
+                    setTimeout(function() {
+                        $btn.prop('disabled', false);
+                        $btn.html(originalText);
+                    }, 10000);
+                }
+            }
+
+            return true;
         });
 
         // Clear validation on input

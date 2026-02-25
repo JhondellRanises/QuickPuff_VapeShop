@@ -43,6 +43,17 @@ $routes->group('/staff', ['filter' => 'auth:admin'], function($routes) {
     $routes->get('/activate/(:num)', 'Staff::activate/$1');
 });
 
+// Product stock management routes (admin only)
+$routes->group('products', ['filter' => 'auth:admin'], function($routes) {
+    $routes->get('/', 'Products::index');
+    $routes->get('create', 'Products::create');
+    $routes->post('store', 'Products::store');
+    $routes->get('edit/(:num)', 'Products::edit/$1');
+    $routes->post('update/(:num)', 'Products::update/$1');
+    $routes->get('delete/(:num)', 'Products::delete/$1');
+    $routes->get('activate/(:num)', 'Products::activate/$1');
+});
+
 // Reports routes
 $routes->group('/reports', ['filter' => 'auth'], function($routes) {
     $routes->get('/sales', 'Reports::sales');

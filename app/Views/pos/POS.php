@@ -134,6 +134,70 @@
     </div>
 </div>
 
+<style>
+/* Force solid white receipt surfaces inside the sale receipt modal */
+#receiptModal .modal-content,
+#receiptModal .modal-header,
+#receiptModal .modal-body {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    border-color: #d7dbe3 !important;
+}
+
+#receiptModal .modal-footer {
+    background-color: #1d2238 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+}
+
+#receiptModal .modal-title,
+#receiptModal .modal-body p,
+#receiptModal .modal-body span,
+#receiptModal .modal-body td,
+#receiptModal .modal-body th {
+    color: #111111 !important;
+}
+
+#receiptModal .receipt-print-btn {
+    background: linear-gradient(135deg, #5d9bff 0%, #6f6bff 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-weight: 700;
+    padding: 0.6rem 1.35rem;
+}
+
+#receiptModal .receipt-print-btn:hover {
+    transform: translateY(-1px);
+    color: #ffffff !important;
+}
+
+#receiptModal .receipt-text-btn {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 700;
+    padding: 0.6rem 0.75rem;
+}
+
+#receiptModal .receipt-text-btn:hover {
+    color: #9fc0ff !important;
+}
+
+#receiptModal .btn-close {
+    filter: none !important;
+    opacity: 0.75;
+}
+
+#receiptModal .btn-close:hover {
+    opacity: 1;
+}
+</style>
+
 <!-- Receipt Modal -->
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -154,13 +218,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="printReceipt()">
+                <button type="button" class="btn receipt-print-btn" onclick="printReceipt()">
                     <i class="fas fa-print me-2"></i>Print Receipt
                 </button>
-                <button type="button" class="btn btn-success" onclick="newSale()">
+                <button type="button" class="btn receipt-text-btn" onclick="newSale()">
                     <i class="fas fa-shopping-cart me-2"></i>New Sale
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn receipt-text-btn" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -448,8 +512,12 @@ function generateReceiptHTML(saleData) {
     
     return `
         <style>
+            #receiptContent {
+                background-color: #ffffff !important;
+            }
             .receipt-container {
                 background: white;
+                background-color: #ffffff !important;
                 color: #000000;
                 font-family: 'Courier New', monospace;
                 font-size: 14px;
@@ -466,6 +534,7 @@ function generateReceiptHTML(saleData) {
                 border-bottom: 2px dashed #000000;
                 padding-bottom: 15px;
                 margin-bottom: 15px;
+                background-color: #ffffff !important;
             }
             .receipt-shop-name {
                 font-size: 20px;
@@ -480,6 +549,7 @@ function generateReceiptHTML(saleData) {
             }
             .receipt-sale-info {
                 background: #f8f8f8;
+                background-color: #f8f8f8 !important;
                 padding: 12px;
                 border-radius: 5px;
                 margin-bottom: 15px;
@@ -497,9 +567,11 @@ function generateReceiptHTML(saleData) {
                 padding: 8px;
                 text-align: left;
                 color: #000000;
+                background-color: #ffffff !important;
             }
             .receipt-items-table th {
                 background: #f0f0f0;
+                background-color: #f0f0f0 !important;
                 font-weight: bold;
                 color: #000000;
             }
@@ -507,12 +579,14 @@ function generateReceiptHTML(saleData) {
                 text-align: right;
                 margin-bottom: 15px;
                 font-size: 13px;
+                background-color: #ffffff !important;
             }
             .receipt-total-row {
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 5px;
                 color: #000000;
+                background-color: #ffffff !important;
             }
             .receipt-grand-total {
                 font-weight: bold;
@@ -528,9 +602,11 @@ function generateReceiptHTML(saleData) {
                 margin-top: 15px;
                 color: #000000;
                 font-size: 12px;
+                background-color: #ffffff !important;
             }
             .receipt-success-badge {
                 background: #000000;
+                background-color: #000000 !important;
                 color: #ffffff;
                 padding: 10px 20px;
                 border-radius: 5px;
@@ -554,7 +630,8 @@ function generateReceiptHTML(saleData) {
                     left: 0; 
                     top: 0; 
                     width: 100%; 
-                    background: white;
+                    background: white !important;
+                    background-color: #ffffff !important;
                 }
                 .modal-footer { display: none !important; }
                 .modal-header { display: none !important; }

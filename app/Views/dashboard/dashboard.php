@@ -97,13 +97,23 @@
                                 </a>
                             </div>
                         <?php endif; ?>
-                        <div class="col-md-4">
-                            <a href="<?= site_url('/products') ?>" class="btn btn-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
-                                <i class="fas fa-box-open mb-2" style="font-size: 2rem;"></i>
-                                <span>Products</span>
-                                <small class="text-white-50">Manage inventory</small>
-                            </a>
-                        </div>
+                        <?php if ($user['role'] === 'admin'): ?>
+                            <div class="col-md-4">
+                                <a href="<?= site_url('/products') ?>" class="btn btn-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-box-open mb-2" style="font-size: 2rem;"></i>
+                                    <span>Products</span>
+                                    <small class="text-white-50">Manage inventory</small>
+                                </a>
+                            </div>
+                        <?php else: ?>
+                            <div class="col-md-4">
+                                <a href="<?= site_url('/reports/sales') ?>" class="btn btn-success btn-lg w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-chart-line mb-2" style="font-size: 2rem;"></i>
+                                    <span>Reports</span>
+                                    <small class="text-white-50">View sales data</small>
+                                </a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     
                     <!-- Secondary Actions -->

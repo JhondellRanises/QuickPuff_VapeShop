@@ -42,6 +42,14 @@
                                 Staff Management
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link <?= (isset($active) && $active === 'products') ? 'active' : '' ?>" 
+                               href="<?= site_url('/products') ?>">
+                                <i class="fas fa-boxes-stacked"></i>
+                                Stock Management
+                            </a>
+                        </li>
                     <?php endif; ?>
                 </ul>
 

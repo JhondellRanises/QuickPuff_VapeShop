@@ -143,4 +143,56 @@ class ProductModel extends Model
         
         return array_column($result, 'category');
     }
+
+    /**
+     * Get products for stock management list with optional filters.
+     */
+    public function getStockManagementList(string $search = '', string $status = ''): array
+    {
+        $builder = $this->builder();
+
+        if ($status === 'active') {
+            $builder->where('is_active', 1);
+        } elseif ($status === 'inactive') {
+            $builder->where('is_active', 0);
+        }
+
+        if ($search !== '') {
+            $builder->groupStart()
+                ->like('name', $search)
+                ->orLike('category', $search)
+                ->orLike('brand', $search)
+                ->groupEnd();
+        }
+
+        return $builder->orderBy('is_active', 'DESC')
+            ->orderBy('stock_qty', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
+     * Get stock summary counters for dashboard cards.
+     */
+    public function getStockSummary(): array
+    {
+        $row = $this->builder()
+            ->select(
+                'COUNT(*) AS total_products, ' .
+                'SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) AS active_products, ' .
+                'SUM(CASE WHEN is_active = 1 AND stock_qty BETWEEN 1 AND 10 THEN 1 ELSE 0 END) AS low_stock_products, ' .
+                'SUM(CASE WHEN is_active = 1 AND stock_qty = 0 THEN 1 ELSE 0 END) AS out_of_stock_products',
+                false
+            )
+            ->get()
+            ->getRowArray();
+
+        return [
+            'total' => (int) ($row['total_products'] ?? 0),
+            'active' => (int) ($row['active_products'] ?? 0),
+            'low_stock' => (int) ($row['low_stock_products'] ?? 0),
+            'out_of_stock' => (int) ($row['out_of_stock_products'] ?? 0),
+        ];
+    }
 }
