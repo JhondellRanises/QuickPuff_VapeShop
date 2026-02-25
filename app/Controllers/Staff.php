@@ -25,7 +25,7 @@ class Staff extends BaseController
         $data = [
             'title' => 'Staff Management - Quick Puff Vape Shop',
             'user' => $this->getCurrentUser(),
-            'staff' => $this->userModel->getActiveUsers()
+            'staff' => $this->userModel->getAllUsers()
         ];
 
         return view('staff/index', $data);
@@ -54,7 +54,7 @@ class Staff extends BaseController
             'full_name' => trim($this->request->getPost('full_name')),
             'password' => $this->request->getPost('password'),
             'role' => $this->request->getPost('role'),
-            'is_active' => 1
+            'is_active' => $this->request->getPost('is_active') ? 1 : 0
         ];
 
         // Enhanced validation
@@ -154,13 +154,17 @@ class Staff extends BaseController
         }
 
         $data = [
-            'full_name' => $this->request->getPost('full_name'),
+            'full_name' => trim($this->request->getPost('full_name')),
             'role' => $this->request->getPost('role'),
         ];
 
         // Add password only if provided
         $password = $this->request->getPost('password');
         if (!empty($password)) {
+            if (strlen($password) < 6) {
+                session()->setFlashdata('error', 'Password must be at least 6 characters long');
+                return redirect()->to("/staff/edit/{$id}")->withInput();
+            }
             $data['password'] = $password;
         }
 

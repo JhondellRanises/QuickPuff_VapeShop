@@ -82,37 +82,7 @@
                                 <option value="">Select Role</option>
                                 <option value="admin" <?= old('role') === 'admin' ? 'selected' : '' ?>>Administrator</option>
                                 <option value="staff" <?= old('role') === 'staff' ? 'selected' : '' ?>>Staff</option>
-                                <option value="inventory" <?= old('role') === 'inventory' ? 'selected' : '' ?>>Inventory Staff</option>
-                                <option value="branch_manager" <?= old('role') === 'branch_manager' ? 'selected' : '' ?>>Branch Manager</option>
-                                <option value="logistics" <?= old('role') === 'logistics' ? 'selected' : '' ?>>Logistics Coordinator</option>
-                                <option value="franchise" <?= old('role') === 'franchise' ? 'selected' : '' ?>>Franchise Manager</option>
                             </select>
-                        </div>
-
-                        <!-- Email (Optional) -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">
-                                <i class="fas fa-envelope me-1"></i> Email (Optional)
-                            </label>
-                            <input type="email" 
-                                   class="form-control" 
-                                   id="email" 
-                                   name="email" 
-                                   placeholder="Enter email address"
-                                   value="<?= old('email') ?>">
-                        </div>
-
-                        <!-- Phone (Optional) -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">
-                                <i class="fas fa-phone me-1"></i> Phone (Optional)
-                            </label>
-                            <input type="tel" 
-                                   class="form-control" 
-                                   id="phone" 
-                                   name="phone" 
-                                   placeholder="Enter phone number"
-                                   value="<?= old('phone') ?>">
                         </div>
 
                         <!-- Status -->
@@ -216,21 +186,6 @@ document.getElementById('password').addEventListener('input', function() {
         `;
     } else {
         strengthIndicator.innerHTML = '';
-    }
-});
-
-// Role change handler
-document.getElementById('role').addEventListener('change', function() {
-    const role = this.value;
-    const emailField = document.getElementById('email');
-    
-    // Make email required for certain roles
-    if (role === 'admin' || role === 'branch_manager') {
-        emailField.required = true;
-        emailField.previousElementSibling.innerHTML = '<i class="fas fa-envelope me-1"></i> Email <span class="text-danger">*</span>';
-    } else {
-        emailField.required = false;
-        emailField.previousElementSibling.innerHTML = '<i class="fas fa-envelope me-1"></i> Email (Optional)';
     }
 });
 

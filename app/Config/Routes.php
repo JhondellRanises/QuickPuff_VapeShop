@@ -10,37 +10,37 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Auth::login');
 
 // Authentication routes
-$routes->get('/login', 'Auth::login');
-$routes->post('/auth/attemptLogin', 'Auth::attemptLogin');
-$routes->get('/logout', 'Auth::logout');
+$routes->get('login', 'Auth::login');
+$routes->post('auth/attemptLogin', 'Auth::attemptLogin');
+$routes->get('logout', 'Auth::logout');
 
 // Simple POS route without auth filter for testing
-$routes->post('/pos/process-sale', 'POS::processSale');
+$routes->post('pos/process-sale', 'POS::processSale');
 
 // Protected routes (require login)
-$routes->group('/dashboard', ['filter' => 'auth'], function($routes) {
+$routes->group('dashboard', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'Dashboard::index');
 });
 
-$routes->group('/pos', ['filter' => 'auth'], function($routes) {
+$routes->group('pos', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'POS::index');
-    $routes->post('/add', 'POS::addToCart');
-    $routes->post('/update', 'POS::updateCart');
-    $routes->post('/remove', 'POS::removeFromCart');
-    $routes->post('/clear', 'POS::clearCart');
-    $routes->get('/receipt/(:num)', 'POS::receipt/$1');
-    $routes->get('/search', 'POS::searchProducts');
+    $routes->post('add', 'POS::addToCart');
+    $routes->post('update', 'POS::updateCart');
+    $routes->post('remove', 'POS::removeFromCart');
+    $routes->post('clear', 'POS::clearCart');
+    $routes->get('receipt/(:num)', 'POS::receipt/$1');
+    $routes->get('search', 'POS::searchProducts');
 });
 
 // Admin only routes
-$routes->group('/staff', ['filter' => 'auth:admin'], function($routes) {
+$routes->group('staff', ['filter' => 'auth:admin'], function($routes) {
     $routes->get('/', 'Staff::index');
-    $routes->get('/create', 'Staff::create');
-    $routes->post('/store', 'Staff::store');
-    $routes->get('/edit/(:num)', 'Staff::edit/$1');
-    $routes->post('/update/(:num)', 'Staff::update/$1');
-    $routes->get('/deactivate/(:num)', 'Staff::deactivate/$1');
-    $routes->get('/activate/(:num)', 'Staff::activate/$1');
+    $routes->get('create', 'Staff::create');
+    $routes->post('store', 'Staff::store');
+    $routes->get('edit/(:num)', 'Staff::edit/$1');
+    $routes->post('update/(:num)', 'Staff::update/$1');
+    $routes->get('deactivate/(:num)', 'Staff::deactivate/$1');
+    $routes->get('activate/(:num)', 'Staff::activate/$1');
 });
 
 // Product stock management routes (admin only)
@@ -55,9 +55,9 @@ $routes->group('products', ['filter' => 'auth:admin'], function($routes) {
 });
 
 // Reports routes
-$routes->group('/reports', ['filter' => 'auth'], function($routes) {
-    $routes->get('/sales', 'Reports::sales');
-    $routes->get('/export-sales', 'Reports::exportSales');
+$routes->group('reports', ['filter' => 'auth'], function($routes) {
+    $routes->get('sales', 'Reports::sales');
+    $routes->get('export-sales', 'Reports::exportSales');
 });
 
 /*

@@ -1,5 +1,21 @@
 <?= $this->include('layouts/header') ?>
 
+<style>
+    .current-user-row td {
+        background-color: rgba(99, 102, 241, 0.14) !important;
+        color: #e7eaf6;
+    }
+
+    .table-hover .current-user-row:hover td {
+        background-color: rgba(99, 102, 241, 0.2) !important;
+        color: #ffffff;
+    }
+
+    .current-user-row .text-muted {
+        color: #c8cede !important;
+    }
+</style>
+
 <div class="container-fluid">
     <!-- Page Header -->
     <div class="page-header">
@@ -45,7 +61,7 @@
                                 $currentUserId = session()->get('user_id');
                                 $isCurrentUser = ($member['id'] == $currentUserId);
                                 ?>
-                                <tr class="<?= $isCurrentUser ? 'table-info' : '' ?>">
+                                <tr class="<?= $isCurrentUser ? 'current-user-row' : '' ?>">
                                     <td><?= $member['id'] ?></td>
                                     <td>
                                         <div class="d-flex align-items-center">

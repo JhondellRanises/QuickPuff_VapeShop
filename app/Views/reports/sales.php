@@ -1,10 +1,7 @@
 <?= $this->include('layouts/header') ?>
 
 <div class="container-fluid">
-    <div class="row">
-        <?= view('layouts/sidebar', ['active' => 'reports']) ?>
-        
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <main class="px-md-4">
             <!-- Page Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
@@ -175,8 +172,7 @@
             <?php endif; ?>
         </div>
     </div>
-        </main>
-    </div>
+    </main>
 </div>
 
 <script>

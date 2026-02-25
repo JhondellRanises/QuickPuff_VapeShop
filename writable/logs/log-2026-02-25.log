@@ -454,3 +454,162 @@ DEBUG - 2026-02-25 13:17:35 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-02-25 13:17:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-02-25 13:17:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-02-25 13:17:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:07:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:07:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:08:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2026-02-25 14:08:24 --> Failed login attempt for username: admin
+DEBUG - 2026-02-25 14:08:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:08:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:08:47 --> User logged in: admin (ID: 1)
+DEBUG - 2026-02-25 14:08:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:08:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:08:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:09:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:09:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:09:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:16:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:16:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:16:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:16:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:17:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:19:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:19:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:19:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:19:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:20:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:20:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:20:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:20:30 --> User logged out: admin (ID: 1)
+DEBUG - 2026-02-25 14:20:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:20:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:20:39 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-25 14:20:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:22:27 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-25 14:22:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:22:43 --> User logged in: admin (ID: 1)
+DEBUG - 2026-02-25 14:22:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:22:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:23:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:24:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:24:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:24:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:24:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:24:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:24:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:25:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:25:12 --> Process sale method called
+DEBUG - 2026-02-25 14:25:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:25:12 --> JSON parsed directly from request
+INFO - 2026-02-25 14:25:12 --> Cart items count: 1
+INFO - 2026-02-25 14:25:12 --> Cart item 0 converted from object to array
+INFO - 2026-02-25 14:25:12 --> Starting database transaction
+INFO - 2026-02-25 14:25:12 --> Totals calculated - Subtotal: 19.99, Tax: 1.999, Total: 21.989
+INFO - 2026-02-25 14:25:12 --> Generated sale code: SALE-20260225-4847
+INFO - 2026-02-25 14:25:12 --> Inserting sale record
+INFO - 2026-02-25 14:25:12 --> Sale inserted with ID: 3
+INFO - 2026-02-25 14:25:12 --> Inserting sale item: Strawberry Banana - 60ml (ID: 8)
+INFO - 2026-02-25 14:25:12 --> Updating stock for product ID: 8, quantity: 1
+INFO - 2026-02-25 14:25:12 --> Transaction completed successfully
+INFO - 2026-02-25 14:25:12 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260225-4847","subtotal":19.99,"tax_amount":1.9989999999999999,"total_amount":21.988999999999997,"items":[{"name":"Strawberry Banana - 60ml","quantity":1,"price":19.99}],"created_at":"2026-02-25 14:25:12"}}
+DEBUG - 2026-02-25 14:26:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:27:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:27:31 --> User logged out: admin (ID: 1)
+DEBUG - 2026-02-25 14:27:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:28:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:28:18 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-25 14:28:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:28:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:28:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:28:42 --> Loading receipt for sale ID: 3
+INFO - 2026-02-25 14:28:42 --> Fetching sale from database
+DEBUG - 2026-02-25 14:28:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:28:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:29:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:29:36 --> Process sale method called
+DEBUG - 2026-02-25 14:29:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:29:36 --> JSON parsed directly from request
+INFO - 2026-02-25 14:29:36 --> Cart items count: 1
+INFO - 2026-02-25 14:29:36 --> Cart item 0 converted from object to array
+INFO - 2026-02-25 14:29:36 --> Starting database transaction
+INFO - 2026-02-25 14:29:36 --> Totals calculated - Subtotal: 18.99, Tax: 1.899, Total: 20.889
+INFO - 2026-02-25 14:29:36 --> Generated sale code: SALE-20260225-9709
+INFO - 2026-02-25 14:29:36 --> Inserting sale record
+INFO - 2026-02-25 14:29:36 --> Sale inserted with ID: 4
+INFO - 2026-02-25 14:29:36 --> Inserting sale item: Geek Bar Pulse Disposable (ID: 7)
+INFO - 2026-02-25 14:29:36 --> Updating stock for product ID: 7, quantity: 1
+INFO - 2026-02-25 14:29:36 --> Transaction completed successfully
+INFO - 2026-02-25 14:29:36 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260225-9709","subtotal":18.99,"tax_amount":1.899,"total_amount":20.889,"items":[{"name":"Geek Bar Pulse Disposable","quantity":1,"price":18.99}],"created_at":"2026-02-25 14:29:36"}}
+DEBUG - 2026-02-25 14:31:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:32:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:32:29 --> Process sale method called
+DEBUG - 2026-02-25 14:32:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:32:29 --> JSON parsed directly from request
+INFO - 2026-02-25 14:32:29 --> Cart items count: 1
+INFO - 2026-02-25 14:32:29 --> Cart item 0 converted from object to array
+INFO - 2026-02-25 14:32:29 --> Starting database transaction
+INFO - 2026-02-25 14:32:29 --> Totals calculated - Subtotal: 18.99, Tax: 1.899, Total: 20.889
+INFO - 2026-02-25 14:32:29 --> Generated sale code: SALE-20260225-5038
+INFO - 2026-02-25 14:32:29 --> Inserting sale record
+INFO - 2026-02-25 14:32:29 --> Sale inserted with ID: 5
+INFO - 2026-02-25 14:32:29 --> Inserting sale item: Geek Bar Pulse Disposable (ID: 7)
+INFO - 2026-02-25 14:32:29 --> Updating stock for product ID: 7, quantity: 1
+INFO - 2026-02-25 14:32:29 --> Transaction completed successfully
+INFO - 2026-02-25 14:32:29 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260225-5038","subtotal":18.99,"tax_amount":1.899,"total_amount":20.889,"items":[{"name":"Geek Bar Pulse Disposable","quantity":1,"price":18.99}],"created_at":"2026-02-25 14:32:29"}}
+DEBUG - 2026-02-25 14:33:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:33:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:33:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:33:16 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-25 14:33:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:35:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:37:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:37:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:37:54 --> User logged in: admin (ID: 1)
+DEBUG - 2026-02-25 14:37:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:38:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:38:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:38:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:38:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:39:21 --> Process sale method called
+DEBUG - 2026-02-25 14:39:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:39:21 --> JSON parsed directly from request
+INFO - 2026-02-25 14:39:21 --> Cart items count: 2
+INFO - 2026-02-25 14:39:21 --> Cart item 0 converted from object to array
+INFO - 2026-02-25 14:39:21 --> Cart item 1 converted from object to array
+INFO - 2026-02-25 14:39:21 --> Starting database transaction
+INFO - 2026-02-25 14:39:21 --> Totals calculated - Subtotal: 31.98, Tax: 3.198, Total: 35.178
+INFO - 2026-02-25 14:39:21 --> Generated sale code: SALE-20260225-4076
+INFO - 2026-02-25 14:39:21 --> Inserting sale record
+INFO - 2026-02-25 14:39:21 --> Sale inserted with ID: 6
+INFO - 2026-02-25 14:39:21 --> Inserting sale item: Geek Bar Pulse Disposable (ID: 7)
+INFO - 2026-02-25 14:39:21 --> Updating stock for product ID: 7, quantity: 1
+INFO - 2026-02-25 14:39:21 --> Inserting sale item: Vaporesso XROS Pods (2-pack) (ID: 6)
+INFO - 2026-02-25 14:39:21 --> Updating stock for product ID: 6, quantity: 1
+INFO - 2026-02-25 14:39:21 --> Transaction completed successfully
+INFO - 2026-02-25 14:39:21 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260225-4076","subtotal":31.979999999999997,"tax_amount":3.198,"total_amount":35.178,"items":[{"name":"Geek Bar Pulse Disposable","quantity":1,"price":18.99},{"name":"Vaporesso XROS Pods (2-pack)","quantity":1,"price":12.99}],"created_at":"2026-02-25 14:39:21"}}
+DEBUG - 2026-02-25 14:39:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 14:39:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 14:39:56 --> User logged out: admin (ID: 1)
+DEBUG - 2026-02-25 14:39:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

@@ -62,6 +62,15 @@ class UserModel extends Model
     }
 
     /**
+     * Get all users (active and inactive)
+     */
+    public function getAllUsers()
+    {
+        return $this->orderBy('created_at', 'DESC')
+                    ->findAll();
+    }
+
+    /**
      * Soft delete user (deactivate)
      */
     public function deactivateUser($id)

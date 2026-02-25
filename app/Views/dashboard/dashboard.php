@@ -302,11 +302,16 @@
     display: flex;
     align-items: center;
     font-weight: 500;
-    color: #6c757d;
+    color: #c9d1e3;
 }
 
 .info-value {
     font-weight: 600;
+    color: #f4f7ff;
+}
+
+.info-value .text-muted {
+    color: #c9d1e3 !important;
 }
 
 .activity-item {
@@ -338,10 +343,12 @@
 .activity-content h6 {
     margin-bottom: 5px;
     font-weight: 600;
+    color: #f4f7ff;
 }
 
 .activity-content p {
     font-size: 0.9rem;
+    color: #d6dcef;
 }
 
 .btn-lg {
@@ -353,6 +360,28 @@
 .btn-lg:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-header small.text-muted {
+    color: #c9d1e3 !important;
+}
+
+.btn-outline-primary span,
+.btn-outline-success span,
+.btn-outline-secondary span,
+.btn-outline-info span {
+    color: #eaf0ff !important;
+}
+
+.btn-outline-primary small,
+.btn-outline-success small,
+.btn-outline-secondary small,
+.btn-outline-info small,
+.btn-outline-primary .text-muted,
+.btn-outline-success .text-muted,
+.btn-outline-secondary .text-muted,
+.btn-outline-info .text-muted {
+    color: #c9d1e3 !important;
 }
 </style>
 
