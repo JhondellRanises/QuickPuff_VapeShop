@@ -43,7 +43,7 @@ class POS extends BaseController
             'cart' => session()->get('cart') ?? []
         ];
 
-        return view('pos/index', $data);
+        return view('pos/POS', $data);
     }
 
     public function processSale()

@@ -14,10 +14,6 @@ $routes->get('/login', 'Auth::login');
 $routes->post('/auth/attemptLogin', 'Auth::attemptLogin');
 $routes->get('/logout', 'Auth::logout');
 
-// Test route
-$routes->get('/pos-test', 'POSTest::index');
-$routes->post('/test-sale', 'TestSale::index');
-
 // Simple POS route without auth filter for testing
 $routes->post('/pos/process-sale', 'POS::processSale');
 

@@ -30,7 +30,7 @@ class Dashboard extends BaseController
             'stats' => $this->getDashboardStats()
         ];
 
-        return view('dashboard/index', $data);
+        return view('dashboard/dashboard', $data);
     }
 
     /**
