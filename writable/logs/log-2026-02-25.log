@@ -1596,3 +1596,71 @@ DEBUG - 2026-02-25 05:25:24 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-02-25 05:25:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-02-25 05:25:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-02-25 05:26:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:21:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-02-25 07:21:40 --> mysqli_sql_exception: Duplicate key name 'sale_code' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php(327): mysqli->query('CREATE TABLE `s...', 0)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `s...')
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `s...')
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `s...')
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\app\Database\Migrations\2025-02-24-233200_CreateSalesTable.php(61): CodeIgniter\Database\Forge->createTable('sales')
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MigrationRunner.php(876): App\Database\Migrations\CreateSalesTable->up()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MigrationRunner.php(182): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+DEBUG - 2026-02-25 07:24:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2026-02-25 07:24:23 --> Failed login attempt for username: admin
+DEBUG - 2026-02-25 07:24:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:25:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 07:25:18 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-25 07:25:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:25:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:25:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:25:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:25:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 07:26:36 --> Process sale method called
+DEBUG - 2026-02-25 07:26:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 07:26:36 --> JSON parsed directly from request
+INFO - 2026-02-25 07:26:36 --> Cart items count: 2
+INFO - 2026-02-25 07:26:36 --> Cart item 0 converted from object to array
+INFO - 2026-02-25 07:26:36 --> Cart item 1 converted from object to array
+INFO - 2026-02-25 07:26:36 --> Starting database transaction
+INFO - 2026-02-25 07:26:36 --> Totals calculated - Subtotal: 31.98, Tax: 3.198, Total: 35.178
+INFO - 2026-02-25 07:26:36 --> Generated sale code: SALE-20260225-0842
+INFO - 2026-02-25 07:26:36 --> Inserting sale record
+INFO - 2026-02-25 07:26:36 --> Sale inserted with ID: 1
+INFO - 2026-02-25 07:26:36 --> Inserting sale item: Geek Bar Pulse Disposable (ID: 7)
+INFO - 2026-02-25 07:26:36 --> Updating stock for product ID: 7, quantity: 1
+INFO - 2026-02-25 07:26:36 --> Inserting sale item: Vaporesso XROS Pods (2-pack) (ID: 6)
+INFO - 2026-02-25 07:26:36 --> Updating stock for product ID: 6, quantity: 1
+INFO - 2026-02-25 07:26:36 --> Transaction completed successfully
+INFO - 2026-02-25 07:26:36 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260225-0842","subtotal":31.979999999999997,"tax_amount":3.198,"total_amount":35.178,"items":[{"name":"Geek Bar Pulse Disposable","quantity":1,"price":18.99},{"name":"Vaporesso XROS Pods (2-pack)","quantity":1,"price":12.99}],"created_at":"2026-02-25 07:26:36"}}
+INFO - 2026-02-25 07:27:11 --> Process sale method called
+DEBUG - 2026-02-25 07:27:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 07:27:11 --> JSON parsed directly from request
+INFO - 2026-02-25 07:27:11 --> Cart items count: 1
+INFO - 2026-02-25 07:27:11 --> Cart item 0 converted from object to array
+INFO - 2026-02-25 07:27:11 --> Starting database transaction
+INFO - 2026-02-25 07:27:11 --> Totals calculated - Subtotal: 74.97, Tax: 7.497, Total: 82.467
+INFO - 2026-02-25 07:27:11 --> Generated sale code: SALE-20260225-6142
+INFO - 2026-02-25 07:27:11 --> Inserting sale record
+INFO - 2026-02-25 07:27:11 --> Sale inserted with ID: 2
+INFO - 2026-02-25 07:27:11 --> Inserting sale item: Blue Razz Ice - 100ml (ID: 1)
+INFO - 2026-02-25 07:27:11 --> Updating stock for product ID: 1, quantity: 3
+INFO - 2026-02-25 07:27:11 --> Transaction completed successfully
+INFO - 2026-02-25 07:27:11 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260225-6142","subtotal":74.97,"tax_amount":7.497,"total_amount":82.467,"items":[{"name":"Blue Razz Ice - 100ml","quantity":3,"price":24.99}],"created_at":"2026-02-25 07:27:11"}}
+DEBUG - 2026-02-25 07:30:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:30:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 07:30:26 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-25 07:30:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:30:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-25 07:30:38 --> User logged in: admin (ID: 1)
+DEBUG - 2026-02-25 07:30:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:30:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:30:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-25 07:30:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

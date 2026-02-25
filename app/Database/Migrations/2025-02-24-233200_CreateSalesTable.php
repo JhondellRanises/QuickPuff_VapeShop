@@ -18,7 +18,6 @@ class CreateSalesTable extends Migration
             'sale_code' => [
                 'type' => 'VARCHAR',
                 'constraint' => 50,
-                'unique' => true,
             ],
             'total_amount' => [
                 'type' => 'DECIMAL',
