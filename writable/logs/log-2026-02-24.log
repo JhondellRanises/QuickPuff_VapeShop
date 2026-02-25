@@ -1,0 +1,1801 @@
+ERROR - 2026-02-24 14:44:18 --> Error connecting to the database: mysqli_sql_exception: Access denied for user ''@'localhost' (using password: NO) in C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', '', Object(SensitiveParameterValue), '', 3306, '', 0)
+#1 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(1525): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#4 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(1545): CodeIgniter\Database\BaseConnection->listTables()
+#5 C:\xampp\htdocs\QuickPuff\system\Database\MigrationRunner.php(768): CodeIgniter\Database\BaseConnection->tableExists('migrations')
+#6 C:\xampp\htdocs\QuickPuff\system\Database\MigrationRunner.php(162): CodeIgniter\Database\MigrationRunner->ensureTable()
+#7 C:\xampp\htdocs\QuickPuff\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 C:\xampp\htdocs\QuickPuff\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 C:\xampp\htdocs\QuickPuff\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 C:\xampp\htdocs\QuickPuff\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\QuickPuff\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\QuickPuff\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user ''@'localhost' (using password: NO) in C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(1525): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#3 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(1545): CodeIgniter\Database\BaseConnection->listTables()
+#4 C:\xampp\htdocs\QuickPuff\system\Database\MigrationRunner.php(768): CodeIgniter\Database\BaseConnection->tableExists('migrations')
+#5 C:\xampp\htdocs\QuickPuff\system\Database\MigrationRunner.php(162): CodeIgniter\Database\MigrationRunner->ensureTable()
+#6 C:\xampp\htdocs\QuickPuff\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#7 C:\xampp\htdocs\QuickPuff\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#8 C:\xampp\htdocs\QuickPuff\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#9 C:\xampp\htdocs\QuickPuff\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#10 C:\xampp\htdocs\QuickPuff\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#11 C:\xampp\htdocs\QuickPuff\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#12 {main}
+ERROR - 2026-02-24 14:44:33 --> mysqli_sql_exception: Table 'quickpuff_db.users' doesn't exist in C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
+#1 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
+#2 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
+#3 C:\xampp\htdocs\QuickPuff\system\Database\BaseBuilder.php(1841): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', NULL, false)
+#4 C:\xampp\htdocs\QuickPuff\system\Database\BaseBuilder.php(2230): CodeIgniter\Database\BaseBuilder->batchExecute('_insertBatch', 100)
+#5 C:\xampp\htdocs\QuickPuff\app\Database\Seeds\UserSeeder.php(32): CodeIgniter\Database\BaseBuilder->insertBatch(Array)
+#6 C:\xampp\htdocs\QuickPuff\system\Database\Seeder.php(149): App\Database\Seeds\UserSeeder->run()
+#7 C:\xampp\htdocs\QuickPuff\system\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Se...')
+#8 C:\xampp\htdocs\QuickPuff\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#9 C:\xampp\htdocs\QuickPuff\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#10 C:\xampp\htdocs\QuickPuff\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\QuickPuff\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\QuickPuff\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+ERROR - 2026-02-24 14:44:57 --> mysqli_sql_exception: Table 'quickpuff_db.users' doesn't exist in C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
+#1 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
+#2 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
+#3 C:\xampp\htdocs\QuickPuff\system\Database\BaseBuilder.php(1841): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', NULL, false)
+#4 C:\xampp\htdocs\QuickPuff\system\Database\BaseBuilder.php(2230): CodeIgniter\Database\BaseBuilder->batchExecute('_insertBatch', 100)
+#5 C:\xampp\htdocs\QuickPuff\app\Database\Seeds\UserSeeder.php(32): CodeIgniter\Database\BaseBuilder->insertBatch(Array)
+#6 C:\xampp\htdocs\QuickPuff\system\Database\Seeder.php(149): App\Database\Seeds\UserSeeder->run()
+#7 C:\xampp\htdocs\QuickPuff\system\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Se...')
+#8 C:\xampp\htdocs\QuickPuff\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#9 C:\xampp\htdocs\QuickPuff\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#10 C:\xampp\htdocs\QuickPuff\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\QuickPuff\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\QuickPuff\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+DEBUG - 2026-02-24 15:06:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:07:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:07:27 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:07:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:07:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:07:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:08:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:09:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:09:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:09:30 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:09:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:09:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2026-02-24 15:09:43 --> Failed login attempt for username: admin
+DEBUG - 2026-02-24 15:09:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:10:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:10:06 --> User logged in: admin (ID: 1)
+DEBUG - 2026-02-24 15:10:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:10:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:10:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:10:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:13:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:13:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:14:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:14:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:15:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:16:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:16:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:17:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:17:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:17:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:17:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:18:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:18:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:19:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:19:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:20:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:20:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:20:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:20:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:21:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:23:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:23:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:23:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:23:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:23:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:23:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:23:52 --> User logged out: admin (ID: 1)
+DEBUG - 2026-02-24 15:23:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:24:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:24:19 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:24:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:24:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:24:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:25:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:25:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:26:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:26:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:27:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:27:10 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:27:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:28:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:28:25 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:28:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:28:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-02-24 15:34:05 --> mysqli_sql_exception: Duplicate key name 'sale_code' in C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff\system\Database\MySQLi\Connection.php(327): mysqli->query('CREATE TABLE `s...', 0)
+#1 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `s...')
+#2 C:\xampp\htdocs\QuickPuff\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `s...')
+#3 C:\xampp\htdocs\QuickPuff\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `s...')
+#4 C:\xampp\htdocs\QuickPuff\app\Database\Migrations\2025-02-24-233200_CreateSalesTable.php(61): CodeIgniter\Database\Forge->createTable('sales')
+#5 C:\xampp\htdocs\QuickPuff\system\Database\MigrationRunner.php(876): App\Database\Migrations\CreateSalesTable->up()
+#6 C:\xampp\htdocs\QuickPuff\system\Database\MigrationRunner.php(182): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 C:\xampp\htdocs\QuickPuff\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 C:\xampp\htdocs\QuickPuff\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 C:\xampp\htdocs\QuickPuff\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 C:\xampp\htdocs\QuickPuff\system\Boot.php(388): CodeIgniter\CLI\Console->run()
+#11 C:\xampp\htdocs\QuickPuff\system\Boot.php(133): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 C:\xampp\htdocs\QuickPuff\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+DEBUG - 2026-02-24 15:34:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:34:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:34:57 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:34:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:35:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:35:09 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:35:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:35:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:39:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:40:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:40:03 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:40:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:40:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:40:11 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:40:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:40:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:41:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:42:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:42:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:42:15 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:42:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:42:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+WARNING - 2026-02-24 15:42:23 --> Failed login attempt for username: staff
+DEBUG - 2026-02-24 15:42:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:42:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:42:31 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:42:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:42:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:43:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:45:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:45:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:45:22 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:45:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:45:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:45:31 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:45:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:45:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:46:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:46:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:46:51 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:46:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:46:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:46:59 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:47:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:47:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:47:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:29 --> All products count: 24
+DEBUG - 2026-02-24 15:49:29 --> Active products count: 24
+DEBUG - 2026-02-24 15:49:29 --> Products loaded: Array
+(
+    [0] => Array
+        (
+            [id] => 5
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [1] => Array
+        (
+            [id] => 13
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [2] => Array
+        (
+            [id] => 21
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [3] => Array
+        (
+            [id] => 6
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [4] => Array
+        (
+            [id] => 14
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [5] => Array
+        (
+            [id] => 22
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [6] => Array
+        (
+            [id] => 7
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [8] => Array
+        (
+            [id] => 23
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [9] => Array
+        (
+            [id] => 3
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [10] => Array
+        (
+            [id] => 11
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [12] => Array
+        (
+            [id] => 4
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [13] => Array
+        (
+            [id] => 12
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [14] => Array
+        (
+            [id] => 20
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [15] => Array
+        (
+            [id] => 1
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [16] => Array
+        (
+            [id] => 9
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [17] => Array
+        (
+            [id] => 17
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [18] => Array
+        (
+            [id] => 2
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [19] => Array
+        (
+            [id] => 10
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [20] => Array
+        (
+            [id] => 18
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [21] => Array
+        (
+            [id] => 8
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [22] => Array
+        (
+            [id] => 16
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [23] => Array
+        (
+            [id] => 24
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+)
+
+DEBUG - 2026-02-24 15:49:29 --> All products count: 24
+DEBUG - 2026-02-24 15:49:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:49:32 --> User logged out: staff (ID: 2)
+DEBUG - 2026-02-24 15:49:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-02-24 15:49:38 --> User logged in: staff (ID: 2)
+DEBUG - 2026-02-24 15:49:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:39 --> All products count: 24
+DEBUG - 2026-02-24 15:49:39 --> Active products count: 24
+DEBUG - 2026-02-24 15:49:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:42 --> All products count: 24
+DEBUG - 2026-02-24 15:49:42 --> Active products count: 24
+DEBUG - 2026-02-24 15:49:42 --> Products loaded: Array
+(
+    [0] => Array
+        (
+            [id] => 5
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [1] => Array
+        (
+            [id] => 13
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [2] => Array
+        (
+            [id] => 21
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [3] => Array
+        (
+            [id] => 6
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [4] => Array
+        (
+            [id] => 14
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [5] => Array
+        (
+            [id] => 22
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [6] => Array
+        (
+            [id] => 7
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [8] => Array
+        (
+            [id] => 23
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [9] => Array
+        (
+            [id] => 3
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [10] => Array
+        (
+            [id] => 11
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [12] => Array
+        (
+            [id] => 4
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [13] => Array
+        (
+            [id] => 12
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [14] => Array
+        (
+            [id] => 20
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [15] => Array
+        (
+            [id] => 1
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [16] => Array
+        (
+            [id] => 9
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [17] => Array
+        (
+            [id] => 17
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [18] => Array
+        (
+            [id] => 2
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [19] => Array
+        (
+            [id] => 10
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [20] => Array
+        (
+            [id] => 18
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [21] => Array
+        (
+            [id] => 8
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [22] => Array
+        (
+            [id] => 16
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [23] => Array
+        (
+            [id] => 24
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+)
+
+DEBUG - 2026-02-24 15:49:42 --> All products count: 24
+DEBUG - 2026-02-24 15:49:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:46 --> All products count: 24
+DEBUG - 2026-02-24 15:49:46 --> Active products count: 24
+DEBUG - 2026-02-24 15:49:46 --> Products loaded: Array
+(
+    [0] => Array
+        (
+            [id] => 5
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [1] => Array
+        (
+            [id] => 13
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [2] => Array
+        (
+            [id] => 21
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [3] => Array
+        (
+            [id] => 6
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [4] => Array
+        (
+            [id] => 14
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [5] => Array
+        (
+            [id] => 22
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [6] => Array
+        (
+            [id] => 7
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [8] => Array
+        (
+            [id] => 23
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [9] => Array
+        (
+            [id] => 3
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [10] => Array
+        (
+            [id] => 11
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [12] => Array
+        (
+            [id] => 4
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [13] => Array
+        (
+            [id] => 12
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [14] => Array
+        (
+            [id] => 20
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [15] => Array
+        (
+            [id] => 1
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [16] => Array
+        (
+            [id] => 9
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [17] => Array
+        (
+            [id] => 17
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [18] => Array
+        (
+            [id] => 2
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [19] => Array
+        (
+            [id] => 10
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [20] => Array
+        (
+            [id] => 18
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [21] => Array
+        (
+            [id] => 8
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [22] => Array
+        (
+            [id] => 16
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [23] => Array
+        (
+            [id] => 24
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+)
+
+DEBUG - 2026-02-24 15:49:46 --> All products count: 24
+DEBUG - 2026-02-24 15:49:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:49:54 --> All products count: 24
+DEBUG - 2026-02-24 15:49:54 --> Active products count: 24
+DEBUG - 2026-02-24 15:49:54 --> Products loaded: Array
+(
+    [0] => Array
+        (
+            [id] => 5
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [1] => Array
+        (
+            [id] => 13
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [2] => Array
+        (
+            [id] => 21
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [3] => Array
+        (
+            [id] => 6
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [4] => Array
+        (
+            [id] => 14
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [5] => Array
+        (
+            [id] => 22
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [6] => Array
+        (
+            [id] => 7
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [8] => Array
+        (
+            [id] => 23
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [9] => Array
+        (
+            [id] => 3
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [10] => Array
+        (
+            [id] => 11
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [12] => Array
+        (
+            [id] => 4
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [13] => Array
+        (
+            [id] => 12
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [14] => Array
+        (
+            [id] => 20
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [15] => Array
+        (
+            [id] => 1
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [16] => Array
+        (
+            [id] => 9
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [17] => Array
+        (
+            [id] => 17
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [18] => Array
+        (
+            [id] => 2
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [19] => Array
+        (
+            [id] => 10
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [20] => Array
+        (
+            [id] => 18
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [21] => Array
+        (
+            [id] => 8
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [22] => Array
+        (
+            [id] => 16
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [23] => Array
+        (
+            [id] => 24
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+)
+
+DEBUG - 2026-02-24 15:49:54 --> All products count: 24
+DEBUG - 2026-02-24 15:50:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:50:05 --> All products count: 24
+DEBUG - 2026-02-24 15:50:05 --> Active products count: 24
+DEBUG - 2026-02-24 15:50:05 --> Products loaded: Array
+(
+    [0] => Array
+        (
+            [id] => 5
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [1] => Array
+        (
+            [id] => 13
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [2] => Array
+        (
+            [id] => 21
+            [name] => SMOK RPM 4 Coils (5-pack)
+            [category] => accessory
+            [brand] => SMOK
+            [price] => 15.99
+            [stock_qty] => 100
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [3] => Array
+        (
+            [id] => 6
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [4] => Array
+        (
+            [id] => 14
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [5] => Array
+        (
+            [id] => 22
+            [name] => Vaporesso XROS Pods (2-pack)
+            [category] => accessory
+            [brand] => Vaporesso
+            [price] => 12.99
+            [stock_qty] => 75
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [6] => Array
+        (
+            [id] => 7
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [7] => Array
+        (
+            [id] => 15
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [8] => Array
+        (
+            [id] => 23
+            [name] => Geek Bar Pulse Disposable
+            [category] => device
+            [brand] => Geek Bar
+            [price] => 18.99
+            [stock_qty] => 60
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [9] => Array
+        (
+            [id] => 3
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [10] => Array
+        (
+            [id] => 11
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [11] => Array
+        (
+            [id] => 19
+            [name] => SMOK Nord 4 Kit
+            [category] => device
+            [brand] => SMOK
+            [price] => 39.99
+            [stock_qty] => 15
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [12] => Array
+        (
+            [id] => 4
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [13] => Array
+        (
+            [id] => 12
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [14] => Array
+        (
+            [id] => 20
+            [name] => Vaporesso XROS 3
+            [category] => device
+            [brand] => Vaporesso
+            [price] => 34.99
+            [stock_qty] => 20
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [15] => Array
+        (
+            [id] => 1
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [16] => Array
+        (
+            [id] => 9
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [17] => Array
+        (
+            [id] => 17
+            [name] => Blue Razz Ice - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 24.99
+            [stock_qty] => 50
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [18] => Array
+        (
+            [id] => 2
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [19] => Array
+        (
+            [id] => 10
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [20] => Array
+        (
+            [id] => 18
+            [name] => Mango Tango - 100ml
+            [category] => e-liquid
+            [brand] => VapeWild
+            [price] => 22.99
+            [stock_qty] => 35
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+    [21] => Array
+        (
+            [id] => 8
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 14:45:37
+            [updated_at] => 2026-02-24 14:45:37
+        )
+
+    [22] => Array
+        (
+            [id] => 16
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:34:41
+            [updated_at] => 2026-02-24 15:34:41
+        )
+
+    [23] => Array
+        (
+            [id] => 24
+            [name] => Strawberry Banana - 60ml
+            [category] => e-liquid
+            [brand] => Naked 100
+            [price] => 19.99
+            [stock_qty] => 0
+            [is_active] => 1
+            [created_at] => 2026-02-24 15:47:50
+            [updated_at] => 2026-02-24 15:47:50
+        )
+
+)
+
+DEBUG - 2026-02-24 15:50:05 --> All products count: 24
+DEBUG - 2026-02-24 15:50:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-02-24 15:50:07 --> All products count: 24
+DEBUG - 2026-02-24 15:50:07 --> Active products count: 24
