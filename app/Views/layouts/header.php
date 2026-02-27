@@ -111,13 +111,14 @@
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            padding: 1rem 0;
+            padding: 0.5rem 0;
+            min-height: auto;
         }
 
         .navbar-brand {
             color: var(--text-primary) !important;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 2rem;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -766,6 +767,26 @@
             background-color: var(--card-bg) !important;
         }
 
+        /* Modal Styles - Less Transparent */
+        .modal-content {
+            background: rgba(10, 14, 39, 0.95) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+        
+        .modal-header {
+            background: rgba(10, 14, 39, 0.95) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+        
+        .modal-body {
+            background: rgba(10, 14, 39, 0.95) !important;
+        }
+        
+        .modal-footer {
+            background: rgba(10, 14, 39, 0.95) !important;
+            border-top: 1px solid var(--border-color) !important;
+        }
+
         /* Force dark backgrounds on all inputs */
         input,
         input.form-control,
@@ -1032,8 +1053,7 @@
         <div class="container-fluid">
             <!-- Brand -->
             <a class="navbar-brand" href="<?= site_url('/dashboard') ?>">
-                <i class="fas fa-bolt"></i>
-                Quick Puff Vape Shop
+                <img src="<?= base_url('public/QuickPuff logoo.png') ?>" alt="QuickPuff" style="height: 4rem;">
             </a>
 
             <!-- Mobile Toggle -->
