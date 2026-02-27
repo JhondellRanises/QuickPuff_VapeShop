@@ -87,6 +87,17 @@
                             </div>
                         </div>
 
+                        <!-- Status -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" <?= $staff['is_active'] ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="is_active">
+                                    <i class="fas fa-check-circle me-1"></i> Active Account
+                                </label>
+                            </div>
+                            <small class="text-muted">Uncheck to deactivate this account</small>
+                        </div>
+
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Current Status</label>

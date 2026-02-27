@@ -4,11 +4,11 @@
     <footer class="text-center py-4 mt-5" style="background: rgba(10, 14, 39, 0.95); border-top: 1px solid var(--border-color); backdrop-filter: blur(20px);">
         <div class="container">
             <p class="mb-2" style="color: var(--text-secondary);">
-                &copy; 2024 Quick Puff Vape Shop. All rights reserved.
+                &copy; 2024 QuickPuff VapeShop. All rights reserved.
             </p>
             <small style="color: var(--text-muted);">
                 <i class="fas fa-bolt me-1"></i> 
-                Powered by Quick Puff POS System v1.0.0
+                Powered by QuickPuff POS System 
             </small>
         </div>
     </footer>

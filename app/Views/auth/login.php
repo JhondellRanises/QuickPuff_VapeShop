@@ -20,14 +20,8 @@
             <div class="branding-content">
                 <!-- Logo -->
                 <div class="brand-logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
+                    <img src="<?= base_url('public/QuickPuff logo.png') ?>" alt="QuickPuff Logo" class="quickpuff-logo">
                 </div>
-                
-                <!-- System Name -->
-                <h1 class="brand-title">Quick Puff Vape Shop</h1>
-                <p class="brand-subtitle">SYSTEM</p>
             </div>
             
             <!-- Smoke Effects -->

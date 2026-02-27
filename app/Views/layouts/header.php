@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? esc($title) : 'Quick Puff Vape Shop' ?></title>
+    <title><?= isset($title) ? esc($title) : 'QuickPuff VapeShop' ?></title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -962,6 +962,41 @@
         }
 
         .table-info .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Form Checkboxes - Fixed styling */
+        .form-check {
+            margin-bottom: 1rem;
+        }
+
+        .form-check-input {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-purple) !important;
+            border-color: var(--primary-purple) !important;
+        }
+
+        .form-check-label {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        /* Ensure all form labels are visible */
+        .form-label,
+        label {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+        }
+
+        /* Fix muted text in forms */
+        .form-text,
+        .text-muted {
             color: var(--text-muted) !important;
         }
 

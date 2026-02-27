@@ -156,6 +156,7 @@ class Staff extends BaseController
         $data = [
             'full_name' => trim($this->request->getPost('full_name')),
             'role' => $this->request->getPost('role'),
+            'is_active' => $this->request->getPost('is_active') ? 1 : 0
         ];
 
         // Add password only if provided
