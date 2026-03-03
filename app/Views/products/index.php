@@ -101,6 +101,7 @@
                             <th>Name</th>
                             <th>Category</th>
                             <th>Brand</th>
+                            <th>Image</th>
                             <th>Price</th>
                             <th>Stock Qty</th>
                             <th>Status</th>
@@ -120,6 +121,21 @@
                                             <?= esc($product['brand']) ?>
                                         <?php else: ?>
                                             <span class="text-muted">N/A</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($product['image_url'])): ?>
+                                            <?php
+                                                $imageUrl = (string) $product['image_url'];
+                                                $imageHref = preg_match('#^(?:https?:)?//#i', $imageUrl) || strpos($imageUrl, 'data:image') === 0
+                                                    ? $imageUrl
+                                                    : base_url(ltrim($imageUrl, '/'));
+                                            ?>
+                                            <a href="<?= esc($imageHref) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-image me-1"></i>View
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted">Default</span>
                                         <?php endif; ?>
                                     </td>
                                     <td>$<?= number_format((float) $product['price'], 2) ?></td>
@@ -168,7 +184,7 @@
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="9" class="text-center text-muted py-4">
+                                <td colspan="10" class="text-center text-muted py-4">
                                     <i class="fas fa-box-open fa-3x mb-3 d-block text-muted"></i>
                                     No products found.
                                     <a href="<?= site_url('/products/create') ?>" class="btn btn-primary btn-sm mt-2">

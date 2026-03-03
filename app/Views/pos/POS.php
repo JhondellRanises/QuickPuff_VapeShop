@@ -1,5 +1,20 @@
 <?= $this->include('layouts/header') ?>
 
+<?php
+$defaultVapeSvg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 340'>"
+    . "<defs><linearGradient id='grad' x1='0' y1='0' x2='1' y2='1'>"
+    . "<stop offset='0%' stop-color='#243251'/><stop offset='100%' stop-color='#4f73d8'/>"
+    . "</linearGradient></defs>"
+    . "<rect width='600' height='340' fill='url(#grad)'/>"
+    . "<g fill='none' stroke='#e7edff' stroke-width='14' stroke-linecap='round' stroke-linejoin='round' opacity='0.95'>"
+    . "<rect x='258' y='72' width='84' height='188' rx='28'/>"
+    . "<path d='M286 58h28'/><path d='M272 234h56'/>"
+    . "</g>"
+    . "<text x='300' y='302' font-family='Arial, sans-serif' font-size='28' fill='#f2f6ff' text-anchor='middle'>VAPE PRODUCT</text>"
+    . "</svg>";
+$defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultVapeSvg);
+?>
+
 <div class="container-fluid py-4">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -53,10 +68,25 @@
                     <div class="row" id="productsContainer">
                         <?php if (!empty($products)): ?>
                             <?php foreach ($products as $product): ?>
+                                <?php
+                                    $productImage = trim((string) ($product['image_url'] ?? ''));
+                                    if ($productImage === '') {
+                                        $productImage = $defaultVapeImage;
+                                    } elseif (!preg_match('#^(?:https?:)?//#i', $productImage) && strpos($productImage, 'data:image') !== 0) {
+                                        $productImage = base_url(ltrim($productImage, '/'));
+                                    }
+                                ?>
                                 <div class="col-md-6 col-lg-4 mb-3 product-item" 
                                      data-category="<?= esc($product['category']) ?>" 
                                      data-name="<?= esc($product['name']) ?>">
                                     <div class="card h-100 product-card">
+                                        <div class="product-image-wrap">
+                                            <img src="<?= esc($productImage, 'attr') ?>"
+                                                 class="product-image"
+                                                 alt="<?= esc($product['name']) ?> image"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null;this.src='<?= esc($defaultVapeImage, 'attr') ?>';">
+                                        </div>
                                         <div class="card-body">
                                             <h6 class="card-title"><?= esc($product['name']) ?></h6>
                                             <p class="card-text">
@@ -146,6 +176,23 @@
 </div>
 
 <style>
+/* Product card image support with default vape fallback */
+.product-card .product-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(93, 155, 255, 0.22), rgba(111, 107, 255, 0.32));
+}
+
+.product-card .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 /* Cart text contrast fixes */
 #cartItems strong {
     color: #f4f7ff !important;

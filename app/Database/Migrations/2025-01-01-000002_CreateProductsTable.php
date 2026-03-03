@@ -29,6 +29,11 @@ class CreateProductsTable extends Migration
                 'constraint' => 100,
                 'null' => true,
             ],
+            'image_url' => [
+                'type' => 'VARCHAR',
+                'constraint' => 2048,
+                'null' => true,
+            ],
             'price' => [
                 'type' => 'DECIMAL',
                 'constraint' => '10,2',

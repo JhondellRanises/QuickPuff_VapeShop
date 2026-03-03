@@ -52,16 +52,6 @@ class Auth extends BaseController
             return redirect()->to('/login')->withInput();
         }
 
-        // Rate limiting check (basic implementation)
-        $loginAttempts = session()->get('login_attempts') ?? 0;
-        $lastAttempt = session()->get('last_attempt_time');
-        
-        if ($loginAttempts >= 3 && $lastAttempt && (time() - $lastAttempt) < 300) {
-            $remainingTime = 300 - (time() - $lastAttempt);
-            session()->setFlashdata('error', 'Too many failed attempts. Please try again in ' . ceil($remainingTime / 60) . ' minutes.');
-            return redirect()->to('/login')->withInput();
-        }
-
         try {
             // Get user from database
             $user = $this->userModel->getUserByUsername($username);
@@ -73,9 +63,6 @@ class Auth extends BaseController
                     session()->setFlashdata('error', 'Your account has been deactivated. Please contact the administrator.');
                     return redirect()->to('/login')->withInput();
                 }
-
-                // Clear login attempts on successful login
-                session()->remove(['login_attempts', 'last_attempt_time']);
 
                 // Set session data
                 session()->set([
@@ -113,12 +100,7 @@ class Auth extends BaseController
                 log_message('warning', 'Failed login attempt for username: ' . $username);
 
                 // Generic error message for security
-                $remainingAttempts = 3 - $loginAttempts;
-                if ($remainingAttempts > 0) {
-                    session()->setFlashdata('error', 'Invalid username or password. ' . $remainingAttempts . ' attempts remaining.');
-                } else {
-                    session()->setFlashdata('error', 'Invalid username or password. Account temporarily locked due to too many failed attempts.');
-                }
+                session()->setFlashdata('error', 'Invalid username or password.');
                 
                 return redirect()->to('/login')->withInput();
             }

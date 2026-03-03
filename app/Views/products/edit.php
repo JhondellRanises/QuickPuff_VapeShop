@@ -22,7 +22,7 @@
                     <span class="badge bg-info">ID: <?= (int) $product['id'] ?></span>
                 </div>
                 <div class="card-body">
-                    <form action="<?= site_url('/products/update/' . $product['id']) ?>" method="POST">
+                    <form action="<?= site_url('/products/update/' . $product['id']) ?>" method="POST" enctype="multipart/form-data">
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
@@ -60,6 +60,31 @@
                                        value="<?= old('brand', $product['brand']) ?>">
                             </div>
                         </div>
+
+                        <div class="mb-3">
+                            <label for="image_file" class="form-label">Product Image Upload</label>
+                            <input type="file"
+                                   class="form-control"
+                                   id="image_file"
+                                   name="image_file"
+                                   accept="image/jpeg,image/png,image/webp,image/gif">
+                            <small class="text-muted">Optional. Choose a new file to replace the current image (max 4MB).</small>
+                        </div>
+
+                        <?php if (!empty($product['image_url'])): ?>
+                            <?php
+                                $currentImageUrl = (string) $product['image_url'];
+                                $currentImageSrc = preg_match('#^(?:https?:)?//#i', $currentImageUrl) || strpos($currentImageUrl, 'data:image') === 0
+                                    ? $currentImageUrl
+                                    : base_url(ltrim($currentImageUrl, '/'));
+                            ?>
+                            <div class="mb-3">
+                                <label class="form-label d-block">Current Image</label>
+                                <img src="<?= esc($currentImageSrc) ?>"
+                                     alt="<?= esc($product['name']) ?> current image"
+                                     style="width: 120px; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+                            </div>
+                        <?php endif; ?>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">

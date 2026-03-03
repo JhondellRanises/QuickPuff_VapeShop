@@ -8,7 +8,7 @@ class ProductModel extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'category', 'brand', 'price', 'stock_qty', 'is_active'];
+    protected $allowedFields = ['name', 'category', 'brand', 'image_url', 'price', 'stock_qty', 'is_active'];
     protected $returnType = 'array';
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
@@ -19,6 +19,7 @@ class ProductModel extends Model
         'name' => 'required|max_length[255]',
         'category' => 'required|max_length[100]',
         'brand' => 'max_length[100]',
+        'image_url' => 'permit_empty|max_length[2048]',
         'price' => 'required|numeric|greater_than_equal_to[0]',
         'stock_qty' => 'required|integer|greater_than_equal_to[0]',
     ];

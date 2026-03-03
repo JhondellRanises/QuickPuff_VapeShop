@@ -21,7 +21,7 @@
                     <h5 class="card-title mb-0">Product Information</h5>
                 </div>
                 <div class="card-body">
-                    <form action="<?= site_url('/products/store') ?>" method="POST">
+                    <form action="<?= site_url('/products/store') ?>" method="POST" enctype="multipart/form-data">
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
@@ -58,6 +58,16 @@
                                        placeholder="Optional brand name"
                                        value="<?= old('brand') ?>">
                             </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image_file" class="form-label">Product Image Upload</label>
+                            <input type="file"
+                                   class="form-control"
+                                   id="image_file"
+                                   name="image_file"
+                                   accept="image/jpeg,image/png,image/webp,image/gif">
+                            <small class="text-muted">Optional. Choose JPG, PNG, WEBP, or GIF (max 4MB).</small>
                         </div>
 
                         <div class="row">
