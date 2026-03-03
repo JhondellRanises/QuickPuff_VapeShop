@@ -94,6 +94,48 @@ class POS extends BaseController
             }
             
             $cart = $data['cart'] ?? [];
+            $customerBirthdate = trim((string) ($data['customer_birthdate'] ?? ''));
+
+            if ($customerBirthdate === '') {
+                log_message('warning', 'Age verification failed: missing customer birth date');
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Customer birth date is required. Sales are only allowed for customers aged 18 and above.'
+                ]);
+            }
+
+            $birthDate = \DateTime::createFromFormat('Y-m-d', $customerBirthdate);
+            $birthDateErrors = \DateTime::getLastErrors();
+            $hasBirthDateErrors = $birthDate === false
+                || ($birthDateErrors !== false && (($birthDateErrors['warning_count'] ?? 0) > 0 || ($birthDateErrors['error_count'] ?? 0) > 0))
+                || $birthDate->format('Y-m-d') !== $customerBirthdate;
+
+            if ($hasBirthDateErrors) {
+                log_message('warning', 'Age verification failed: invalid birth date format [' . $customerBirthdate . ']');
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Invalid birth date format. Please use YYYY-MM-DD.'
+                ]);
+            }
+
+            $today = new \DateTime('today');
+            if ($birthDate > $today) {
+                log_message('warning', 'Age verification failed: future birth date [' . $customerBirthdate . ']');
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Birth date cannot be in the future.'
+                ]);
+            }
+
+            $customerAge = $birthDate->diff($today)->y;
+            if ($customerAge < 18) {
+                log_message('warning', 'Sale blocked: underage customer [' . $customerAge . ']');
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Sale blocked: customer must be 18 years old or above.'
+                ]);
+            }
+            log_message('info', 'Age verification passed. Customer age: ' . $customerAge);
             
             // Validate cart structure
             if (!is_array($cart)) {

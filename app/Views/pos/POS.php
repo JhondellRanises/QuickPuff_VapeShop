@@ -124,6 +124,17 @@
                             <h5 id="total">₱0.00</h5>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label for="customerBirthDate" class="form-label">
+                            Customer Birth Date <span class="text-danger">*</span>
+                        </label>
+                        <input type="date"
+                               class="form-control"
+                               id="customerBirthDate"
+                               max="<?= date('Y-m-d') ?>"
+                               required>
+                        <small class="text-muted d-block mt-1">Age restriction: 18 years old and above only.</small>
+                    </div>
                     <button class="btn btn-success btn-lg w-100" onclick="processSale()" id="processSaleBtn" disabled>
                         <i class="fas fa-credit-card me-2"></i>
                         Process Sale
@@ -392,9 +403,70 @@ function clearCart() {
     }
 }
 
+function getCustomerAge(birthDateValue) {
+    if (!birthDateValue || !/^\d{4}-\d{2}-\d{2}$/.test(birthDateValue)) {
+        return null;
+    }
+
+    const birthDate = new Date(`${birthDateValue}T00:00:00`);
+    if (Number.isNaN(birthDate.getTime())) {
+        return null;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    return age;
+}
+
+function validateAgeRestriction() {
+    const birthDateInput = document.getElementById('customerBirthDate');
+    const birthDateValue = (birthDateInput?.value || '').trim();
+
+    if (!birthDateValue) {
+        return {
+            isValid: false,
+            message: 'Please enter customer birth date before processing sale.'
+        };
+    }
+
+    const age = getCustomerAge(birthDateValue);
+    if (age === null) {
+        return {
+            isValid: false,
+            message: 'Invalid birth date. Please use a valid date.'
+        };
+    }
+
+    if (age < 18) {
+        return {
+            isValid: false,
+            message: 'Sale blocked: customer must be 18 years old or above.'
+        };
+    }
+
+    return {
+        isValid: true,
+        birthDate: birthDateValue
+    };
+}
+
 function processSale() {
     if (cart.length === 0) {
         alert('Your cart is empty!');
+        return;
+    }
+
+    const ageValidation = validateAgeRestriction();
+    if (!ageValidation.isValid) {
+        alert(ageValidation.message);
         return;
     }
     
@@ -406,7 +478,8 @@ function processSale() {
     
     // Prepare request data
     const requestData = {
-        cart: cart
+        cart: cart,
+        customer_birthdate: ageValidation.birthDate
     };
     
     console.log('Sending cart data:', requestData);
@@ -428,12 +501,18 @@ function processSale() {
             // Clear cart immediately
             cart = [];
             updateCart();
+            const birthDateInput = document.getElementById('customerBirthDate');
+            if (birthDateInput) {
+                birthDateInput.value = '';
+            }
             
             // Show receipt modal
             showReceiptModal(data);
             
         } else {
             alert('Error: ' + data.message);
+            processBtn.disabled = false;
+            processBtn.innerHTML = originalText;
         }
     })
     .catch(error => {
