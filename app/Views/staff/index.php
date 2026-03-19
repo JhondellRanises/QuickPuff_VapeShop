@@ -28,10 +28,10 @@
                     For security reasons, you cannot edit or deactivate your own account
                 </small>
             </div>
-            <a href="<?= site_url('/staff/create') ?>" class="btn btn-primary">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                 <i class="fas fa-plus me-2"></i>
                 Add New Staff
-            </a>
+            </button>
         </div>
     </div>
 
@@ -166,9 +166,9 @@
                                 <td colspan="7" class="text-center text-muted py-4">
                                     <i class="fas fa-users fa-3x mb-3 d-block text-muted"></i>
                                     No staff members found. 
-                                    <a href="<?= site_url('/staff/create') ?>" class="btn btn-primary btn-sm mt-2">
+                                    <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#addUserModal">
                                         Add your first staff member
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -178,5 +178,122 @@
         </div>
     </div>
 </div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">
+                    <i class="fas fa-user-plus me-2"></i>Add New Staff
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addUserForm" action="<?= site_url('/staff/store') ?>" method="POST">
+                <?= csrf_field() ?>
+                <div class="modal-body">
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-user me-1"></i> Username
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="username" 
+                               name="username" 
+                               required
+                               placeholder="Enter username">
+                        <small class="text-muted">Username must be at least 3 characters long</small>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">
+                            <i class="fas fa-id-card me-1"></i> Full Name
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="full_name" 
+                               name="full_name" 
+                               required
+                               placeholder="Enter full name">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock me-1"></i> Password
+                        </label>
+                        <div class="input-group">
+                            <input type="password" 
+                                   class="form-control password-input" 
+                                   id="password" 
+                                   name="password" 
+                                   required
+                                   placeholder="Enter password">
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                <i class="fas fa-eye" id="password-toggle"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted">Password must be at least 6 characters long</small>
+                    </div>
+
+                    <!-- Role -->
+                    <div class="mb-3">
+                        <label for="role" class="form-label">
+                            <i class="fas fa-user-tag me-1"></i> Role
+                        </label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="staff">Staff</option>
+                        </select>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" checked>
+                            <label class="form-check-label" for="is_active">
+                                <i class="fas fa-check-circle me-1"></i> Active Account
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Create Staff
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const toggleIcon = document.getElementById(fieldId + '-toggle');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Simple form submission without AJAX for now
+document.getElementById('addUserForm').addEventListener('submit', function(e) {
+    console.log('Form submitted normally');
+    // Let it submit normally for now
+});
+</script>
 
 <?= $this->include('layouts/footer') ?>

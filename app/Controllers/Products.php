@@ -20,27 +20,45 @@ class Products extends BaseController
     {
         $search = trim((string) $this->request->getGet('q'));
         $status = strtolower(trim((string) $this->request->getGet('status')));
+        $category = trim((string) $this->request->getGet('category_filter'));
+        $brand = trim((string) $this->request->getGet('brand_filter'));
+        
         $allowedStatuses = ['', 'active', 'inactive'];
 
         if (!in_array($status, $allowedStatuses, true)) {
             $status = '';
         }
 
-        $products = $this->productModel->getStockManagementList($search, $status);
+        // Use the new grouped method with additional filters
+        $groupedProducts = $this->productModel->getProductsGroupedByCategory($search, $status, $category, $brand);
         $stats = $this->productModel->getStockSummary();
         $allProductsForImageMap = $this->productModel->findAll();
         $this->syncImageSeedMapFromProducts($allProductsForImageMap);
+        
+        // Get unique categories and brands
+        $categories = $this->productModel->getDistinctCategories();
+        $brands = $this->productModel->getDistinctBrands();
+
+        // Count total products for display
+        $totalProducts = 0;
+        foreach ($groupedProducts as $categoryProducts) {
+            $totalProducts += count($categoryProducts);
+        }
 
         $data = [
             'title' => 'Stock Management - Quick Puff Vape Shop',
             'user' => $this->getCurrentUser(),
-            'products' => $products,
-            'filtered_count' => count($products),
+            'groupedProducts' => $groupedProducts,
+            'totalProducts' => $totalProducts,
             'filters' => [
                 'q' => $search,
                 'status' => $status,
+                'category_filter' => $category,
+                'brand_filter' => $brand,
             ],
             'stats' => $stats,
+            'categories' => $categories,
+            'brands' => $brands,
         ];
 
         return view('products/index', $data);
@@ -64,11 +82,27 @@ class Products extends BaseController
      */
     public function store()
     {
+        // Check if this is an AJAX request from modal
+        $isAjax = $this->request->isAJAX();
+        
+        log_message('info', 'Product store method called. AJAX: ' . ($isAjax ? 'Yes' : 'No'));
+        
         $data = $this->getProductFormData();
+        log_message('info', 'Form data: ' . json_encode($data));
 
         if (!$this->validate($this->getValidationRules())) {
-            session()->setFlashdata('error', $this->buildValidationMessage());
-            return redirect()->to('/products/create')->withInput();
+            $validationErrors = $this->validator->getErrors();
+            log_message('error', 'Validation failed: ' . json_encode($validationErrors));
+            
+            if ($isAjax) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $this->buildValidationMessage()
+                ]);
+            } else {
+                session()->setFlashdata('error', $this->buildValidationMessage());
+                return redirect()->to('/products/create')->withInput();
+            }
         }
 
         try {
@@ -77,26 +111,58 @@ class Products extends BaseController
                 $data['image_url'] = $uploadedImagePath;
             }
 
+            log_message('info', 'Attempting to insert product with data: ' . json_encode($data));
+
             if ($this->productModel->insert($data)) {
+                $productId = $this->productModel->getInsertID();
+                log_message('info', 'Product inserted successfully with ID: ' . $productId);
+                
                 $this->syncImageSeedMap(
                     null,
                     (string) ($data['name'] ?? ''),
                     $data['image_url'] ?? null
                 );
-
-                session()->setFlashdata('success', 'Product created successfully.');
-                return redirect()->to('/products');
+                
+                $productName = $data['name'] ?? 'Product';
+                $successMessage = "✅ {$productName} has been successfully added to inventory!";
+                
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        'success' => true,
+                        'message' => $successMessage,
+                        'redirect' => site_url('/products')
+                    ]);
+                } else {
+                    session()->setFlashdata('success', $successMessage);
+                    return redirect()->to('/products');
+                }
+            } else {
+                log_message('error', 'Product insert failed. Database error: ' . json_encode($this->productModel->errors()));
+                $errorMessage = 'Failed to add product. Please try again.';
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => $errorMessage
+                    ]);
+                } else {
+                    session()->setFlashdata('error', $errorMessage);
+                    return redirect()->to('/products/create')->withInput();
+                }
             }
-
-            session()->setFlashdata('error', 'Failed to create product. Please try again.');
-            return redirect()->to('/products/create')->withInput();
-        } catch (\RuntimeException $e) {
-            session()->setFlashdata('error', $e->getMessage());
-            return redirect()->to('/products/create')->withInput();
         } catch (\Exception $e) {
-            log_message('error', 'Product create error: ' . $e->getMessage());
-            session()->setFlashdata('error', 'An unexpected error occurred while creating the product.');
-            return redirect()->to('/products/create')->withInput();
+            log_message('error', 'Product store error: ' . $e->getMessage());
+            log_message('error', 'Exception trace: ' . $e->getTraceAsString());
+            $errorMessage = 'An unexpected error occurred while adding the product.';
+            
+            if ($isAjax) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $errorMessage . ' Error: ' . $e->getMessage()
+                ]);
+            } else {
+                session()->setFlashdata('error', $errorMessage);
+                return redirect()->to('/products/create')->withInput();
+            }
         }
     }
 
@@ -112,10 +178,16 @@ class Products extends BaseController
             return redirect()->to('/products');
         }
 
+        // Get unique categories and brands for dropdowns
+        $categories = $this->productModel->getDistinctCategories();
+        $brands = $this->productModel->getDistinctBrands();
+
         $data = [
             'title' => 'Edit Product - Quick Puff Vape Shop',
             'user' => $this->getCurrentUser(),
             'product' => $product,
+            'categories' => $categories,
+            'brands' => $brands,
         ];
 
         return view('products/edit', $data);
@@ -174,7 +246,7 @@ class Products extends BaseController
     }
 
     /**
-     * Soft delete product by deactivating it.
+     * Delete product permanently.
      */
     public function delete($id)
     {
@@ -186,14 +258,14 @@ class Products extends BaseController
         }
 
         try {
-            if ($this->productModel->update($id, ['is_active' => 0])) {
-                session()->setFlashdata('success', 'Product deactivated successfully.');
+            if ($this->productModel->delete($id)) {
+                session()->setFlashdata('success', 'Product deleted successfully.');
             } else {
-                session()->setFlashdata('error', 'Failed to deactivate product.');
+                session()->setFlashdata('error', 'Failed to delete product.');
             }
         } catch (\Exception $e) {
             log_message('error', 'Product delete error: ' . $e->getMessage());
-            session()->setFlashdata('error', 'An unexpected error occurred while deactivating the product.');
+            session()->setFlashdata('error', 'An unexpected error occurred while deleting the product.');
         }
 
         return redirect()->to('/products');
@@ -227,15 +299,26 @@ class Products extends BaseController
 
     private function getProductFormData(): array
     {
+        $category = trim((string) $this->request->getPost('category'));
         $brand = trim((string) $this->request->getPost('brand'));
+        $flavorCategory = trim((string) $this->request->getPost('flavor_category'));
+        $flavor = trim((string) $this->request->getPost('flavor'));
+        $customFlavor = trim((string) $this->request->getPost('custom_flavor'));
+        $puffs = trim((string) $this->request->getPost('puffs'));
+
+        // Use custom flavor if provided, otherwise use selected flavor
+        $finalFlavor = $customFlavor !== '' ? $customFlavor : $flavor;
 
         return [
             'name' => trim((string) $this->request->getPost('name')),
-            'category' => trim((string) $this->request->getPost('category')),
+            'category' => $category,
             'brand' => $brand === '' ? null : $brand,
             'price' => (float) $this->request->getPost('price'),
             'stock_qty' => (int) $this->request->getPost('stock_qty'),
             'is_active' => $this->request->getPost('is_active') === '0' ? 0 : 1,
+            'flavor' => $finalFlavor === '' ? null : $finalFlavor,
+            'flavor_category' => $flavorCategory === '' ? null : $flavorCategory,
+            'puffs' => $puffs === '' ? null : (int) $puffs,
         ];
     }
 
@@ -248,6 +331,9 @@ class Products extends BaseController
             'price' => 'required|numeric|greater_than_equal_to[0]',
             'stock_qty' => 'required|integer|greater_than_equal_to[0]',
             'is_active' => 'required|in_list[0,1]',
+            'flavor' => 'permit_empty|max_length[100]',
+            'flavor_category' => 'permit_empty|max_length[50]',
+            'puffs' => 'permit_empty|integer|greater_than_equal_to[0]',
         ];
     }
 

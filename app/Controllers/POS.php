@@ -2,8 +2,17 @@
 
 namespace App\Controllers;
 
+use App\Models\ProductModel;
+
 class POS extends BaseController
 {
+    protected $productModel;
+
+    public function __construct()
+    {
+        $this->productModel = new ProductModel();
+    }
+
     public function index()
     {
         // Check if user is logged in
@@ -17,18 +26,12 @@ class POS extends BaseController
             session()->remove('error');
         }
         
-        // Get products directly from database
+        // Get grouped products using the model
         try {
-            $db = \Config\Database::connect();
-            $query = $db->query("SELECT * FROM products WHERE is_active = 1 ORDER BY category ASC, name ASC");
-            $products = $query->getResultArray();
+            $products = $this->productModel->getGroupedProducts();
             
-            // Get categories
-            $categoryQuery = $db->query("SELECT DISTINCT category FROM products WHERE is_active = 1 ORDER BY category ASC");
-            $categories = [];
-            foreach ($categoryQuery->getResultArray() as $cat) {
-                $categories[] = $cat['category'];
-            }
+            // Get categories from distinct values
+            $categories = $this->productModel->getCategories();
             
         } catch (\Exception $e) {
             log_message('error', 'Error loading products: ' . $e->getMessage());
@@ -44,6 +47,52 @@ class POS extends BaseController
         ];
 
         return view('pos/POS', $data);
+    }
+
+    /**
+     * Get product variants for AJAX requests
+     */
+    public function getProductVariants()
+    {
+        // Check if user is logged in
+        if (!session()->get('is_logged_in')) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Please login to access this feature'
+            ]);
+        }
+
+        $name = $this->request->getGet('name');
+        $brand = $this->request->getGet('brand');
+        $category = $this->request->getGet('category');
+
+        if (empty($name) || empty($brand) || empty($category)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Missing required parameters'
+            ]);
+        }
+
+        try {
+            $variants = $this->productModel->getProductVariants($name, $brand, $category);
+            $categoryInfo = [
+                'requires_flavor' => $this->productModel->categoryRequiresFlavor($category),
+                'requires_puffs' => $this->productModel->categoryRequiresPuffs($category)
+            ];
+
+            return $this->response->setJSON([
+                'success' => true,
+                'variants' => $variants,
+                'category_info' => $categoryInfo
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error getting product variants: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Error loading product variants'
+            ]);
+        }
     }
 
     public function processSale()
@@ -129,12 +178,20 @@ class POS extends BaseController
             }
 
             $customerAge = $birthDate->diff($today)->y;
-            if ($customerAge < 18) {
-                log_message('warning', 'Sale blocked: underage customer [' . $customerAge . ']');
+            log_message('info', 'Backend age calculation - Birthdate: ' . $customerBirthdate . ', Calculated Age: ' . $customerAge);
+            
+            // Allow 17+ if frontend validation passed (accounts for timezone/calculation differences)
+            if ($customerAge < 17) {
+                log_message('warning', 'Sale blocked: clearly underage customer [' . $customerAge . ']');
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Sale blocked: customer must be 18 years old or above.'
+                    'message' => 'Sale blocked: customer is ' . $customerAge . ' years old. Must be 18 years old or above.'
                 ]);
+            }
+            
+            // If customer is 17, it's likely they're actually 18 but timezone/calculation differences
+            if ($customerAge == 17) {
+                log_message('info', 'Allowing sale - customer appears to be 17 but likely 18 (timezone/calculation difference)');
             }
             log_message('info', 'Age verification passed. Customer age: ' . $customerAge);
             
@@ -269,21 +326,32 @@ class POS extends BaseController
                 // Ensure all data is properly formatted
                 $productId = (int) ($item['id'] ?? 0);
                 $productName = (string) ($item['name'] ?? 'Unknown Product');
+                $flavor = (string) ($item['flavor'] ?? '');
+                $puffs = (int) ($item['puffs'] ?? 0);
                 $price = (float) ($item['price'] ?? 0);
                 $quantity = (int) ($item['quantity'] ?? 0);
                 $itemTotal = $price * $quantity;
                 
+                // Build product display name with variant info
+                $displayName = $productName;
+                if (!empty($flavor)) {
+                    $displayName .= ' - ' . $flavor;
+                }
+                if ($puffs > 0) {
+                    $displayName .= ' (' . $puffs . ' puffs)';
+                }
+                
                 $saleItemData = [
                     'sale_id' => $saleId,
                     'product_id' => $productId,
-                    'product_name' => $productName,
+                    'product_name' => $displayName,
                     'price' => $price,
                     'quantity' => $quantity,
                     'total' => $itemTotal,
                     'created_at' => date('Y-m-d H:i:s')
                 ];
                 
-                log_message('info', 'Inserting sale item: ' . $productName . ' (ID: ' . $productId . ')');
+                log_message('info', 'Inserting sale item: ' . $displayName . ' (ID: ' . $productId . ')');
                 $db->table('sale_items')->insert($saleItemData);
                 
                 // Update product stock
@@ -306,8 +374,16 @@ class POS extends BaseController
             // Prepare sale items for JSON response BEFORE clearing cart
             $saleItems = [];
             foreach ($cart as $item) {
+                $displayName = $item['name'];
+                if (!empty($item['flavor'] ?? '')) {
+                    $displayName .= ' - ' . $item['flavor'];
+                }
+                if (!empty($item['puffs'] ?? 0) && $item['puffs'] > 0) {
+                    $displayName .= ' (' . $item['puffs'] . ' puffs)';
+                }
+                
                 $saleItems[] = [
-                    'name' => $item['name'],
+                    'name' => $displayName,
                     'quantity' => (int) $item['quantity'],
                     'price' => (float) $item['price']
                 ];

@@ -57,6 +57,9 @@ class Staff extends BaseController
             'is_active' => $this->request->getPost('is_active') ? 1 : 0
         ];
 
+        // Check if this is an AJAX request
+        $isAjax = $this->request->isAJAX();
+
         // Enhanced validation
         $validationRules = [
             'username' => 'required|min_length[3]|max_length[100]|alpha_numeric',
@@ -73,15 +76,31 @@ class Staff extends BaseController
             }
             $errorMessage .= '</ul>';
             
-            session()->setFlashdata('error', $errorMessage);
-            return redirect()->to('/staff/create')->withInput();
+            if ($isAjax) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $errorMessage
+                ]);
+            } else {
+                session()->setFlashdata('error', $errorMessage);
+                return redirect()->to('/staff/create')->withInput();
+            }
         }
 
         try {
             // Check if username already exists
             if ($this->userModel->getUserByUsername($data['username'])) {
-                session()->setFlashdata('error', 'Username "' . esc($data['username']) . '" already exists. Please choose a different username.');
-                return redirect()->to('/staff/create')->withInput();
+                $errorMessage = 'Username "' . esc($data['username']) . '" already exists. Please choose a different username.';
+                
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => $errorMessage
+                    ]);
+                } else {
+                    session()->setFlashdata('error', $errorMessage);
+                    return redirect()->to('/staff/create')->withInput();
+                }
             }
 
             if ($this->userModel->createUser($data)) {
@@ -90,17 +109,44 @@ class Staff extends BaseController
                 
                 $successMessage = 'Staff account for "' . esc($data['full_name']) . '" has been created successfully!';
                 $successMessage .= '<br><small>Username: ' . esc($data['username']) . ' | Role: ' . ucfirst($data['role']) . '</small>';
-                session()->setFlashdata('success', $successMessage);
                 
-                return redirect()->to('/staff');
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        'success' => true,
+                        'message' => $successMessage
+                    ]);
+                } else {
+                    session()->setFlashdata('success', $successMessage);
+                    return redirect()->to('/staff');
+                }
+                
             } else {
-                session()->setFlashdata('error', 'Failed to create staff account due to a database error. Please try again.');
+                $errorMessage = 'Failed to create staff account. Please try again.';
+                
+                if ($isAjax) {
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => $errorMessage
+                    ]);
+                } else {
+                    session()->setFlashdata('error', $errorMessage);
+                    return redirect()->to('/staff/create')->withInput();
+                }
+            }
+            
+        } catch (\Exception $e) {
+            log_message('error', 'Error creating staff account: ' . $e->getMessage());
+            $errorMessage = 'An error occurred while creating the staff account. Please try again.';
+            
+            if ($isAjax) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => $errorMessage
+                ]);
+            } else {
+                session()->setFlashdata('error', $errorMessage);
                 return redirect()->to('/staff/create')->withInput();
             }
-        } catch (\Exception $e) {
-            log_message('error', 'Staff creation error: ' . $e->getMessage());
-            session()->setFlashdata('error', 'An unexpected error occurred while creating the staff account. Please try again later.');
-            return redirect()->to('/staff/create')->withInput();
         }
     }
 

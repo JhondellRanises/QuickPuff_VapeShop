@@ -174,10 +174,10 @@
 
                     <!-- Receipt Header -->
                     <div class="receipt-header">
-                        <div class="receipt-shop-name">Quick Puff Vape Shop</div>
-                        <div class="receipt-shop-address">123 Vape Street, Manila, Philippines</div>
-                        <div class="receipt-shop-address">Tel: (02) 1234-5678</div>
-                        <div class="receipt-shop-address">Email: info@quickpuff.com</div>
+                        <div class="receipt-shop-name">QuickPuff VapeShop</div>
+                        <div class="receipt-shop-address">Bula, General Santos City, South Cotabato</div>
+                        <div class="receipt-shop-address">Tel: 09365879409</div>
+                        <div class="receipt-shop-address">Email: quickpuff@gmail.com</div>
                     </div>
 
                     <!-- Sale Information -->
@@ -195,7 +195,7 @@
                         <div class="row mt-2">
                             <div class="col-6">
                                 <strong>Cashier:</strong><br>
-                                <span><?= session()->get('username') ?? 'Staff' ?></span>
+                                <span><?= session()->get('full_name') ?? session()->get('username') ?? 'Staff' ?></span>
                             </div>
                             <div class="col-6 text-end">
                                 <strong>Payment:</strong><br>
@@ -255,9 +255,6 @@
                         </div>
                         <div class="mb-2">
                             Please come again
-                        </div>
-                        <div>
-                            <small>This is a computer-generated receipt</small>
                         </div>
                     </div>
                 </div>

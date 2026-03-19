@@ -8,7 +8,7 @@ class ProductModel extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'category', 'brand', 'image_url', 'price', 'stock_qty', 'is_active'];
+    protected $allowedFields = ['name', 'category', 'brand', 'image_url', 'price', 'stock_qty', 'is_active', 'flavor', 'flavor_category', 'puffs'];
     protected $returnType = 'array';
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
@@ -22,6 +22,9 @@ class ProductModel extends Model
         'image_url' => 'permit_empty|max_length[2048]',
         'price' => 'required|numeric|greater_than_equal_to[0]',
         'stock_qty' => 'required|integer|greater_than_equal_to[0]',
+        'flavor' => 'permit_empty|max_length[100]',
+        'flavor_category' => 'permit_empty|max_length[50]',
+        'puffs' => 'permit_empty|integer|greater_than_equal_to[0]',
     ];
 
     protected $validationMessages = [
@@ -146,6 +149,53 @@ class ProductModel extends Model
     }
 
     /**
+     * Get products grouped by category for better organization.
+     */
+    public function getProductsGroupedByCategory(string $search = '', string $status = '', string $category = '', string $brand = ''): array
+    {
+        $builder = $this->builder();
+
+        if ($status === 'active') {
+            $builder->where('is_active', 1);
+        } elseif ($status === 'inactive') {
+            $builder->where('is_active', 0);
+        }
+
+        if ($category !== '') {
+            $builder->where('category', $category);
+        }
+
+        if ($brand !== '') {
+            $builder->where('brand', $brand);
+        }
+
+        if ($search !== '') {
+            $builder->groupStart()
+                ->like('name', $search)
+                ->orLike('category', $search)
+                ->orLike('brand', $search)
+                ->orLike('flavor', $search)
+                ->groupEnd();
+        }
+
+        $products = $builder->orderBy('category', 'ASC')
+            ->orderBy('brand', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->orderBy('flavor', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        // Group products by category
+        $groupedProducts = [];
+        foreach ($products as $product) {
+            $cat = $product['category'] ?: 'Uncategorized';
+            $groupedProducts[$cat][] = $product;
+        }
+
+        return $groupedProducts;
+    }
+
+    /**
      * Get products for stock management list with optional filters.
      */
     public function getStockManagementList(string $search = '', string $status = ''): array
@@ -194,6 +244,141 @@ class ProductModel extends Model
             'active' => (int) ($row['active_products'] ?? 0),
             'low_stock' => (int) ($row['low_stock_products'] ?? 0),
             'out_of_stock' => (int) ($row['out_of_stock_products'] ?? 0),
+        ];
+    }
+
+    /**
+     * Get distinct categories from products
+     */
+    public function getDistinctCategories()
+    {
+        return $this->builder()
+            ->select('category')
+            ->where('category IS NOT NULL')
+            ->where('category !=', '')
+            ->distinct()
+            ->orderBy('category', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
+     * Get distinct brands from products
+     */
+    public function getDistinctBrands()
+    {
+        return $this->builder()
+            ->select('brand')
+            ->where('brand IS NOT NULL')
+            ->where('brand !=', '')
+            ->distinct()
+            ->orderBy('brand', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
+     * Get grouped products for POS display
+     * Groups products by name, brand, and category
+     */
+    public function getGroupedProducts()
+    {
+        $builder = $this->builder();
+        
+        $result = $builder->select([
+            'name',
+            'brand', 
+            'category',
+            'MIN(price) as min_price',
+            'MAX(price) as max_price',
+            'SUM(stock_qty) as total_stock',
+            'GROUP_CONCAT(DISTINCT CASE WHEN flavor IS NOT NULL AND flavor != "" THEN flavor END) as flavors',
+            'GROUP_CONCAT(DISTINCT CASE WHEN puffs IS NOT NULL THEN puffs END ORDER BY puffs) as puff_counts',
+            'MIN(image_url) as image_url',
+            'COUNT(*) as variant_count'
+        ])
+        ->where('is_active', 1)
+        ->groupBy('name, brand, category')
+        ->orderBy('category', 'ASC')
+        ->orderBy('name', 'ASC')
+        ->get()
+        ->getResultArray();
+        
+        // Process the results
+        foreach ($result as &$product) {
+            $product['flavors'] = $product['flavors'] ? explode(',', $product['flavors']) : [];
+            $product['puff_counts'] = $product['puff_counts'] ? array_filter(explode(',', $product['puff_counts'])) : [];
+            $product['min_price'] = (float) $product['min_price'];
+            $product['max_price'] = (float) $product['max_price'];
+            $product['total_stock'] = (int) $product['total_stock'];
+            $product['variant_count'] = (int) $product['variant_count'];
+            
+            // Format price display
+            if ($product['min_price'] == $product['max_price']) {
+                $product['price_display'] = '₱' . number_format($product['min_price'], 2);
+            } else {
+                $product['price_display'] = '₱' . number_format($product['min_price'], 2) . ' - ₱' . number_format($product['max_price'], 2);
+            }
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Get product variants for a specific product group
+     */
+    public function getProductVariants($name, $brand, $category)
+    {
+        return $this->where('name', $name)
+                    ->where('brand', $brand)
+                    ->where('category', $category)
+                    ->where('is_active', 1)
+                    ->orderBy('flavor', 'ASC')
+                    ->orderBy('puffs', 'ASC')
+                    ->findAll();
+    }
+
+    /**
+     * Find specific product variant by selection criteria
+     */
+    public function findProductVariant($name, $brand, $category, $flavor = null, $puffs = null)
+    {
+        $builder = $this->where('name', $name)
+                        ->where('brand', $brand)
+                        ->where('category', $category)
+                        ->where('is_active', 1);
+        
+        if ($flavor !== null) {
+            $builder->where('flavor', $flavor);
+        }
+        
+        if ($puffs !== null) {
+            $builder->where('puffs', $puffs);
+        }
+        
+        return $builder->first();
+    }
+
+    /**
+     * Check if category requires flavor selection
+     */
+    public function categoryRequiresFlavor($category)
+    {
+        // These categories require flavor selection when products have variants
+        $flavorCategories = ['Pods', 'E-liquid', 'Disposable'];
+        return in_array($category, $flavorCategories);
+    }
+
+    /**
+     * Check if category requires puff selection
+     */
+    public function categoryRequiresPuffs($category)
+    {
+        $puffCategories = ['Disposable'];
+        $optionalPuffCategories = ['Pods']; // Pods now have optional puffs
+        return [
+            'required' => in_array($category, $puffCategories),
+            'optional' => in_array($category, $optionalPuffCategories)
         ];
     }
 }

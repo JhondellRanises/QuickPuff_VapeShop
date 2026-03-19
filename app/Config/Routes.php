@@ -30,6 +30,7 @@ $routes->group('pos', ['filter' => 'auth'], function($routes) {
     $routes->post('clear', 'POS::clearCart');
     $routes->get('receipt/(:num)', 'POS::receipt/$1');
     $routes->get('search', 'POS::searchProducts');
+    $routes->get('variants', 'POS::getProductVariants');
 });
 
 // Admin only routes

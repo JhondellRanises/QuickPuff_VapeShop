@@ -78,7 +78,8 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                 ?>
                                 <div class="col-md-6 col-lg-4 mb-3 product-item" 
                                      data-category="<?= esc($product['category']) ?>" 
-                                     data-name="<?= esc($product['name']) ?>">
+                                     data-name="<?= esc($product['name']) ?>"
+                                     data-brand="<?= esc($product['brand'] ?? '') ?>">
                                     <div class="card h-100 product-card">
                                         <div class="product-image-wrap">
                                             <img src="<?= esc($productImage, 'attr') ?>"
@@ -90,18 +91,24 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                         <div class="card-body">
                                             <h6 class="card-title"><?= esc($product['name']) ?></h6>
                                             <p class="card-text">
-                                                <small class="text-muted"><?= esc($product['category']) ?></small><br>
-                                                <strong>₱<?= number_format($product['price'], 2) ?></strong><br>
-                                                <small class="text-muted">Stock: <?= $product['stock_qty'] ?></small>
+                                                <small class="text-muted"><?= esc($product['category']) ?></small>
+                                                <?php if (!empty($product['brand'])): ?>
+                                                    <br><small class="text-muted">Brand: <?= esc($product['brand']) ?></small>
+                                                <?php endif; ?>
+                                                <br><strong><?= $product['price_display'] ?></strong>
+                                                <br><small class="text-muted">Stock: <?= $product['total_stock'] ?></small>
+                                                <?php if ($product['variant_count'] > 1): ?>
+                                                    <br><small class="text-info"><?= $product['variant_count'] ?> variants available</small>
+                                                <?php endif; ?>
                                             </p>
                                         </div>
                                         <div class="card-footer">
                                             <button class="btn btn-primary btn-sm w-100" 
-                                                    onclick="addToCart(<?= $product['id'] ?>, '<?= esc($product['name']) ?>', <?= $product['price'] ?>, <?= $product['stock_qty'] ?>)"
-                                                    <?= $product['stock_qty'] <= 0 ? 'disabled' : '' ?>>
+                                                    onclick="showVariantModal('<?= esc($product['name']) ?>', '<?= esc($product['brand'] ?? '') ?>', '<?= esc($product['category']) ?>')"
+                                                    <?= $product['total_stock'] <= 0 ? 'disabled' : '' ?>>
                                                 <i class="fas fa-plus me-1"></i>
                                                 Add to Cart
-                                                <?php if ($product['stock_qty'] <= 0): ?>
+                                                <?php if ($product['total_stock'] <= 0): ?>
                                                     <span class="badge bg-danger ms-1">Out of Stock</span>
                                                 <?php endif; ?>
                                             </button>
@@ -158,12 +165,31 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                         <label for="customerBirthDate" class="form-label">
                             Customer Birth Date <span class="text-danger">*</span>
                         </label>
-                        <input type="date"
-                               class="form-control"
-                               id="customerBirthDate"
-                               max="<?= date('Y-m-d') ?>"
-                               required>
-                        <small class="text-muted d-block mt-1">Age restriction: 18 years old and above only.</small>
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <input type="date"
+                                       class="form-control"
+                                       id="customerBirthDate"
+                                       max="<?= date('Y-m-d') ?>"
+                                       onchange="verifyAgeDisplay()"
+                                       required>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-info btn-sm text-white" onclick="quickAgeVerify('18')">
+                                        <i class="fas fa-check me-1"></i>
+                                        Verify 18+ Years Old
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ageVerificationResult" class="mt-2" style="display: none;">
+                            <!-- Age verification result will be displayed here -->
+                        </div>
+                        <small class="text-muted d-block mt-1">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Age restriction: 18 years old and above only.
+                        </small>
                     </div>
                     <div class="mb-3">
                         <label for="amountPaid" class="form-label">
@@ -177,7 +203,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                    step="0.01"
                                    min="0"
                                    placeholder="0.00"
-                                   oninput="calculateChange()"
+                                   oninput="debouncedCalculateChange()"
                                    required>
                         </div>
                         <small class="text-muted d-block mt-1">Enter the amount of money the customer gives.</small>
@@ -185,7 +211,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                             <strong>Change: ₱<span id="changeAmount">0.00</span></strong>
                         </small>
                     </div>
-                    <button class="btn btn-success btn-lg w-100" onclick="processSale()" id="processSaleBtn" disabled>
+                    <button class="btn btn-success btn-lg w-100 text-white fw-bold shadow-sm" onclick="processSale()" id="processSaleBtn" disabled>
                         <i class="fas fa-credit-card me-2"></i>
                         Process Sale
                     </button>
@@ -350,18 +376,380 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     </div>
 </div>
 
+<!-- Product Variant Selection Modal -->
+<div class="modal fade" id="variantModal" tabindex="-1" aria-labelledby="variantModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="variantModalLabel">
+                    <i class="fas fa-box me-2"></i>Select Product Variant
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="variantContent">
+                <div class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading variants...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="addVariantToCartBtn" disabled>
+                    <i class="fas fa-plus me-2"></i>Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->include('layouts/footer') ?>
 
 <script>
 let cart = [];
+let currentProductVariants = [];
+let selectedVariant = null;
 
+// Show variant selection modal
+function showVariantModal(name, brand, category) {
+    const modal = new bootstrap.Modal(document.getElementById('variantModal'));
+    const modalTitle = document.getElementById('variantModalLabel');
+    const variantContent = document.getElementById('variantContent');
+    const addBtn = document.getElementById('addVariantToCartBtn');
+    
+    // IMMEDIATE VALIDATION: Categories that should NEVER show modal
+    const noModalCategories = ['Device'];
+    if (noModalCategories.includes(category)) {
+        // Add directly without showing any modal
+        fetch(`<?= site_url('/pos/variants') ?>?name=${encodeURIComponent(name)}&brand=${encodeURIComponent(brand)}&category=${encodeURIComponent(category)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.variants.length > 0) {
+                    selectedVariant = data.variants[0];
+                    addVariantToCart();
+                } else {
+                    // Handle no variants case
+                    console.warn('No variants found for product:', name);
+                    // Try to add as a simple product
+                    legacyAddToCart(name, brand, category);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding product to cart');
+            });
+        return;
+    }
+    
+    // Reset selection
+    selectedVariant = null;
+    addBtn.disabled = true;
+    
+    // Fetch variants first before showing modal
+    fetch(`<?= site_url('/pos/variants') ?>?name=${encodeURIComponent(name)}&brand=${encodeURIComponent(brand)}&category=${encodeURIComponent(category)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentProductVariants = data.variants;
+                
+                // Check if variant selection is actually needed
+                const requiresSelection = data.category_info.requires_flavor || 
+                                        data.category_info.requires_puffs.required || 
+                                        data.category_info.requires_puffs.optional;
+                
+                // Smart logic: Only show modal if there are actual choices to make
+                const shouldShowModal = requiresSelection && data.variants.length > 1;
+                
+                // Handle different scenarios:
+                // 1. No variants at all - add directly like Device category
+                // 2. Only 1 variant - add directly (no choice needed)
+                // 3. Multiple variants - show modal only if selection is required
+                if (data.variants.length === 0) {
+                    // No variants found - add directly to cart like Device category
+                    console.log('No variants found, adding directly to cart like Device category');
+                    legacyAddToCart(name, brand, category);
+                    return;
+                }
+                
+                if (!shouldShowModal || data.variants.length === 1) {
+                    // Add directly to cart - no choice needed or only one option
+                    selectedVariant = data.variants[0];
+                    addVariantToCart();
+                    return;
+                }
+                
+                // Only show modal if we actually need to
+                modalTitle.innerHTML = `<i class="fas fa-box me-2"></i>Select Variant: ${name}`;
+                
+                // Show loading state
+                variantContent.innerHTML = `
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading variants...</p>
+                    </div>
+                `;
+                
+                modal.show();
+                displayVariants(data.variants, data.category_info, name, brand, category);
+            } else {
+                // If no variants found, add directly like Device category
+                console.log('No variants found, adding directly to cart like Device category');
+                legacyAddToCart(name, brand, category);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading variants:', error);
+            // On error, try to add directly
+            legacyAddToCart(name, brand, category);
+        });
+}
+
+// Display variants in the modal
+function displayVariants(variants, categoryInfo, productName, brand, category) {
+    const variantContent = document.getElementById('variantContent');
+    const addBtn = document.getElementById('addVariantToCartBtn');
+    
+    let html = `
+        <div class="mb-3">
+            <h6 class="text-muted">${productName} ${brand ? '- ' + brand : ''}</h6>
+        </div>
+    `;
+    
+    // Flavor selection
+    if (categoryInfo.requires_flavor) {
+        const flavors = [...new Set(variants.filter(v => v.flavor).map(v => v.flavor))];
+        if (flavors.length > 0) {
+            html += `
+                <div class="mb-3">
+                    <label class="form-label">Flavor <span class="text-danger">*</span></label>
+                    <select class="form-select" id="flavorSelect" onchange="updateVariantSelection()">
+                        <option value="">Select Flavor</option>
+                        ${flavors.map(flavor => `<option value="${flavor}">${flavor}</option>`).join('')}
+                    </select>
+                </div>
+            `;
+        }
+    }
+    
+    // Puff selection
+    if (categoryInfo.requires_puffs.required || categoryInfo.requires_puffs.optional) {
+        const puffCounts = [...new Set(variants.filter(v => v.puffs).map(v => v.puffs))].sort((a, b) => a - b);
+        if (puffCounts.length > 0) {
+            const required = categoryInfo.requires_puffs.required ? ' <span class="text-danger">*</span>' : '';
+            html += `
+                <div class="mb-3">
+                    <label class="form-label">Puffs${required}</label>
+                    <select class="form-select" id="puffSelect" onchange="updateVariantSelection()">
+                        <option value="">Select Puffs</option>
+                        ${puffCounts.map(puffs => `<option value="${puffs}">${puffs} puffs</option>`).join('')}
+                    </select>
+                </div>
+            `;
+        }
+    }
+    
+    variantContent.innerHTML = html;
+    
+    // Store data for variant selection
+    window.currentVariantData = {
+        variants: variants,
+        categoryInfo: categoryInfo,
+        productName: productName,
+        brand: brand,
+        category: category
+    };
+}
+
+// Update variant selection based on dropdowns
+function updateVariantSelection() {
+    const flavorSelect = document.getElementById('flavorSelect');
+    const puffSelect = document.getElementById('puffSelect');
+    const flavor = flavorSelect ? (flavorSelect.value || null) : null;
+    const puffs = puffSelect ? (puffSelect.value || null) : null;
+    const { variants, categoryInfo, productName, brand, category } = window.currentVariantData;
+    
+    console.log('updateVariantSelection called:', {
+        flavor,
+        puffs,
+        categoryInfo,
+        variantsCount: variants.length
+    });
+    
+    // If flavor changed, update available puffs (only if puff select exists and puffs are required/optional)
+    if (flavor && puffSelect && (categoryInfo.requires_puffs.required || categoryInfo.requires_puffs.optional)) {
+        const availablePuffs = [...new Set(variants
+            .filter(v => v.flavor === flavor)
+            .map(v => v.puffs)
+            .filter(Boolean)
+        )].sort((a, b) => a - b);
+        
+        // Update puff dropdown
+        puffSelect.innerHTML = '<option value="">Select Puffs</option>';
+        availablePuffs.forEach(puff => {
+            const option = document.createElement('option');
+            option.value = puff;
+            option.textContent = puff;
+            puffSelect.appendChild(option);
+        });
+        
+        // Auto-select if only one puff available
+        if (availablePuffs.length === 1) {
+            puffSelect.value = availablePuffs[0];
+            // Call updateVariantSelection again after auto-selecting puff
+            setTimeout(() => updateVariantSelection(), 100);
+        }
+    }
+    
+    // Find matching variant
+    selectedVariant = null;
+    
+    console.log('Looking for matching variant with:', { flavor, puffs });
+    
+    for (let variant of variants) {
+        let matches = true;
+        
+        console.log('Checking variant:', variant);
+        
+        // Check flavor requirement
+        if (categoryInfo.requires_flavor) {
+            if (!flavor) {
+                matches = false; // Flavor is required but not selected
+                console.log('Variant rejected: flavor required but not selected');
+            } else {
+                matches = matches && variant.flavor === flavor;
+                console.log('Flavor check:', variant.flavor, '===', flavor, '=', matches);
+            }
+        }
+        
+        // Check puff requirement
+        if (categoryInfo.requires_puffs.required) {
+            if (!puffs) {
+                matches = false; // Puffs are required but not selected
+                console.log('Variant rejected: puffs required but not selected');
+            } else {
+                matches = matches && variant.puffs == puffs;
+                console.log('Required puffs check:', variant.puffs, '===', puffs, '=', matches);
+            }
+        } else if (categoryInfo.requires_puffs.optional) {
+            // Puffs are optional - only filter if selected
+            if (puffs) {
+                matches = matches && variant.puffs == puffs;
+                console.log('Optional puffs check:', variant.puffs, '===', puffs, '=', matches);
+            }
+        }
+        // If puffs are not required or optional, don't filter by puffs
+        
+        console.log('Final matches status for variant:', matches);
+        
+        if (matches) {
+            selectedVariant = variant;
+            console.log('Found matching variant:', selectedVariant);
+            break;
+        }
+    }
+    
+    console.log('Final selectedVariant:', selectedVariant);
+    
+    const addBtn = document.getElementById('addVariantToCartBtn');
+    
+    console.log('About to set button state. selectedVariant:', selectedVariant);
+    
+    if (selectedVariant) {
+        addBtn.disabled = selectedVariant.stock_qty <= 0;
+        console.log('Button enabled. Stock:', selectedVariant.stock_qty);
+        
+        if (selectedVariant.stock_qty <= 0) {
+            alert('This variant is out of stock!');
+        }
+    } else {
+        addBtn.disabled = true;
+        console.log('Button disabled - no variant selected');
+    }
+}
+
+// Add selected variant to cart
+function addVariantToCart() {
+    if (!selectedVariant) {
+        const { categoryInfo } = window.currentVariantData;
+        const flavorSelect = document.getElementById('flavorSelect');
+        const puffSelect = document.getElementById('puffSelect');
+        const flavor = flavorSelect ? (flavorSelect.value || null) : null;
+        const puffs = puffSelect ? (puffSelect.value || null) : null;
+        
+        let errorMessage = 'Please select ';
+        const missingFields = [];
+        
+        if (categoryInfo.requires_flavor && !flavor) {
+            missingFields.push('flavor');
+        }
+        if (categoryInfo.requires_puffs.required && !puffs) {
+            missingFields.push('puffs');
+        }
+        
+        if (missingFields.length > 0) {
+            errorMessage += missingFields.join(' and ');
+        } else {
+            errorMessage = 'Please select valid product options';
+        }
+        
+        alert(errorMessage);
+        return;
+    }
+    
+    if (selectedVariant.stock_qty <= 0) {
+        alert('This variant is out of stock!');
+        return;
+    }
+    
+    // Check if variant already exists in cart
+    const existingItem = cart.find(item => 
+        item.id === selectedVariant.id && 
+        item.flavor === (selectedVariant.flavor || '') && 
+        item.puffs === (selectedVariant.puffs || 0)
+    );
+    
+    if (existingItem) {
+        if (existingItem.quantity >= selectedVariant.stock_qty) {
+            alert('Cannot add more than available stock!');
+            return;
+        }
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            id: selectedVariant.id,
+            name: selectedVariant.name,
+            price: parseFloat(selectedVariant.price),
+            quantity: 1,
+            stock: selectedVariant.stock_qty,
+            flavor: selectedVariant.flavor || '',
+            puffs: selectedVariant.puffs || 0
+        });
+    }
+    
+    updateCart();
+    
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('variantModal'));
+    if (modal) {
+        modal.hide();
+    }
+}
+
+// Legacy addToCart function (for compatibility)
 function addToCart(id, name, price, stock) {
     if (stock <= 0) {
         alert('This product is out of stock!');
         return;
     }
 
-    const existingItem = cart.find(item => item.id === id);
+    const existingItem = cart.find(item => 
+        item.id === id && 
+        item.flavor === '' && 
+        item.puffs === 0
+    );
     
     if (existingItem) {
         if (existingItem.quantity >= stock) {
@@ -373,13 +761,34 @@ function addToCart(id, name, price, stock) {
         cart.push({
             id: id,
             name: name,
-            price: price,
+            price: parseFloat(price),
             quantity: 1,
-            stock: stock
+            stock: stock,
+            flavor: '',
+            puffs: 0
         });
     }
     
     updateCart();
+}
+
+// Legacy addToCart function for products without variants (like Device category)
+function legacyAddToCart(name, brand, category) {
+    // Fetch product details to get ID, price, and stock
+    fetch(`<?= site_url('/pos/variants') ?>?name=${encodeURIComponent(name)}&brand=${encodeURIComponent(brand)}&category=${encodeURIComponent(category)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.variants.length > 0) {
+                const variant = data.variants[0];
+                addToCart(variant.id, variant.name, variant.price, variant.stock_qty);
+            } else {
+                alert('Product not found or out of stock');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding product to cart:', error);
+            alert('Error adding product to cart');
+        });
 }
 
 function updateCart() {
@@ -404,26 +813,35 @@ function updateCart() {
     let subtotalAmount = 0;
     let totalItems = 0;
     
-    cart.forEach(item => {
+    cart.forEach((item, index) => {
         const itemTotal = item.price * item.quantity;
         subtotalAmount += itemTotal;
         totalItems += item.quantity;
         
+        // Build display name with variant info
+        let displayName = item.name;
+        if (item.flavor) {
+            displayName += ' - ' + item.flavor;
+        }
+        if (item.puffs > 0) {
+            displayName += ' (' + item.puffs + ' puffs)';
+        }
+        
         html += `
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <div>
-                    <strong>${item.name}</strong><br>
+                    <strong>${displayName}</strong><br>
                     <small class="text-muted">₱${item.price.toFixed(2)} x ${item.quantity}</small>
                 </div>
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="updateQuantity(${item.id}, -1)">
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="cartMinus(${index})">
                         <i class="fas fa-minus"></i>
                     </button>
                     <span class="mx-2">${item.quantity}</span>
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="updateQuantity(${item.id}, 1)">
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="cartPlus(${index})">
                         <i class="fas fa-plus"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${item.id})">
+                    <button class="btn btn-sm btn-outline-danger" onclick="cartDelete(${index})">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -441,66 +859,228 @@ function updateCart() {
     tax.textContent = `₱${taxAmount.toFixed(2)}`;
     total.textContent = `₱${totalAmount.toFixed(2)}`;
     processBtn.disabled = false;
-    
-    // Auto-calculate change when amount is entered
-    calculateChange();
+}
+
+function cartPlus(index) {
+    if (cart[index].quantity < cart[index].stock) {
+        cart[index].quantity++;
+        updateCart();
+    } else {
+        alert('Cannot add more than available stock!');
+    }
+}
+
+function cartMinus(index) {
+    if (cart[index].quantity > 1) {
+        cart[index].quantity--;
+        updateCart();
+    } else {
+        cartDelete(index);
+    }
+}
+
+function cartDelete(index) {
+    cart.splice(index, 1);
+    updateCart();
+}
+
+// Add event listener for the add variant button
+document.addEventListener('DOMContentLoaded', function() {
+    const addVariantBtn = document.getElementById('addVariantToCartBtn');
+    if (addVariantBtn) {
+        addVariantBtn.addEventListener('click', addVariantToCart);
+    }
+});
+let changeCalcElements = null;
+
+function initChangeCalcElements() {
+    if (!changeCalcElements) {
+        changeCalcElements = {
+            amountPaidInput: document.getElementById('amountPaid'),
+            totalElement: document.getElementById('total'),
+            changeDisplay: document.getElementById('changeDisplay'),
+            changeAmountElement: document.getElementById('changeAmount')
+        };
+    }
+}
+
+// Debounce function to limit how often calculateChange runs
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 function calculateChange() {
-    const amountPaidInput = document.getElementById('amountPaid');
-    const totalElement = document.getElementById('total');
-    const changeDisplay = document.getElementById('changeDisplay');
-    const changeAmountElement = document.getElementById('changeAmount');
-    const amountPaid = parseFloat(amountPaidInput?.value || '0');
+    // Initialize cached elements if not already done
+    initChangeCalcElements();
     
-    if (totalElement && amountPaidInput) {
+    const { amountPaidInput, totalElement, changeDisplay, changeAmountElement } = changeCalcElements;
+    
+    if (!totalElement || !amountPaidInput) return;
+    
+    const amountPaidValue = amountPaidInput.value || '';
+    const amountPaid = parseFloat(amountPaidValue) || 0;
+    
+    // If amount paid is empty or zero, reset change display
+    if (amountPaidValue === '' || amountPaid <= 0) {
+        amountPaidInput.style.borderColor = ''; // Reset to default
+        changeDisplay.style.display = 'none';
+        changeAmountElement.textContent = '0.00';
+        return;
+    }
+    
+    // Cache the total amount to avoid repeated parsing
+    if (!changeCalcElements.cachedTotalAmount) {
         const totalText = totalElement.textContent;
-        const totalAmount = parseFloat(totalText.replace('₱', '').replace(',', ''));
+        changeCalcElements.cachedTotalAmount = parseFloat(totalText.replace(/[₱,]/g, '')) || 0;
+    }
+    
+    const totalAmount = changeCalcElements.cachedTotalAmount;
+    
+    if (!isNaN(totalAmount)) {
+        const change = amountPaid - totalAmount;
         
-        if (!isNaN(totalAmount) && amountPaid > 0) {
-            const change = amountPaid - totalAmount;
-            
-            // Update the input border color
-            if (change >= 0) {
-                amountPaidInput.style.borderColor = '#28a745'; // Green for sufficient payment
-                changeDisplay.style.display = 'block';
-                changeDisplay.className = 'text-success d-block mt-1';
-                changeAmountElement.textContent = change.toFixed(2);
-            } else {
-                amountPaidInput.style.borderColor = '#dc3545'; // Red for insufficient payment
-                changeDisplay.style.display = 'none';
-            }
+        // Update the input border color
+        if (change >= 0) {
+            amountPaidInput.style.borderColor = '#28a745'; // Green for sufficient payment
+            changeDisplay.style.display = 'block';
+            changeDisplay.className = 'text-success d-block mt-1';
+            changeAmountElement.textContent = change.toFixed(2);
         } else {
-            amountPaidInput.style.borderColor = ''; // Reset to default
+            amountPaidInput.style.borderColor = '#dc3545'; // Red for insufficient payment
             changeDisplay.style.display = 'none';
+            changeAmountElement.textContent = '0.00';
         }
+    } else {
+        amountPaidInput.style.borderColor = ''; // Reset to default
+        changeDisplay.style.display = 'none';
+        changeAmountElement.textContent = '0.00';
     }
 }
 
-function updateQuantity(id, change) {
-    const item = cart.find(item => item.id === id);
-    if (item) {
-        const newQuantity = item.quantity + change;
-        if (newQuantity <= 0) {
-            removeFromCart(id);
-        } else if (newQuantity <= item.stock) {
-            item.quantity = newQuantity;
-            updateCart();
-        } else {
-            alert('Cannot add more than available stock!');
-        }
-    }
-}
+// Create debounced version for input events
+const debouncedCalculateChange = debounce(calculateChange, 100);
 
-function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
-    updateCart();
-}
+// Add event listener for the add variant button
+document.addEventListener('DOMContentLoaded', function() {
+    const addVariantBtn = document.getElementById('addVariantToCartBtn');
+    if (addVariantBtn) {
+        addVariantBtn.addEventListener('click', addVariantToCart);
+    }
+});
 
 function clearCart() {
     if (cart.length > 0 && confirm('Are you sure you want to clear the cart?')) {
         cart = [];
+        
+        // Clear cached values
+        if (changeCalcElements) {
+            changeCalcElements.cachedTotalAmount = null;
+            if (changeCalcElements.amountPaidInput) {
+                changeCalcElements.amountPaidInput.value = '';
+                changeCalcElements.amountPaidInput.style.borderColor = '';
+            }
+            if (changeCalcElements.changeDisplay) {
+                changeCalcElements.changeDisplay.style.display = 'none';
+            }
+        }
+        
+        // Clear age verification fields
+        const birthDateInput = document.getElementById('customerBirthDate');
+        const ageResultDiv = document.getElementById('ageVerificationResult');
+        if (birthDateInput) {
+            birthDateInput.value = '';
+            birthDateInput.style.borderColor = '';
+            birthDateInput.classList.remove('is-valid', 'is-invalid');
+        }
+        if (ageResultDiv) {
+            ageResultDiv.style.display = 'none';
+        }
+        
         updateCart();
+    }
+}
+
+// Quick Age Verification Functions
+function quickAgeVerify(ageRequirement) {
+    const birthDateInput = document.getElementById('customerBirthDate');
+    
+    // Calculate birth date for 18 years ago
+    const today = new Date();
+    const birthYear = today.getFullYear() - 18;
+    const birthMonth = (today.getMonth() + 1).toString().padStart(2, '0');
+    const birthDay = today.getDate().toString().padStart(2, '0');
+    
+    // Format as YYYY-MM-DD for date input
+    const birthDateString = `${birthYear}-${birthMonth}-${birthDay}`;
+    
+    // Set the birth date in the input
+    birthDateInput.value = birthDateString;
+    
+    // Trigger verification display
+    verifyAgeDisplay();
+}
+
+function verifyAgeDisplay() {
+    const birthDateInput = document.getElementById('customerBirthDate');
+    const birthDateValue = birthDateInput.value;
+    const resultDiv = document.getElementById('ageVerificationResult');
+    
+    if (!birthDateValue) {
+        resultDiv.style.display = 'none';
+        birthDateInput.style.borderColor = '';
+        birthDateInput.classList.remove('is-valid', 'is-invalid');
+        return;
+    }
+    
+    const age = getCustomerAge(birthDateValue);
+    displayAgeResult(age);
+}
+
+function displayAgeResult(age, quickVerifyType = null) {
+    const resultDiv = document.getElementById('ageVerificationResult');
+    const birthDateInput = document.getElementById('customerBirthDate');
+    
+    if (age === null) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger py-2 mb-0">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Invalid birth date format
+            </div>
+        `;
+        resultDiv.style.display = 'block';
+        birthDateInput.style.borderColor = '#dc3545';
+        birthDateInput.classList.add('is-invalid');
+        birthDateInput.classList.remove('is-valid');
+    } else if (age < 18) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger py-2 mb-0">
+                <i class="fas fa-times-circle me-1"></i>
+                Customer is ${age} years old. Under 18
+            </div>
+        `;
+        resultDiv.style.display = 'block';
+        birthDateInput.style.borderColor = '#dc3545';
+        birthDateInput.classList.add('is-invalid');
+        birthDateInput.classList.remove('is-valid');
+    } else {
+        resultDiv.innerHTML = `
+            <div class="alert alert-success py-2 mb-0">
+                <i class="fas fa-check-circle me-1"></i>
+                Customer is ${age} years old. Age Verified.
+            </div>
+        `;
+        resultDiv.style.display = 'block';
+        birthDateInput.style.borderColor = '#28a745';
+        birthDateInput.classList.add('is-valid');
+        birthDateInput.classList.remove('is-invalid');
     }
 }
 
@@ -539,6 +1119,8 @@ function validateAgeRestriction() {
     }
 
     const age = getCustomerAge(birthDateValue);
+    console.log('Frontend age calculation:', { birthDateValue, age });
+    
     if (age === null) {
         return {
             isValid: false,
@@ -549,7 +1131,7 @@ function validateAgeRestriction() {
     if (age < 18) {
         return {
             isValid: false,
-            message: 'Sale blocked: customer must be 18 years old or above.'
+            message: `Sale blocked: customer is ${age} years old. Must be 18 years old or above.`
         };
     }
 
@@ -658,7 +1240,8 @@ function searchProducts() {
     
     products.forEach(product => {
         const name = product.dataset.name.toLowerCase();
-        if (name.includes(searchTerm)) {
+        const brand = product.dataset.brand.toLowerCase();
+        if (name.includes(searchTerm) || brand.includes(searchTerm)) {
             product.style.display = 'block';
         } else {
             product.style.display = 'none';
@@ -920,10 +1503,10 @@ function generateReceiptHTML(saleData) {
             </div>
 
             <div class="receipt-header">
-                <div class="receipt-shop-name">QUICK PUFF VAPE SHOP</div>
-                <div class="receipt-shop-address">123 Vape Street, Manila, Philippines</div>
-                <div class="receipt-shop-address">Tel: (02) 1234-5678</div>
-                <div class="receipt-shop-address">Email: info@quickpuff.com</div>
+                <div class="receipt-shop-name">QuickPuff VapeShop</div>
+                <div class="receipt-shop-address">Bula, General Santos City, South Cotabato</div>
+                <div class="receipt-shop-address">Tel: 09365879409</div>
+                <div class="receipt-shop-address">Email: quickpuff@gmail.com</div>
             </div>
 
             <div class="receipt-sale-info">
@@ -989,7 +1572,6 @@ function generateReceiptHTML(saleData) {
                     Please come again
                 </div>
                 <div>
-                    <small>This is a computer-generated receipt</small>
                 </div>
             </div>
         </div>
@@ -1213,10 +1795,10 @@ function generatePrintReceiptHTML(saleData) {
             </div>
 
             <div class="receipt-header">
-                <div class="receipt-shop-name">QUICK PUFF VAPE SHOP</div>
-                <div class="receipt-shop-address">123 Vape Street, Manila, Philippines</div>
-                <div class="receipt-shop-address">Tel: (02) 1234-5678</div>
-                <div class="receipt-shop-address">Email: info@quickpuff.com</div>
+                <div class="receipt-shop-name">QuickPuff VapeShop</div>
+                <div class="receipt-shop-address">Bula, General Santos City, South Cotabato</div>
+                <div class="receipt-shop-address">Tel: 09365879409</div>
+                <div class="receipt-shop-address">Email: quickpuff@gmail.com</div>
             </div>
 
             <div class="receipt-sale-info">
@@ -1282,7 +1864,6 @@ function generatePrintReceiptHTML(saleData) {
                     Please come again
                 </div>
                 <div>
-                    <small>This is a computer-generated receipt</small>
                 </div>
             </div>
         </div>
