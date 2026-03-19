@@ -165,6 +165,26 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                required>
                         <small class="text-muted d-block mt-1">Age restriction: 18 years old and above only.</small>
                     </div>
+                    <div class="mb-3">
+                        <label for="amountPaid" class="form-label">
+                            Amount Paid <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number"
+                                   class="form-control"
+                                   id="amountPaid"
+                                   step="0.01"
+                                   min="0"
+                                   placeholder="0.00"
+                                   oninput="calculateChange()"
+                                   required>
+                        </div>
+                        <small class="text-muted d-block mt-1">Enter the amount of money the customer gives.</small>
+                        <small id="changeDisplay" class="text-success d-block mt-1" style="display: none;">
+                            <strong>Change: ₱<span id="changeAmount">0.00</span></strong>
+                        </small>
+                    </div>
                     <button class="btn btn-success btn-lg w-100" onclick="processSale()" id="processSaleBtn" disabled>
                         <i class="fas fa-credit-card me-2"></i>
                         Process Sale
@@ -421,6 +441,40 @@ function updateCart() {
     tax.textContent = `₱${taxAmount.toFixed(2)}`;
     total.textContent = `₱${totalAmount.toFixed(2)}`;
     processBtn.disabled = false;
+    
+    // Auto-calculate change when amount is entered
+    calculateChange();
+}
+
+function calculateChange() {
+    const amountPaidInput = document.getElementById('amountPaid');
+    const totalElement = document.getElementById('total');
+    const changeDisplay = document.getElementById('changeDisplay');
+    const changeAmountElement = document.getElementById('changeAmount');
+    const amountPaid = parseFloat(amountPaidInput?.value || '0');
+    
+    if (totalElement && amountPaidInput) {
+        const totalText = totalElement.textContent;
+        const totalAmount = parseFloat(totalText.replace('₱', '').replace(',', ''));
+        
+        if (!isNaN(totalAmount) && amountPaid > 0) {
+            const change = amountPaid - totalAmount;
+            
+            // Update the input border color
+            if (change >= 0) {
+                amountPaidInput.style.borderColor = '#28a745'; // Green for sufficient payment
+                changeDisplay.style.display = 'block';
+                changeDisplay.className = 'text-success d-block mt-1';
+                changeAmountElement.textContent = change.toFixed(2);
+            } else {
+                amountPaidInput.style.borderColor = '#dc3545'; // Red for insufficient payment
+                changeDisplay.style.display = 'none';
+            }
+        } else {
+            amountPaidInput.style.borderColor = ''; // Reset to default
+            changeDisplay.style.display = 'none';
+        }
+    }
 }
 
 function updateQuantity(id, change) {
@@ -517,6 +571,30 @@ function processSale() {
         return;
     }
     
+    // Validate payment amount
+    const amountPaidInput = document.getElementById('amountPaid');
+    const amountPaid = parseFloat(amountPaidInput?.value || '0');
+    
+    if (isNaN(amountPaid) || amountPaid <= 0) {
+        alert('Please enter a valid amount paid.');
+        amountPaidInput?.focus();
+        return;
+    }
+    
+    // Calculate total amount
+    let subtotalAmount = 0;
+    cart.forEach(item => {
+        subtotalAmount += item.price * item.quantity;
+    });
+    const taxAmount = subtotalAmount * 0.1;
+    const totalAmount = subtotalAmount + taxAmount;
+    
+    if (amountPaid < totalAmount) {
+        alert('Insufficient payment amount. Total is ₱' + totalAmount.toFixed(2) + ' but customer paid ₱' + amountPaid.toFixed(2));
+        amountPaidInput?.focus();
+        return;
+    }
+    
     // Show loading state
     const processBtn = document.getElementById('processSaleBtn');
     const originalText = processBtn.innerHTML;
@@ -526,7 +604,8 @@ function processSale() {
     // Prepare request data
     const requestData = {
         cart: cart,
-        customer_birthdate: ageValidation.birthDate
+        customer_birthdate: ageValidation.birthDate,
+        amount_paid: amountPaid
     };
     
     console.log('Sending cart data:', requestData);
@@ -551,6 +630,9 @@ function processSale() {
             const birthDateInput = document.getElementById('customerBirthDate');
             if (birthDateInput) {
                 birthDateInput.value = '';
+            }
+            if (amountPaidInput) {
+                amountPaidInput.value = '';
             }
             
             // Show receipt modal
@@ -885,9 +967,17 @@ function generateReceiptHTML(saleData) {
                     <span class="receipt-label">Tax (10%):</span>
                     <span class="receipt-value">₱${parseFloat(sale.tax_amount || 0).toFixed(2)}</span>
                 </div>
-                <div class="receipt-total-row receipt-grand-total">
+                <div class="receipt-total-row">
                     <span class="receipt-label">TOTAL:</span>
                     <span class="receipt-value">₱${parseFloat(sale.total_amount || 0).toFixed(2)}</span>
+                </div>
+                <div class="receipt-total-row">
+                    <span class="receipt-label">Amount Paid:</span>
+                    <span class="receipt-value">₱${parseFloat(sale.amount_paid || 0).toFixed(2)}</span>
+                </div>
+                <div class="receipt-total-row receipt-grand-total">
+                    <span class="receipt-label">CHANGE:</span>
+                    <span class="receipt-value">₱${parseFloat(sale.change_amount || 0).toFixed(2)}</span>
                 </div>
             </div>
 
@@ -1170,9 +1260,17 @@ function generatePrintReceiptHTML(saleData) {
                     <span class="receipt-label">Tax (10%):</span>
                     <span class="receipt-value">₱${parseFloat(sale.tax_amount || 0).toFixed(2)}</span>
                 </div>
-                <div class="receipt-total-row receipt-grand-total">
+                <div class="receipt-total-row">
                     <span class="receipt-label">TOTAL:</span>
                     <span class="receipt-value">₱${parseFloat(sale.total_amount || 0).toFixed(2)}</span>
+                </div>
+                <div class="receipt-total-row">
+                    <span class="receipt-label">Amount Paid:</span>
+                    <span class="receipt-value">₱${parseFloat(sale.amount_paid || 0).toFixed(2)}</span>
+                </div>
+                <div class="receipt-total-row receipt-grand-total">
+                    <span class="receipt-label">CHANGE:</span>
+                    <span class="receipt-value">₱${parseFloat(sale.change_amount || 0).toFixed(2)}</span>
                 </div>
             </div>
 

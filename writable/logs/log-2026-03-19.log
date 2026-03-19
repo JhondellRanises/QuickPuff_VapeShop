@@ -1,0 +1,368 @@
+DEBUG - 2026-03-19 03:22:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:34:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-19 05:34:38 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'quickpuff_db', 3306, '', 0)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin')
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin')
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+ERROR - 2026-03-19 05:34:38 --> Login error: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'quickpuff_db'
+DEBUG - 2026-03-19 05:34:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:34:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-19 05:34:45 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'quickpuff_db', 3306, '', 0)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin')
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin')
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+ERROR - 2026-03-19 05:34:45 --> Login error: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'quickpuff_db'
+DEBUG - 2026-03-19 05:34:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:34:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-19 05:35:04 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'quickpuff_db', 3306, '', 0)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin@gmail.com')
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin@gmail.com')
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+ERROR - 2026-03-19 05:35:04 --> Login error: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'quickpuff_db'
+DEBUG - 2026-03-19 05:35:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:35:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-19 05:35:16 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'quickpuff_db', 3306, '', 0)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin@example.c...')
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin@example.c...')
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+ERROR - 2026-03-19 05:35:16 --> Login error: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'quickpuff_db'
+DEBUG - 2026-03-19 05:35:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:35:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-19 05:35:22 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'quickpuff_db', 3306, '', 0)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin@example.c...')
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'quickpuff_db' in C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseConnection.php(614): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\QuickPuff_VapeShop\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\xampp\htdocs\QuickPuff_VapeShop\system\Model.php(330): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\xampp\htdocs\QuickPuff_VapeShop\system\BaseModel.php(715): CodeIgniter\Model->doFirst()
+#5 C:\xampp\htdocs\QuickPuff_VapeShop\app\Models\UserModel.php(51): CodeIgniter\BaseModel->first()
+#6 C:\xampp\htdocs\QuickPuff_VapeShop\app\Controllers\Auth.php(57): App\Models\UserModel->getUserByUsername('admin@example.c...')
+#7 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(933): App\Controllers\Auth->attemptLogin()
+#8 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#9 C:\xampp\htdocs\QuickPuff_VapeShop\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\QuickPuff_VapeShop\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\QuickPuff_VapeShop\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+ERROR - 2026-03-19 05:35:22 --> Login error: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'quickpuff_db'
+DEBUG - 2026-03-19 05:35:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:35:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-19 05:39:49 --> Login error: Undefined variable $loginAttempts
+DEBUG - 2026-03-19 05:39:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:39:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:40:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 05:40:03 --> User logged in: admin (ID: 1)
+DEBUG - 2026-03-19 05:40:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:53:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:53:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:54:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:54:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:54:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:54:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:54:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:54:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 05:55:11 --> Process sale method called
+DEBUG - 2026-03-19 05:55:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 05:55:11 --> JSON parsed directly from request
+INFO - 2026-03-19 05:55:11 --> Age verification passed. Customer age: 2021
+INFO - 2026-03-19 05:55:11 --> Cart items count: 1
+INFO - 2026-03-19 05:55:11 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 05:55:11 --> Starting database transaction
+INFO - 2026-03-19 05:55:11 --> Totals calculated - Subtotal: 450, Tax: 45, Total: 495
+INFO - 2026-03-19 05:55:11 --> Generated sale code: SALE-20260319-4057
+INFO - 2026-03-19 05:55:11 --> Inserting sale record
+INFO - 2026-03-19 05:55:11 --> Sale inserted with ID: 1
+INFO - 2026-03-19 05:55:11 --> Inserting sale item: STORM (15k puffs) (ID: 9)
+INFO - 2026-03-19 05:55:11 --> Updating stock for product ID: 9, quantity: 1
+INFO - 2026-03-19 05:55:11 --> Transaction completed successfully
+INFO - 2026-03-19 05:55:11 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-4057","subtotal":450,"tax_amount":45,"total_amount":495,"items":[{"name":"STORM (15k puffs)","quantity":1,"price":450}],"created_at":"2026-03-19 05:55:11"}}
+DEBUG - 2026-03-19 05:55:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:55:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:55:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:55:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:56:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:56:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:56:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:56:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:56:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:57:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:57:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 05:58:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:01:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:01:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:01:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:01:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:02:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:02:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:02:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:03:34 --> Process sale method called
+DEBUG - 2026-03-19 06:03:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:03:34 --> JSON parsed directly from request
+INFO - 2026-03-19 06:03:34 --> Age verification passed. Customer age: 21
+INFO - 2026-03-19 06:03:34 --> Cart items count: 1
+INFO - 2026-03-19 06:03:34 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 06:03:34 --> Starting database transaction
+INFO - 2026-03-19 06:03:34 --> Totals calculated - Subtotal: 900, Tax: 90, Total: 990
+INFO - 2026-03-19 06:03:34 --> Generated sale code: SALE-20260319-7208
+INFO - 2026-03-19 06:03:34 --> Inserting sale record
+INFO - 2026-03-19 06:03:34 --> Sale inserted with ID: 2
+INFO - 2026-03-19 06:03:34 --> Inserting sale item: STORM (15k puffs) (ID: 9)
+INFO - 2026-03-19 06:03:34 --> Updating stock for product ID: 9, quantity: 2
+INFO - 2026-03-19 06:03:34 --> Transaction completed successfully
+INFO - 2026-03-19 06:03:34 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-7208","subtotal":900,"tax_amount":90,"total_amount":990,"items":[{"name":"STORM (15k puffs)","quantity":2,"price":450}],"created_at":"2026-03-19 06:03:34"}}
+DEBUG - 2026-03-19 06:10:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:11:17 --> Process sale method called
+DEBUG - 2026-03-19 06:11:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:11:17 --> JSON parsed directly from request
+INFO - 2026-03-19 06:11:17 --> Age verification passed. Customer age: 21
+INFO - 2026-03-19 06:11:17 --> Cart items count: 1
+INFO - 2026-03-19 06:11:17 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 06:11:17 --> Starting database transaction
+INFO - 2026-03-19 06:11:17 --> Totals calculated - Subtotal: 900, Tax: 90, Total: 990
+INFO - 2026-03-19 06:11:17 --> Payment validated - Amount paid: ₱1000, Change: ₱10
+INFO - 2026-03-19 06:11:17 --> Generated sale code: SALE-20260319-2289
+INFO - 2026-03-19 06:11:17 --> Inserting sale record
+INFO - 2026-03-19 06:11:17 --> Sale inserted with ID: 3
+INFO - 2026-03-19 06:11:17 --> Inserting sale item: STORM (15k puffs) (ID: 9)
+INFO - 2026-03-19 06:11:17 --> Updating stock for product ID: 9, quantity: 2
+INFO - 2026-03-19 06:11:17 --> Transaction completed successfully
+INFO - 2026-03-19 06:11:17 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-2289","subtotal":900,"tax_amount":90,"total_amount":990,"amount_paid":1000,"change_amount":10,"items":[{"name":"STORM (15k puffs)","quantity":2,"price":450}],"created_at":"2026-03-19 06:11:17"}}
+DEBUG - 2026-03-19 06:12:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:14:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:16:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:19:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:20:57 --> Process sale method called
+DEBUG - 2026-03-19 06:20:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:20:57 --> JSON parsed directly from request
+INFO - 2026-03-19 06:20:57 --> Age verification passed. Customer age: 21
+INFO - 2026-03-19 06:20:57 --> Cart items count: 1
+INFO - 2026-03-19 06:20:57 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 06:20:57 --> Starting database transaction
+INFO - 2026-03-19 06:20:57 --> Totals calculated - Subtotal: 900, Tax: 90, Total: 990
+INFO - 2026-03-19 06:20:57 --> Payment validated - Amount paid: ₱1000, Change: ₱10
+INFO - 2026-03-19 06:20:57 --> Generated sale code: SALE-20260319-3301
+INFO - 2026-03-19 06:20:57 --> Inserting sale record
+INFO - 2026-03-19 06:20:57 --> Sale inserted with ID: 4
+INFO - 2026-03-19 06:20:57 --> Inserting sale item: STORM (15k puffs) (ID: 9)
+INFO - 2026-03-19 06:20:57 --> Updating stock for product ID: 9, quantity: 2
+INFO - 2026-03-19 06:20:57 --> Transaction completed successfully
+INFO - 2026-03-19 06:20:57 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-3301","subtotal":900,"tax_amount":90,"total_amount":990,"amount_paid":1000,"change_amount":10,"items":[{"name":"STORM (15k puffs)","quantity":2,"price":450}],"created_at":"2026-03-19 06:20:57"}}
+DEBUG - 2026-03-19 06:21:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:21:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:21:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:22:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:22:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:23:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:23:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:23:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:24:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:37:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:37:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:37:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:38:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:38:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:38:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:40:45 --> Process sale method called
+DEBUG - 2026-03-19 06:40:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:40:45 --> JSON parsed directly from request
+INFO - 2026-03-19 06:40:45 --> Age verification passed. Customer age: 21
+INFO - 2026-03-19 06:40:45 --> Cart items count: 2
+INFO - 2026-03-19 06:40:45 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 06:40:45 --> Cart item 1 converted from object to array
+INFO - 2026-03-19 06:40:45 --> Starting database transaction
+INFO - 2026-03-19 06:40:45 --> Totals calculated - Subtotal: 489.99, Tax: 48.999, Total: 538.989
+INFO - 2026-03-19 06:40:45 --> Payment validated - Amount paid: ₱1000, Change: ₱461.011
+INFO - 2026-03-19 06:40:45 --> Generated sale code: SALE-20260319-0825
+INFO - 2026-03-19 06:40:45 --> Inserting sale record
+INFO - 2026-03-19 06:40:45 --> Sale inserted with ID: 5
+INFO - 2026-03-19 06:40:45 --> Inserting sale item: STORM (15k puffs) (ID: 9)
+INFO - 2026-03-19 06:40:45 --> Updating stock for product ID: 9, quantity: 1
+INFO - 2026-03-19 06:40:45 --> Inserting sale item: BLACK ELITE V2 (12k puffs) (ID: 3)
+INFO - 2026-03-19 06:40:45 --> Updating stock for product ID: 3, quantity: 1
+INFO - 2026-03-19 06:40:45 --> Transaction completed successfully
+INFO - 2026-03-19 06:40:45 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-0825","subtotal":489.99,"tax_amount":48.999,"total_amount":538.989,"amount_paid":1000,"change_amount":461.01099999999997,"items":[{"name":"STORM (15k puffs)","quantity":1,"price":450},{"name":"BLACK ELITE V2 (12k puffs)","quantity":1,"price":39.99}],"created_at":"2026-03-19 06:40:45"}}
+INFO - 2026-03-19 06:42:22 --> Process sale method called
+DEBUG - 2026-03-19 06:42:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:42:22 --> JSON parsed directly from request
+INFO - 2026-03-19 06:42:22 --> Age verification passed. Customer age: 21
+INFO - 2026-03-19 06:42:22 --> Cart items count: 2
+INFO - 2026-03-19 06:42:22 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 06:42:22 --> Cart item 1 converted from object to array
+INFO - 2026-03-19 06:42:22 --> Starting database transaction
+INFO - 2026-03-19 06:42:22 --> Totals calculated - Subtotal: 489.99, Tax: 48.999, Total: 538.989
+INFO - 2026-03-19 06:42:22 --> Payment validated - Amount paid: ₱1000, Change: ₱461.011
+INFO - 2026-03-19 06:42:22 --> Generated sale code: SALE-20260319-4335
+INFO - 2026-03-19 06:42:22 --> Inserting sale record
+INFO - 2026-03-19 06:42:22 --> Sale inserted with ID: 6
+INFO - 2026-03-19 06:42:22 --> Inserting sale item: STORM (15k puffs) (ID: 9)
+INFO - 2026-03-19 06:42:22 --> Updating stock for product ID: 9, quantity: 1
+INFO - 2026-03-19 06:42:22 --> Inserting sale item: BLACK ELITE V2 (12k puffs) (ID: 3)
+INFO - 2026-03-19 06:42:22 --> Updating stock for product ID: 3, quantity: 1
+INFO - 2026-03-19 06:42:22 --> Transaction completed successfully
+INFO - 2026-03-19 06:42:22 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-4335","subtotal":489.99,"tax_amount":48.999,"total_amount":538.989,"amount_paid":1000,"change_amount":461.01099999999997,"items":[{"name":"STORM (15k puffs)","quantity":1,"price":450},{"name":"BLACK ELITE V2 (12k puffs)","quantity":1,"price":39.99}],"created_at":"2026-03-19 06:42:22"}}
+DEBUG - 2026-03-19 06:42:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:42:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:42:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:43:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:43:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-19 06:43:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:44:32 --> Process sale method called
+DEBUG - 2026-03-19 06:44:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-19 06:44:32 --> JSON parsed directly from request
+INFO - 2026-03-19 06:44:32 --> Age verification passed. Customer age: 22
+INFO - 2026-03-19 06:44:32 --> Cart items count: 1
+INFO - 2026-03-19 06:44:32 --> Cart item 0 converted from object to array
+INFO - 2026-03-19 06:44:32 --> Starting database transaction
+INFO - 2026-03-19 06:44:32 --> Totals calculated - Subtotal: 7500, Tax: 750, Total: 8250
+INFO - 2026-03-19 06:44:32 --> Payment validated - Amount paid: ₱10000, Change: ₱1750
+INFO - 2026-03-19 06:44:32 --> Generated sale code: SALE-20260319-3306
+INFO - 2026-03-19 06:44:32 --> Inserting sale record
+INFO - 2026-03-19 06:44:32 --> Sale inserted with ID: 7
+INFO - 2026-03-19 06:44:32 --> Inserting sale item: example (ID: 11)
+INFO - 2026-03-19 06:44:32 --> Updating stock for product ID: 11, quantity: 50
+INFO - 2026-03-19 06:44:32 --> Transaction completed successfully
+INFO - 2026-03-19 06:44:32 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260319-3306","subtotal":7500,"tax_amount":750,"total_amount":8250,"amount_paid":10000,"change_amount":1750,"items":[{"name":"example","quantity":50,"price":150}],"created_at":"2026-03-19 06:44:32"}}
+DEBUG - 2026-03-19 06:44:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

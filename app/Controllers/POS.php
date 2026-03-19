@@ -95,6 +95,7 @@ class POS extends BaseController
             
             $cart = $data['cart'] ?? [];
             $customerBirthdate = trim((string) ($data['customer_birthdate'] ?? ''));
+            $amountPaid = (float) ($data['amount_paid'] ?? 0);
 
             if ($customerBirthdate === '') {
                 log_message('warning', 'Age verification failed: missing customer birth date');
@@ -223,6 +224,18 @@ class POS extends BaseController
             
             log_message('info', 'Totals calculated - Subtotal: ' . $subtotal . ', Tax: ' . $taxAmount . ', Total: ' . $totalAmount);
             
+            // Validate payment amount
+            if ($amountPaid < $totalAmount) {
+                log_message('warning', 'Insufficient payment amount: ' . $amountPaid . ' < ' . $totalAmount);
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Insufficient payment amount. Total is ₱' . number_format($totalAmount, 2) . ' but customer paid ₱' . number_format($amountPaid, 2)
+                ]);
+            }
+            
+            $changeAmount = $amountPaid - $totalAmount;
+            log_message('info', 'Payment validated - Amount paid: ₱' . $amountPaid . ', Change: ₱' . $changeAmount);
+            
             // Generate sale code
             $saleCode = 'SALE-' . date('Ymd') . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
             log_message('info', 'Generated sale code: ' . $saleCode);
@@ -234,6 +247,8 @@ class POS extends BaseController
                 'tax_amount' => $taxAmount,
                 'subtotal' => $subtotal,
                 'payment_method' => 'cash',
+                'amount_paid' => $amountPaid,
+                'change_amount' => $changeAmount,
                 'processed_by' => (int) (session()->get('user_id') ?? 1),
                 'created_at' => date('Y-m-d H:i:s')
             ];
@@ -307,6 +322,8 @@ class POS extends BaseController
                     'subtotal' => (float) $subtotal,
                     'tax_amount' => (float) $taxAmount,
                     'total_amount' => (float) $totalAmount,
+                    'amount_paid' => (float) $amountPaid,
+                    'change_amount' => (float) $changeAmount,
                     'items' => $saleItems,
                     'created_at' => date('Y-m-d H:i:s')
                 ]
@@ -321,6 +338,8 @@ class POS extends BaseController
                 'subtotal' => $subtotal,
                 'tax_amount' => $taxAmount,
                 'total_amount' => $totalAmount,
+                'amount_paid' => $amountPaid,
+                'change_amount' => $changeAmount,
                 'items' => $cart,
                 'created_at' => date('Y-m-d H:i:s')
             ]);
