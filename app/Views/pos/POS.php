@@ -16,6 +16,41 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 ?>
 
 <div class="container-fluid py-4">
+    <!-- Category Sidebar -->
+    <div class="category-sidebar" id="categorySidebar">
+        <div class="category-indicator" id="categoryIndicator">
+            <div class="category-letters">
+                <?php foreach ($categories as $category): ?>
+                    <div class="category-letter" data-category="<?= esc($category) ?>" title="<?= esc($category) ?>">
+                        <?= strtoupper(substr($category, 0, 1)) ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        
+        <div class="category-content">
+            <div class="category-header">
+                <h5 class="category-title">
+                    <i class="fas fa-list me-2"></i>Categories
+                </h5>
+            </div>
+            <div class="category-list">
+                <?php foreach ($categories as $category): ?>
+                    <div class="category-item" data-category="<?= esc($category) ?>" onclick="filterByCategorySidebar('<?= esc($category) ?>')">
+                        <i class="fas fa-tag me-2 category-icon"></i>
+                        <span class="category-name"><?= esc($category) ?></span>
+                        <i class="fas fa-chevron-right category-arrow"></i>
+                    </div>
+                <?php endforeach; ?>
+                <div class="category-item active" data-category="" onclick="filterByCategorySidebar('')">
+                    <i class="fas fa-th me-2 category-icon"></i>
+                    <span class="category-name">All Categories</span>
+                    <i class="fas fa-chevron-right category-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -31,19 +66,11 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-9">
                             <input type="text" class="form-control" id="searchProduct" 
                                    placeholder="Search products..." onkeyup="searchProducts()">
                         </div>
-                        <div class="col-md-4">
-                            <select class="form-select" id="categoryFilter" onchange="filterByCategory()">
-                                <option value="">All Categories</option>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?= esc($category) ?>"><?= esc($category) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <button class="btn btn-outline-primary w-100" onclick="resetFilters()">
                                 <i class="fas fa-redo me-2"></i>Reset Filters
                             </button>
@@ -243,6 +270,9 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     </div>
 </div>
 
+<!-- Category Overlay -->
+<div class="category-overlay" id="categoryOverlay"></div>
+
 <style>
 /* Product card image support with default vape fallback */
 .product-card .product-image-wrap {
@@ -365,6 +395,234 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     opacity: 1;
 }
 
+/* Category Sidebar Styles */
+.category-sidebar {
+    position: fixed;
+    top: 80px; /* Reduced to eliminate top space and align with header */
+    left: -280px; /* Initially hidden */
+    width: 280px;
+    height: calc(100vh - 80px); /* Adjust height to match new top position */
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1040;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.category-sidebar.show {
+    transform: translateX(280px);
+}
+
+/* Category Indicator - Vertical bar with letters */
+.category-indicator {
+    position: absolute;
+    top: 40%; /* Moved up from 50% to match cart indicator */
+    right: -40px;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 8px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.category-letters {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.category-letter {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.category-letter:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.category-letter.active {
+    background: #5d9bff;
+    color: white;
+}
+
+/* Category Content */
+.category-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.category-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1); /* Subtle background for header */
+}
+
+.category-title {
+    color: #f7fafc;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.category-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1.5rem;
+    color: #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 3px solid transparent;
+    position: relative;
+}
+
+.category-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: #5d9bff;
+}
+
+.category-item.active {
+    background: rgba(93, 155, 255, 0.1);
+    border-left-color: #5d9bff;
+    color: #5d9bff;
+}
+
+.category-icon {
+    width: 16px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.category-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.category-arrow {
+    opacity: 0.5;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.category-item:hover .category-arrow {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+/* Overlay effect */
+.category-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1035;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.category-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Adjust main content for both sidebars */
+#mainContent {
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+#mainContent.category-hidden.cart-hidden {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+}
+
+#mainContent.category-visible.cart-hidden {
+    margin-left: 300px; /* Category sidebar width + margin */
+    margin-right: 0;
+    max-width: calc(100% - 300px);
+}
+
+#mainContent.category-hidden.cart-visible {
+    margin-left: 0;
+    margin-right: 470px; /* Cart width + margin */
+    max-width: calc(100% - 470px);
+}
+
+#mainContent.category-visible.cart-visible {
+    margin-left: 300px; /* Category sidebar width + margin */
+    margin-right: 470px; /* Cart width + margin */
+    max-width: calc(100% - 770px); /* Both sidebars */
+}
+
+/* Responsive adjustments for category sidebar */
+@media (max-width: 768px) {
+    .category-sidebar {
+        width: 250px;
+        left: -250px;
+        top: 80px; /* Reduced to eliminate top space on tablet */
+        height: calc(100vh - 80px); /* Adjust height for tablet */
+    }
+    
+    .category-sidebar.show {
+        transform: translateX(250px);
+    }
+    
+    #mainContent.category-visible.cart-hidden {
+        margin-left: 270px;
+        max-width: calc(100% - 270px);
+    }
+    
+    #mainContent.category-visible.cart-visible {
+        margin-left: 270px;
+        margin-right: 370px; /* Mobile cart width + margin */
+        max-width: calc(100% - 640px); /* Both sidebars on tablet */
+    }
+}
+
+@media (max-width: 576px) {
+    .category-sidebar {
+        width: 100%;
+        left: -100%;
+        top: 80px; /* Reduced to eliminate top space on mobile */
+        height: calc(100vh - 80px); /* Adjust height for mobile */
+    }
+    
+    .category-sidebar.show {
+        transform: translateX(100%);
+    }
+    
+    #mainContent.category-visible.cart-hidden,
+    #mainContent.category-visible.cart-visible {
+        margin-left: 0;
+        max-width: 100%;
+    }
+}
+
 /* Auto-hide Sliding Cart Styles */
 .cart-sidebar {
     position: fixed;
@@ -410,22 +668,6 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     cursor: pointer !important;
 }
 
-/* Dynamic main content adjustment */
-#mainContent {
-    transition: all 0.3s ease-in-out;
-    width: 100%;
-}
-
-#mainContent.cart-hidden {
-    margin-right: 0;
-    max-width: 100%;
-}
-
-#mainContent.cart-visible {
-    margin-right: 470px; /* Cart width (450px) + margin (20px) */
-    max-width: calc(100% - 470px);
-}
-
 /* Adjust cart content for larger sidebar */
 .cart-sidebar .card-body {
     padding: 1.5rem; /* Increased from 1.2rem */
@@ -464,13 +706,13 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 
 .cart-indicator {
     position: fixed;
-    top: 50%; /* Center vertically on screen */
+    top: calc(80px + 40%); /* Moved up from 50% to 40% for higher position */
     right: 0;
     transform: translateY(-50%);
-    background: linear-gradient(135deg, #5d9bff 0%, #6f6bff 100%);
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); /* Same as category sidebar */
     color: white;
-    padding: 15px 8px;
-    border-radius: 8px 0 0 8px;
+    padding: 10px 8px; /* Match category indicator padding */
+    border-radius: 0 8px 8px 0; /* Match category indicator shape */
     cursor: pointer;
     z-index: 1049;
     transition: all 0.3s ease;
@@ -478,12 +720,13 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow to match category sidebar */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* Border to match category sidebar */
 }
 
 .cart-indicator:hover {
     padding-right: 15px;
-    background: linear-gradient(135deg, #4a8ae6 0%, #5a5ae6 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%); /* Match category sidebar hover */
 }
 
 .cart-indicator.hidden {
@@ -502,17 +745,23 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 }
 
 .cart-count-indicator {
-    background: #ff6b7a;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    background: rgba(255, 255, 255, 0.1); /* Match category letter background */
+    color: #e2e8f0; /* Match category letter color */
+    border-radius: 4px; /* Match category letter border radius */
+    width: 24px; /* Match category letter width */
+    height: 24px; /* Match category letter height */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
-    font-weight: bold;
-    min-width: 20px;
+    font-size: 12px; /* Match category letter font size */
+    font-weight: 600; /* Match category letter font weight */
+    min-width: 24px;
+    transition: all 0.2s ease; /* Match category letter transition */
+}
+
+.cart-count-indicator:hover {
+    background: rgba(255, 255, 255, 0.2); /* Match category letter hover */
+    transform: scale(1.1); /* Match category letter hover */
 }
 
 .indicator-arrow i {
@@ -586,21 +835,6 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     
     .indicator-content i {
         font-size: 16px;
-    }
-}
-
-@media (max-width: 576px) {
-    .cart-sidebar {
-        width: 100%;
-        right: -100%;
-        top: 0;
-        max-height: 100vh;
-        border-radius: 0;
-    }
-    
-    #mainContent.cart-visible {
-        margin-right: 0; /* Full width on small mobile */
-        max-width: 100%;
     }
 }
 
@@ -702,6 +936,150 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 let cart = [];
 let currentProductVariants = [];
 let selectedVariant = null;
+
+// Category Sidebar Variables
+let categoryTimeout = null;
+let isMouseOverCategory = false;
+let isMouseOverCategoryIndicator = false;
+let currentActiveCategory = '';
+
+// Initialize Category Sidebar
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySidebar = document.getElementById('categorySidebar');
+    const categoryIndicator = document.getElementById('categoryIndicator');
+    const categoryOverlay = document.getElementById('categoryOverlay');
+    const mainContent = document.getElementById('mainContent');
+    
+    if (!categorySidebar || !categoryIndicator || !categoryOverlay || !mainContent) {
+        console.error('Category sidebar elements not found');
+        return;
+    }
+    
+    // Initialize main content as category-hidden
+    mainContent.classList.add('category-hidden');
+    
+    // Category indicator mouse events
+    categoryIndicator.addEventListener('mouseenter', function() {
+        clearTimeout(categoryTimeout);
+        showCategorySidebar();
+    });
+    
+    categoryIndicator.addEventListener('mouseleave', function() {
+        isMouseOverCategoryIndicator = false;
+        startCategoryHideTimer();
+    });
+    
+    categoryIndicator.addEventListener('mouseenter', function() {
+        isMouseOverCategoryIndicator = true;
+        clearTimeout(categoryTimeout);
+    });
+    
+    // Category sidebar mouse events
+    categorySidebar.addEventListener('mouseenter', function() {
+        isMouseOverCategory = true;
+        clearTimeout(categoryTimeout);
+    });
+    
+    categorySidebar.addEventListener('mouseleave', function() {
+        isMouseOverCategory = false;
+        startCategoryHideTimer();
+    });
+    
+    // Category overlay click to hide
+    categoryOverlay.addEventListener('click', function() {
+        hideCategorySidebar();
+    });
+    
+    // Category letter clicks
+    document.querySelectorAll('.category-letter').forEach(letter => {
+        letter.addEventListener('click', function() {
+            const category = this.dataset.category;
+            filterByCategorySidebar(category);
+            showCategorySidebar();
+        });
+    });
+    
+    // ESC key to close category sidebar
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && categorySidebar.classList.contains('show')) {
+            hideCategorySidebar();
+        }
+    });
+});
+
+// Show category sidebar
+function showCategorySidebar() {
+    const categorySidebar = document.getElementById('categorySidebar');
+    const categoryOverlay = document.getElementById('categoryOverlay');
+    const mainContent = document.getElementById('mainContent');
+    
+    categorySidebar.classList.add('show');
+    categoryOverlay.classList.add('show');
+    mainContent.classList.remove('category-hidden');
+    mainContent.classList.add('category-visible');
+    clearTimeout(categoryTimeout);
+}
+
+// Hide category sidebar
+function hideCategorySidebar() {
+    const categorySidebar = document.getElementById('categorySidebar');
+    const categoryOverlay = document.getElementById('categoryOverlay');
+    const mainContent = document.getElementById('mainContent');
+    
+    categorySidebar.classList.remove('show');
+    categoryOverlay.classList.remove('show');
+    mainContent.classList.remove('category-visible');
+    mainContent.classList.add('category-hidden');
+}
+
+// Start hide timer for category sidebar
+function startCategoryHideTimer() {
+    clearTimeout(categoryTimeout);
+    categoryTimeout = setTimeout(() => {
+        if (!isMouseOverCategory && !isMouseOverCategoryIndicator) {
+            hideCategorySidebar();
+        }
+    }, 300); // 300ms delay before hiding
+}
+
+// Filter by category from sidebar
+function filterByCategorySidebar(category) {
+    // Update active states
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.category-letter').forEach(letter => {
+        letter.classList.remove('active');
+    });
+    
+    // Set new active category
+    if (category) {
+        const activeItem = document.querySelector(`.category-item[data-category="${category}"]`);
+        const activeLetter = document.querySelector(`.category-letter[data-category="${category}"]`);
+        
+        if (activeItem) activeItem.classList.add('active');
+        if (activeLetter) activeLetter.classList.add('active');
+    } else {
+        const activeItem = document.querySelector('.category-item[data-category=""]');
+        if (activeItem) activeItem.classList.add('active');
+    }
+    
+    currentActiveCategory = category;
+    
+    // Filter products
+    const products = document.querySelectorAll('.product-item');
+    
+    products.forEach(product => {
+        if (category === '' || product.dataset.category === category) {
+            product.style.display = 'block';
+            // Add smooth scroll animation
+            product.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            product.style.display = 'none';
+        }
+    });
+}
 
 // Sliding Cart Variables
 let cartTimeout = null;
@@ -1714,26 +2092,28 @@ function searchProducts() {
     });
 }
 
-function filterByCategory() {
-    const category = document.getElementById('categoryFilter').value;
-    const products = document.querySelectorAll('.product-item');
-    
-    products.forEach(product => {
-        if (category === '' || product.dataset.category === category) {
-            product.style.display = 'block';
-        } else {
-            product.style.display = 'none';
-        }
-    });
-}
-
 function resetFilters() {
     document.getElementById('searchProduct').value = '';
-    document.getElementById('categoryFilter').value = '';
     const products = document.querySelectorAll('.product-item');
     products.forEach(product => {
         product.style.display = 'block';
     });
+    
+    // Reset category sidebar active state
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    document.querySelectorAll('.category-letter').forEach(letter => {
+        letter.classList.remove('active');
+    });
+    
+    // Set "All Categories" as active
+    const allCategoriesItem = document.querySelector('.category-item[data-category=""]');
+    if (allCategoriesItem) {
+        allCategoriesItem.classList.add('active');
+    }
+    
+    currentActiveCategory = '';
 }
 
 // Show receipt modal with sale data
