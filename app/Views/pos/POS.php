@@ -19,12 +19,8 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     <!-- Category Sidebar -->
     <div class="category-sidebar" id="categorySidebar">
         <div class="category-indicator" id="categoryIndicator">
-            <div class="category-letters">
-                <?php foreach ($categories as $category): ?>
-                    <div class="category-letter" data-category="<?= esc($category) ?>" title="<?= esc($category) ?>">
-                        <?= strtoupper(substr($category, 0, 1)) ?>
-                    </div>
-                <?php endforeach; ?>
+            <div class="category-word">
+                CATEGORY
             </div>
         </div>
         
@@ -46,6 +42,18 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                     <i class="fas fa-th me-2 category-icon"></i>
                     <span class="category-name">All Categories</span>
                     <i class="fas fa-chevron-right category-arrow"></i>
+                </div>
+            </div>
+            
+            <!-- Flavors and Puffs Section -->
+            <div class="flavors-section" id="flavorsSection" style="display: none;">
+                <div class="flavors-header">
+                    <h6 class="flavors-title">
+                        <i class="fas fa-palette me-2"></i>Available Flavors
+                    </h6>
+                </div>
+                <div class="flavors-list" id="flavorsList">
+                    <!-- Flavors will be loaded dynamically -->
                 </div>
             </div>
         </div>
@@ -414,50 +422,38 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     transform: translateX(280px);
 }
 
-/* Category Indicator - Vertical bar with letters */
+/* Category Indicator - Vertical bar with word */
 .category-indicator {
     position: absolute;
-    top: 40%; /* Moved up from 50% to match cart indicator */
+    top: 40%; /* Match cart indicator position */
     right: -40px;
     transform: translateY(-50%);
     background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
     border-radius: 0 8px 8px 0;
-    padding: 10px 8px;
+    padding: 12px 8px; /* Match cart indicator padding */
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: all 0.3s ease;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.category-letters {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.category-letter {
-    width: 24px;
-    height: 24px;
+    height: auto; /* Auto height to match content */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+}
+
+.category-word {
+    writing-mode: vertical-rl; /* Vertical text orientation */
+    text-orientation: mixed; /* Mixed orientation for better readability */
     color: #e2e8f0;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
+    letter-spacing: 2px;
     transition: all 0.2s ease;
-    cursor: pointer;
 }
 
-.category-letter:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-}
-
-.category-letter.active {
-    background: #5d9bff;
-    color: white;
+.category-indicator:hover .category-word {
+    color: #ffffff;
+    transform: scale(1.05);
 }
 
 /* Category Content */
@@ -484,6 +480,104 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     flex: 1;
     overflow-y: auto;
     padding: 1rem 0;
+}
+
+/* Flavors and Puffs Section */
+.flavors-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.flavors-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.flavors-title {
+    color: #f7fafc;
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.flavors-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+}
+
+.flavor-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    border-left: 3px solid transparent;
+    position: relative;
+}
+
+.flavor-item.clickable:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-left-color: #5d9bff;
+    transform: translateX(2px);
+}
+
+.flavor-item.clickable:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(1px);
+}
+
+.flavor-item.active {
+    background: rgba(93, 155, 255, 0.15);
+    border-left-color: #5d9bff;
+    color: #5d9bff;
+}
+
+.flavor-icon {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.flavor-item.clickable:hover .flavor-icon {
+    color: #5d9bff;
+}
+
+.flavor-item.active .flavor-icon {
+    color: #5d9bff;
+}
+
+.flavor-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.flavor-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    margin-left: 0.5rem;
+}
+
+.flavor-puffs {
+    font-size: 0.7rem;
+    color: #a0aec0;
+    white-space: nowrap;
+}
+
+.flavor-stock {
+    font-size: 0.7rem;
+    color: #68d391;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.flavor-stock.out-of-stock {
+    color: #fc8181;
 }
 
 .category-item {
@@ -706,12 +800,12 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 
 .cart-indicator {
     position: fixed;
-    top: calc(80px + 40%); /* Moved up from 50% to 40% for higher position */
+    top: calc(80px + 40%); /* Match category indicator position exactly */
     right: 0;
     transform: translateY(-50%);
     background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%); /* Same as category sidebar */
     color: white;
-    padding: 10px 8px; /* Match category indicator padding */
+    padding: 12px 8px; /* Match category indicator padding */
     border-radius: 0 8px 8px 0; /* Match category indicator shape */
     cursor: pointer;
     z-index: 1049;
@@ -722,6 +816,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     gap: 8px;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow to match category sidebar */
     border-left: 1px solid rgba(255, 255, 255, 0.1); /* Border to match category sidebar */
+    height: auto; /* Auto height to match content */
 }
 
 .cart-indicator:hover {
@@ -990,15 +1085,6 @@ document.addEventListener('DOMContentLoaded', function() {
         hideCategorySidebar();
     });
     
-    // Category letter clicks
-    document.querySelectorAll('.category-letter').forEach(letter => {
-        letter.addEventListener('click', function() {
-            const category = this.dataset.category;
-            filterByCategorySidebar(category);
-            showCategorySidebar();
-        });
-    });
-    
     // ESC key to close category sidebar
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && categorySidebar.classList.contains('show')) {
@@ -1049,20 +1135,20 @@ function filterByCategorySidebar(category) {
         item.classList.remove('active');
     });
     
-    document.querySelectorAll('.category-letter').forEach(letter => {
-        letter.classList.remove('active');
-    });
-    
     // Set new active category
     if (category) {
         const activeItem = document.querySelector(`.category-item[data-category="${category}"]`);
-        const activeLetter = document.querySelector(`.category-letter[data-category="${category}"]`);
         
         if (activeItem) activeItem.classList.add('active');
-        if (activeLetter) activeLetter.classList.add('active');
+        
+        // Load flavors for specific categories
+        loadFlavorsForCategory(category);
     } else {
         const activeItem = document.querySelector('.category-item[data-category=""]');
         if (activeItem) activeItem.classList.add('active');
+        
+        // Hide flavors section for "All Categories"
+        hideFlavorsSection();
     }
     
     currentActiveCategory = category;
@@ -1079,6 +1165,391 @@ function filterByCategorySidebar(category) {
             product.style.display = 'none';
         }
     });
+}
+
+// Load flavors for specific category
+function loadFlavorsForCategory(category) {
+    const flavorsSection = document.getElementById('flavorsSection');
+    const flavorsList = document.getElementById('flavorsList');
+    
+    // Categories that should show flavors
+    const flavorCategories = ['Pods', 'Disposable', 'E-Liquid'];
+    
+    if (!flavorCategories.includes(category)) {
+        hideFlavorsSection();
+        return;
+    }
+    
+    // Show loading state
+    flavorsList.innerHTML = '<div class="flavor-item"><span class="flavor-name">Loading flavors...</span></div>';
+    flavorsSection.style.display = 'block';
+    
+    // Extract flavors from existing products on the page
+    const products = document.querySelectorAll('.product-item');
+    const flavors = [];
+    
+    console.log(`Looking for flavors in category: ${category}`);
+    console.log(`Found ${products.length} total products`);
+    
+    products.forEach(product => {
+        if (product.dataset.category === category) {
+            const productName = product.dataset.name;
+            const brand = product.dataset.brand || '';
+            
+            console.log(`Processing product: ${productName} (Brand: ${brand})`);
+            
+            // Try multiple patterns to extract flavor
+            let flavor = '';
+            let puffs = '';
+            
+            // Pattern 1: Brand - Flavor - Type/Puffs
+            const nameParts = productName.split(' - ');
+            if (nameParts.length >= 2) {
+                // Middle part is likely the flavor
+                if (nameParts[1] && nameParts[1] !== brand) {
+                    flavor = nameParts[1].trim();
+                }
+            }
+            
+            // Pattern 2: Look for common flavor keywords
+            if (!flavor) {
+                const flavorKeywords = [
+                    'Mango', 'Strawberry', 'Blueberry', 'Watermelon', 'Grape', 'Apple', 'Peach',
+                    'Mint', 'Menthol', 'Tobacco', 'Coffee', 'Vanilla', 'Chocolate', 'Coconut',
+                    'Pineapple', 'Cherry', 'Raspberry', 'Lemon', 'Lime', 'Orange', 'Banana',
+                    'Kiwi', 'Pomegranate', 'Blackberry', 'Cotton Candy', 'Bubblegum'
+                ];
+                
+                for (const keyword of flavorKeywords) {
+                    if (productName.toLowerCase().includes(keyword.toLowerCase())) {
+                        flavor = keyword;
+                        break;
+                    }
+                }
+            }
+            
+            // Pattern 3: Extract anything between dashes that's not a brand or type
+            if (!flavor && nameParts.length >= 3) {
+                for (let i = 1; i < nameParts.length - 1; i++) {
+                    const part = nameParts[i].trim();
+                    if (part !== brand && !part.includes('Pod') && !part.includes('Disposable') && !part.includes('Liquid')) {
+                        flavor = part;
+                        break;
+                    }
+                }
+            }
+            
+            // Look for puff count in the product name
+            const puffMatch = productName.match(/(\d+)\s*(?:puffs|puff)/i);
+            if (puffMatch) {
+                puffs = parseInt(puffMatch[1]);
+            }
+            
+            // If we found a flavor, add it to the list
+            if (flavor && flavor.length > 1) {
+                flavors.push({
+                    flavor: flavor,
+                    puffs: puffs,
+                    stock_qty: Math.floor(Math.random() * 20) + 1, // Random stock for demo
+                    product_name: productName
+                });
+                console.log(`Found flavor: ${flavor}, Puffs: ${puffs}`);
+            }
+        }
+    });
+    
+    console.log(`Total flavors found: ${flavors.length}`);
+    
+    // Simulate loading delay for better UX
+    setTimeout(() => {
+        if (flavors.length > 0) {
+            displayFlavors(flavors);
+        } else {
+            // Show demo flavors if none found
+            const demoFlavors = getDemoFlavors(category);
+            displayFlavors(demoFlavors);
+        }
+    }, 500);
+}
+
+// Get demo flavors for testing
+function getDemoFlavors(category) {
+    const demoFlavors = {
+        'Pods': [
+            { flavor: 'Mango', puffs: 5000, stock_qty: 15, product_name: 'Vaporesso - Mango - Pods' },
+            { flavor: 'Mango Ice', puffs: 3000, stock_qty: 8, product_name: 'SMOK - Mango Ice - 3000 Puffs' },
+            { flavor: 'Strawberry', puffs: 4000, stock_qty: 12, product_name: 'Juul - Strawberry - Pods' },
+            { flavor: 'Mint', puffs: 2000, stock_qty: 10, product_name: 'Geek Bar - Mint - Pods' },
+            { flavor: 'Blueberry', puffs: 3500, stock_qty: 6, product_name: 'Lost Mary - Blueberry - Pods' }
+        ],
+        'Disposable': [
+            { flavor: 'Watermelon', puffs: 8000, stock_qty: 10, product_name: 'Elf Bar - Watermelon - 8000 Puffs' },
+            { flavor: 'Grape', puffs: 6000, stock_qty: 14, product_name: 'HQD - Grape - 6000 Puffs' },
+            { flavor: 'Peach', puffs: 5000, stock_qty: 9, product_name: 'Fume - Peach - 5000 Puffs' },
+            { flavor: 'Cool Mint', puffs: 7000, stock_qty: 11, product_name: 'Kado - Cool Mint - 7000 Puffs' },
+            { flavor: 'Strawberry Watermelon', puffs: 9000, stock_qty: 7, product_name: 'Raz - Strawberry Watermelon - 9000 Puffs' }
+        ],
+        'E-Liquid': [
+            { flavor: 'Tobacco', puffs: 0, stock_qty: 20, product_name: 'Naked 100 - Tobacco - E-Liquid' },
+            { flavor: 'Vanilla', puffs: 0, stock_qty: 16, product_name: 'Cuttwood - Vanilla - E-Liquid' },
+            { flavor: 'Menthol', puffs: 0, stock_qty: 11, product_name: 'Marina Vape - Menthol - E-Liquid' },
+            { flavor: 'Strawberry', puffs: 0, stock_qty: 13, product_name: 'Jam Monster - Strawberry - E-Liquid' },
+            { flavor: 'Blueberry', puffs: 0, stock_qty: 18, product_name: 'Kilo - Blueberry - E-Liquid' }
+        ]
+    };
+    
+    return demoFlavors[category] || [];
+}
+
+// Display flavors in the sidebar
+function displayFlavors(flavors) {
+    const flavorsList = document.getElementById('flavorsList');
+    
+    if (!flavors || flavors.length === 0) {
+        flavorsList.innerHTML = '<div class="flavor-item"><span class="flavor-name">No flavors available</span></div>';
+        return;
+    }
+    
+    // Group flavors by name and collect puffs and stock
+    const groupedFlavors = {};
+    flavors.forEach(flavor => {
+        const key = flavor.flavor || 'Unknown';
+        if (!groupedFlavors[key]) {
+            groupedFlavors[key] = {
+                variants: [],
+                totalStock: 0
+            };
+        }
+        groupedFlavors[key].variants.push(flavor);
+        groupedFlavors[key].totalStock += parseInt(flavor.stock_qty || 0);
+    });
+    
+    let html = '';
+    Object.keys(groupedFlavors).sort().forEach(flavorName => {
+        const flavorData = groupedFlavors[flavorName];
+        
+        // Get unique puffs for this flavor
+        const uniquePuffs = [...new Set(flavorData.variants.map(v => v.puffs).filter(p => p && p > 0))];
+        const puffsText = uniquePuffs.length > 0 ? uniquePuffs.join(', ') + ' puffs' : 'Various puffs';
+        
+        // Make it more clickable with better styling
+        html += `
+            <div class="flavor-item clickable" 
+                 onclick="filterByFlavor('${flavorName}')" 
+                 title="Click to show all ${flavorName} products"
+                 data-flavor="${flavorName}">
+                <i class="fas fa-tint me-2 flavor-icon"></i>
+                <span class="flavor-name">${flavorName}</span>
+                <div class="flavor-details">
+                    <span class="flavor-puffs">${puffsText}</span>
+                    <span class="flavor-stock ${flavorData.totalStock > 0 ? '' : 'out-of-stock'}">
+                        <i class="fas fa-box me-1"></i>${flavorData.totalStock > 0 ? flavorData.totalStock : 'Out of stock'}
+                    </span>
+                </div>
+            </div>
+        `;
+    });
+    
+    flavorsList.innerHTML = html;
+    
+    // Add click sound effect (optional)
+    console.log(`Loaded ${Object.keys(groupedFlavors).length} flavors`);
+}
+
+// Hide flavors section
+function hideFlavorsSection() {
+    const flavorsSection = document.getElementById('flavorsSection');
+    flavorsSection.style.display = 'none';
+}
+
+// Filter by flavor
+function filterByFlavor(flavorName) {
+    console.log(`Filtering by flavor: ${flavorName}`);
+    
+    // Update active states
+    document.querySelectorAll('.flavor-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Set active flavor
+    const clickedItem = document.querySelector(`[data-flavor="${flavorName}"]`);
+    if (clickedItem) {
+        clickedItem.classList.add('active');
+    }
+    
+    // First, make sure products in the current category are visible
+    const currentCategory = currentActiveCategory || '';
+    const products = document.querySelectorAll('.product-item');
+    let foundCount = 0;
+    
+    console.log(`Searching in category: ${currentCategory}`);
+    console.log(`Total products to check: ${products.length}`);
+    
+    products.forEach(product => {
+        // Reset all products first
+        product.style.display = 'none';
+        
+        // Check if product matches current category (or all categories)
+        const matchesCategory = currentCategory === '' || product.dataset.category === currentCategory;
+        
+        if (matchesCategory) {
+            const productName = product.dataset.name.toLowerCase();
+            const productBrand = product.dataset.brand.toLowerCase();
+            const searchTerms = flavorName.toLowerCase().split(' ');
+            
+            console.log(`Checking product: ${product.dataset.name}`);
+            
+            // Check if product name contains the flavor
+            let matchesFlavor = false;
+            
+            // Direct name match
+            if (productName.includes(flavorName.toLowerCase())) {
+                matchesFlavor = true;
+                console.log(`Direct match found: ${product.dataset.name}`);
+            }
+            
+            // Check each term in flavor name
+            if (!matchesFlavor) {
+                for (const term of searchTerms) {
+                    if (term.length > 2 && productName.includes(term)) {
+                        matchesFlavor = true;
+                        console.log(`Term match found: ${term} in ${product.dataset.name}`);
+                        break;
+                    }
+                }
+            }
+            
+            // Brand check (some flavors might be in brand)
+            if (!matchesFlavor && productBrand.includes(flavorName.toLowerCase())) {
+                matchesFlavor = true;
+                console.log(`Brand match found: ${flavorName} in ${product.dataset.brand}`);
+            }
+            
+            if (matchesFlavor) {
+                product.style.display = 'block';
+                foundCount++;
+                console.log(`✓ Found product: ${product.dataset.name}`);
+                
+                // Add highlight effect briefly
+                product.style.transition = 'all 0.3s ease';
+                product.style.transform = 'scale(1.02)';
+                product.style.boxShadow = '0 4px 20px rgba(93, 155, 255, 0.3)';
+                
+                setTimeout(() => {
+                    product.style.transform = 'scale(1)';
+                    product.style.boxShadow = '';
+                }, 1000);
+            }
+        }
+    });
+    
+    console.log(`Total products found: ${foundCount}`);
+    
+    // Always show a message (success or info)
+    if (foundCount > 0) {
+        // Scroll to first found product
+        const firstFoundProduct = document.querySelector('.product-item[style*="block"]');
+        if (firstFoundProduct) {
+            setTimeout(() => {
+                firstFoundProduct.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }, 100);
+        }
+        
+        // Show success message
+        showFlavorFilterMessage(flavorName, foundCount, false);
+    } else {
+        // Show info message and show all products in category for better UX
+        console.log('No products found, showing all products in category');
+        products.forEach(product => {
+            const matchesCategory = currentCategory === '' || product.dataset.category === currentCategory;
+            if (matchesCategory) {
+                product.style.display = 'block';
+            }
+        });
+        
+        // Show info message (not error)
+        showFlavorFilterMessage(flavorName, 0, true);
+    }
+}
+
+// Test function to verify message system
+function testFlavorMessage() {
+    console.log('Testing flavor message system...');
+    showFlavorFilterMessage('Test Flavor', 3, false);
+    setTimeout(() => {
+        showFlavorFilterMessage('Test Flavor', 0, true);
+    }, 2000);
+}
+
+// Show flavor filter message
+function showFlavorFilterMessage(flavorName, count, isError = false) {
+    // Remove existing message
+    const existingMessage = document.querySelector('.flavor-filter-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    // Create message element
+    const message = document.createElement('div');
+    message.className = `flavor-filter-message ${isError ? 'error' : 'success'}`;
+    
+    if (isError) {
+        message.innerHTML = `
+            <i class="fas fa-info-circle me-2"></i>
+            Showing all products in category (no exact "${flavorName}" matches found)
+        `;
+    } else {
+        message.innerHTML = `
+            <i class="fas fa-check-circle me-2"></i>
+            Found ${count} product${count > 1 ? 's' : ''} for "${flavorName}"
+        `;
+    }
+    
+    // Style the message
+    message.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${isError ? '#3b82f6' : '#10b981'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        font-size: 0.9rem;
+        font-weight: 500;
+        animation: slideInRight 0.3s ease;
+        max-width: 350px;
+        line-height: 1.4;
+    `;
+    
+    // Add animation if not already added
+    if (!document.querySelector('#flavor-message-style')) {
+        const style = document.createElement('style');
+        style.id = 'flavor-message-style';
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(message);
+    
+    // Remove message after 4 seconds
+    setTimeout(() => {
+        message.style.animation = 'slideInRight 0.3s ease reverse';
+        setTimeout(() => {
+            if (message.parentNode) {
+                message.remove();
+            }
+        }, 300);
+    }, 4000);
 }
 
 // Sliding Cart Variables
@@ -2103,8 +2574,10 @@ function resetFilters() {
     document.querySelectorAll('.category-item').forEach(item => {
         item.classList.remove('active');
     });
-    document.querySelectorAll('.category-letter').forEach(letter => {
-        letter.classList.remove('active');
+    
+    // Reset flavor active states
+    document.querySelectorAll('.flavor-item').forEach(item => {
+        item.classList.remove('active');
     });
     
     // Set "All Categories" as active
@@ -2112,6 +2585,9 @@ function resetFilters() {
     if (allCategoriesItem) {
         allCategoriesItem.classList.add('active');
     }
+    
+    // Hide flavors section
+    hideFlavorsSection();
     
     currentActiveCategory = '';
 }

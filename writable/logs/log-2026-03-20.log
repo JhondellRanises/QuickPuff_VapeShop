@@ -235,3 +235,67 @@ DEBUG - 2026-03-20 02:50:06 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2026-03-20 02:50:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-03-20 02:50:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2026-03-20 02:50:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:50:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:51:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:52:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:53:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:53:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-20 02:53:17 --> Process sale method called
+DEBUG - 2026-03-20 02:53:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-20 02:53:17 --> JSON parsed directly from request
+INFO - 2026-03-20 02:53:17 --> Backend age calculation - Birthdate: 2008-03-20, Calculated Age: 17
+INFO - 2026-03-20 02:53:17 --> Allowing sale - customer appears to be 17 but likely 18 (timezone/calculation difference)
+INFO - 2026-03-20 02:53:17 --> Age verification passed. Customer age: 17
+INFO - 2026-03-20 02:53:17 --> Cart items count: 2
+INFO - 2026-03-20 02:53:17 --> Cart item 0 converted from object to array
+INFO - 2026-03-20 02:53:17 --> Cart item 1 converted from object to array
+INFO - 2026-03-20 02:53:17 --> Starting database transaction
+INFO - 2026-03-20 02:53:17 --> Totals calculated - Subtotal: 1595, Tax: 159.5, Total: 1754.5
+INFO - 2026-03-20 02:53:17 --> Payment validated - Amount paid: ₱10000, Change: ₱8245.5
+INFO - 2026-03-20 02:53:17 --> Generated sale code: SALE-20260320-9679
+INFO - 2026-03-20 02:53:17 --> Inserting sale record
+INFO - 2026-03-20 02:53:18 --> Sale inserted with ID: 13
+INFO - 2026-03-20 02:53:18 --> Inserting sale item: VOOPOO DRAG KIT (ID: 29)
+INFO - 2026-03-20 02:53:18 --> Updating stock for product ID: 29, quantity: 1
+INFO - 2026-03-20 02:53:18 --> Inserting sale item: X-VAPE SLIMBAR DEVICE (ID: 28)
+INFO - 2026-03-20 02:53:18 --> Updating stock for product ID: 28, quantity: 1
+INFO - 2026-03-20 02:53:18 --> Transaction completed successfully
+INFO - 2026-03-20 02:53:18 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260320-9679","subtotal":1595,"tax_amount":159.5,"total_amount":1754.5,"amount_paid":10000,"change_amount":8245.5,"items":[{"name":"VOOPOO DRAG KIT","quantity":1,"price":1200},{"name":"X-VAPE SLIMBAR DEVICE","quantity":1,"price":395}],"created_at":"2026-03-20 02:53:18"}}
+DEBUG - 2026-03-20 02:53:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:54:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:56:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:56:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:57:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 02:57:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:01:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:01:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:02:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:03:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:03:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:03:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:03:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:04:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:05:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:06:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:07:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:07:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-20 03:07:33 --> Process sale method called
+DEBUG - 2026-03-20 03:07:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-03-20 03:07:33 --> JSON parsed directly from request
+INFO - 2026-03-20 03:07:33 --> Backend age calculation - Birthdate: 2008-03-20, Calculated Age: 17
+INFO - 2026-03-20 03:07:33 --> Allowing sale - customer appears to be 17 but likely 18 (timezone/calculation difference)
+INFO - 2026-03-20 03:07:33 --> Age verification passed. Customer age: 17
+INFO - 2026-03-20 03:07:33 --> Cart items count: 1
+INFO - 2026-03-20 03:07:33 --> Cart item 0 converted from object to array
+INFO - 2026-03-20 03:07:33 --> Starting database transaction
+INFO - 2026-03-20 03:07:33 --> Totals calculated - Subtotal: 350, Tax: 35, Total: 385
+INFO - 2026-03-20 03:07:33 --> Payment validated - Amount paid: ₱1000, Change: ₱615
+INFO - 2026-03-20 03:07:33 --> Generated sale code: SALE-20260320-9466
+INFO - 2026-03-20 03:07:33 --> Inserting sale record
+INFO - 2026-03-20 03:07:33 --> Sale inserted with ID: 14
+INFO - 2026-03-20 03:07:33 --> Inserting sale item: BLACK ELITE V2 - Grape (8000 puffs) (ID: 22)
+INFO - 2026-03-20 03:07:33 --> Updating stock for product ID: 22, quantity: 1
+INFO - 2026-03-20 03:07:33 --> Transaction completed successfully
+INFO - 2026-03-20 03:07:33 --> Response data prepared: {"success":true,"message":"Sale processed successfully!","sale":{"sale_code":"SALE-20260320-9466","subtotal":350,"tax_amount":35,"total_amount":385,"amount_paid":1000,"change_amount":615,"items":[{"name":"BLACK ELITE V2 - Grape (8000 puffs)","quantity":1,"price":350}],"created_at":"2026-03-20 03:07:33"}}
+DEBUG - 2026-03-20 03:07:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-20 03:09:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
