@@ -22,15 +22,11 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
             <h1 class="page-title">Point of Sale</h1>
             <p class="page-subtitle">Process sales and manage transactions</p>
         </div>
-        <button class="btn btn-danger" onclick="clearCart()">
-            <i class="fas fa-trash me-2"></i>
-            Clear Cart
-        </button>
     </div>
 
     <div class="row">
         <!-- Products Section -->
-        <div class="col-lg-8">
+        <div class="col-lg-12" id="mainContent">
             <!-- Search and Filter -->
             <div class="card mb-4">
                 <div class="card-body">
@@ -130,91 +126,117 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
             </div>
         </div>
 
-        <!-- Cart Section -->
+        <!-- Cart Section - Auto-hide Sliding Sidebar -->
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-shopping-cart me-2"></i>
-                        Shopping Cart
-                        <span class="badge bg-primary float-end" id="cartCount">0</span>
-                    </h5>
+            <!-- Cart Indicator (visible when cart is hidden) -->
+            <div class="cart-indicator" id="cartIndicator">
+                <div class="indicator-content">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count-indicator" id="cartCountIndicator">0</span>
                 </div>
-                <div class="card-body">
-                    <div id="cartItems">
-                        <p class="text-muted text-center">Your cart is empty</p>
-                    </div>
+                <div class="indicator-arrow">
+                    <i class="fas fa-chevron-left"></i>
                 </div>
-                <div class="card-footer">
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <strong>Subtotal:</strong>
-                            <span id="subtotal">₱0.00</span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <strong>Tax (10%):</strong>
-                            <span id="tax">₱0.00</span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between">
-                            <h5>Total:</h5>
-                            <h5 id="total">₱0.00</h5>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="customerBirthDate" class="form-label">
-                            Customer Birth Date <span class="text-danger">*</span>
-                        </label>
-                        <div class="row g-2">
-                            <div class="col-12">
-                                <input type="date"
-                                       class="form-control"
-                                       id="customerBirthDate"
-                                       max="<?= date('Y-m-d') ?>"
-                                       onchange="verifyAgeDisplay()"
-                                       required>
+            </div>
+
+            <!-- Cart Container -->
+            <div class="cart-sidebar" id="cartSidebar">
+                <!-- Pin/Unpin Toggle -->
+                <button class="cart-pin-toggle" id="cartPinToggle" title="Pin/Unpin Cart">
+                    <i class="fas fa-thumbtack" id="pinIcon"></i>
+                </button>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                Shopping Cart
+                            </h5>
+                            <div class="d-flex align-items-center gap-2">
+                                <button class="btn btn-sm btn-outline-danger" onclick="clearCart()" title="Clear Cart">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <span class="badge bg-primary" id="cartCount">0</span>
                             </div>
-                            <div class="col-12">
-                                <div class="d-grid">
-                                    <button type="button" class="btn btn-info btn-sm text-white" onclick="quickAgeVerify('18')">
-                                        <i class="fas fa-check me-1"></i>
-                                        Verify 18+ Years Old
-                                    </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="cartItems">
+                            <p class="text-muted text-center">Your cart is empty</p>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <strong>Subtotal:</strong>
+                                <span id="subtotal">₱0.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <strong>Tax (10%):</strong>
+                                <span id="tax">₱0.00</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <h5>Total:</h5>
+                                <h5 id="total">₱0.00</h5>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerBirthDate" class="form-label">
+                                Customer Birth Date <span class="text-danger">*</span>
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <input type="date"
+                                           class="form-control"
+                                           id="customerBirthDate"
+                                           max="<?= date('Y-m-d') ?>"
+                                           onchange="verifyAgeDisplay()"
+                                           required>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="button" class="btn btn-info btn-sm text-white" onclick="quickAgeVerify('18')">
+                                            <i class="fas fa-check me-1"></i>
+                                            Verify 18+ Years Old
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                            <div id="ageVerificationResult" class="mt-2" style="display: none;">
+                                <!-- Age verification result will be displayed here -->
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Age restriction: 18 years old and above only.
+                            </small>
                         </div>
-                        <div id="ageVerificationResult" class="mt-2" style="display: none;">
-                            <!-- Age verification result will be displayed here -->
+                        <div class="mb-3">
+                            <label for="amountPaid" class="form-label">
+                                Amount Paid <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">₱</span>
+                                <input type="number"
+                                       class="form-control"
+                                       id="amountPaid"
+                                       step="0.01"
+                                       min="0"
+                                       placeholder="0.00"
+                                       oninput="debouncedCalculateChange()"
+                                       required>
+                            </div>
+                            <small class="text-muted d-block mt-1">Enter the amount of money the customer gives.</small>
+                            <small id="changeDisplay" class="text-success d-block mt-1" style="display: none;">
+                                <strong>Change: ₱<span id="changeAmount">0.00</span></strong>
+                            </small>
                         </div>
-                        <small class="text-muted d-block mt-1">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Age restriction: 18 years old and above only.
-                        </small>
+                        <button class="btn btn-success btn-lg w-100 text-white fw-bold shadow-sm" onclick="processSale()" id="processSaleBtn" disabled>
+                            <i class="fas fa-credit-card me-2"></i>
+                            Process Sale
+                        </button>
                     </div>
-                    <div class="mb-3">
-                        <label for="amountPaid" class="form-label">
-                            Amount Paid <span class="text-danger">*</span>
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-text">₱</span>
-                            <input type="number"
-                                   class="form-control"
-                                   id="amountPaid"
-                                   step="0.01"
-                                   min="0"
-                                   placeholder="0.00"
-                                   oninput="debouncedCalculateChange()"
-                                   required>
-                        </div>
-                        <small class="text-muted d-block mt-1">Enter the amount of money the customer gives.</small>
-                        <small id="changeDisplay" class="text-success d-block mt-1" style="display: none;">
-                            <strong>Change: ₱<span id="changeAmount">0.00</span></strong>
-                        </small>
-                    </div>
-                    <button class="btn btn-success btn-lg w-100 text-white fw-bold shadow-sm" onclick="processSale()" id="processSaleBtn" disabled>
-                        <i class="fas fa-credit-card me-2"></i>
-                        Process Sale
-                    </button>
                 </div>
             </div>
         </div>
@@ -342,6 +364,276 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 #receiptModal .btn-close:hover {
     opacity: 1;
 }
+
+/* Auto-hide Sliding Cart Styles */
+.cart-sidebar {
+    position: fixed;
+    top: 120px; /* Moved down further to avoid covering header */
+    right: -450px; /* Increased from 400px to 450px */
+    width: 450px; /* Increased from 400px to 450px */
+    height: auto;
+    max-height: calc(100vh - 140px); /* Adjusted max-height for new top position */
+    background: #1d2238; /* Solid background - no transparency */
+    transition: all 0.3s ease-in-out;
+    z-index: 1050;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); /* Darker shadow for solid appearance */
+    border-radius: 12px 0 0 12px;
+    border: 2px solid #2d3348; /* Solid border instead of transparent */
+    border-right: none;
+}
+
+.cart-sidebar.show {
+    right: 0;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6); /* Darker, more prominent shadow */
+}
+
+.cart-sidebar .card {
+    height: auto;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer; /* Indicate cart is clickable for pin toggle */
+}
+
+/* Override cursor for interactive elements */
+.cart-sidebar input,
+.cart-sidebar button,
+.cart-sidebar select,
+.cart-sidebar a,
+.cart-sidebar .cart-pin-toggle {
+    cursor: default; /* Reset cursor for interactive elements */
+}
+
+/* Ensure Clear Cart button has pointer cursor for auto-spacing compatibility */
+.cart-sidebar .btn-outline-danger {
+    cursor: pointer !important;
+}
+
+/* Dynamic main content adjustment */
+#mainContent {
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+#mainContent.cart-hidden {
+    margin-right: 0;
+    max-width: 100%;
+}
+
+#mainContent.cart-visible {
+    margin-right: 470px; /* Cart width (450px) + margin (20px) */
+    max-width: calc(100% - 470px);
+}
+
+/* Adjust cart content for larger sidebar */
+.cart-sidebar .card-body {
+    padding: 1.5rem; /* Increased from 1.2rem */
+}
+
+.cart-sidebar .card-footer {
+    padding: 1.5rem; /* Increased from 1.2rem */
+}
+
+/* Cart header adjustments */
+.cart-sidebar .card-header {
+    background: #252b42; /* Solid background instead of transparent */
+    border-bottom: 2px solid #2d3348; /* Solid border */
+    padding: 1.2rem 1.5rem; /* Increased padding */
+}
+
+/* Clear Cart button in header - integrated with auto-spacing */
+.cart-sidebar .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking in flex layout */
+}
+
+.cart-sidebar .btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    transform: scale(1.05);
+}
+
+.cart-sidebar .btn-outline-danger:active {
+    transform: scale(0.95);
+}
+
+.cart-indicator {
+    position: fixed;
+    top: 50%; /* Center vertically on screen */
+    right: 0;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #5d9bff 0%, #6f6bff 100%);
+    color: white;
+    padding: 15px 8px;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    z-index: 1049;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-indicator:hover {
+    padding-right: 15px;
+    background: linear-gradient(135deg, #4a8ae6 0%, #5a5ae6 100%);
+}
+
+.cart-indicator.hidden {
+    right: -50px;
+}
+
+.indicator-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.indicator-content i {
+    font-size: 18px;
+}
+
+.cart-count-indicator {
+    background: #ff6b7a;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 20px;
+}
+
+.indicator-arrow i {
+    font-size: 12px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(0);
+    }
+    40% {
+        transform: translateX(-3px);
+    }
+    60% {
+        transform: translateX(-1px);
+    }
+}
+
+.cart-pin-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #2d3348; /* Solid background */
+    border: 2px solid #3d4358; /* Solid border */
+    color: #f4f7ff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.cart-pin-toggle:hover {
+    background: #3d4358; /* Solid hover background */
+    transform: scale(1.1);
+}
+
+.cart-pin-toggle.pinned {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.cart-pin-toggle.pinned i {
+    transform: rotate(45deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cart-sidebar {
+        width: 350px; /* Increased from 320px to 350px */
+        right: -350px;
+        top: 100px; /* Adjusted top position to avoid header on tablet */
+        max-height: calc(100vh - 120px); /* Adjusted max-height */
+        border-radius: 8px 0 0 8px;
+    }
+    
+    #mainContent.cart-visible {
+        margin-right: 370px; /* Mobile cart width (350px) + margin (20px) */
+        max-width: calc(100% - 370px);
+    }
+    
+    .cart-indicator {
+        padding: 12px 6px;
+    }
+    
+    .indicator-content i {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .cart-sidebar {
+        width: 100%;
+        right: -100%;
+        top: 0;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+    
+    #mainContent.cart-visible {
+        margin-right: 0; /* Full width on small mobile */
+        max-width: 100%;
+    }
+}
+
+/* Ensure cart content is visible when sidebar is shown */
+.cart-sidebar.show .card {
+    opacity: 1;
+}
+
+/* Smooth transitions for cart content */
+.cart-sidebar .card-body,
+.cart-sidebar .card-footer {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Optimize product grid for maximized space */
+#mainContent.cart-hidden .product-item {
+    transition: all 0.3s ease-in-out;
+}
+
+/* When cart is hidden, show more products per row on larger screens */
+@media (min-width: 1400px) {
+    #mainContent.cart-hidden .product-item {
+        max-width: 20%; /* 5 products per row on extra large screens */
+        flex: 0 0 20%;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+    #mainContent.cart-hidden .product-item {
+        max-width: 25%; /* 4 products per row on large screens */
+        flex: 0 0 25%;
+    }
+}
 </style>
 
 <!-- Receipt Modal -->
@@ -410,6 +702,184 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 let cart = [];
 let currentProductVariants = [];
 let selectedVariant = null;
+
+// Sliding Cart Variables
+let cartTimeout = null;
+let isCartPinned = false;
+let isMouseOverCart = false;
+let isMouseOverIndicator = false;
+
+// Initialize Sliding Cart
+document.addEventListener('DOMContentLoaded', function() {
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartIndicator = document.getElementById('cartIndicator');
+    const cartPinToggle = document.getElementById('cartPinToggle');
+    const mainContent = document.getElementById('mainContent');
+    
+    if (!cartSidebar || !cartIndicator || !cartPinToggle || !mainContent) {
+        console.error('Cart elements not found');
+        return;
+    }
+    
+    // Initialize main content as cart-hidden
+    mainContent.classList.add('cart-hidden');
+    
+    // Hide cart initially
+    hideCart();
+    
+    // Cart indicator click/hover events
+    cartIndicator.addEventListener('mouseenter', showCart);
+    cartIndicator.addEventListener('click', toggleCart);
+    
+    // Cart sidebar mouse events
+    cartSidebar.addEventListener('mouseenter', function() {
+        isMouseOverCart = true;
+        clearTimeout(cartTimeout);
+    });
+    
+    cartSidebar.addEventListener('mouseleave', function() {
+        isMouseOverCart = false;
+        if (!isCartPinned) {
+            startHideTimer();
+        }
+    });
+    
+    // Click anywhere in cart to toggle pin
+    cartSidebar.addEventListener('click', function(e) {
+        // Don't toggle pin if clicking on the pin toggle button, form inputs, buttons, or specific cart controls
+        // Clear Cart button is excluded to allow it to work independently with auto-spacing
+        if (!e.target.closest('.cart-pin-toggle') && 
+            !e.target.closest('input') && 
+            !e.target.closest('button:not(.btn-outline-danger)') && // Allow Clear Cart button to work normally
+            !e.target.closest('select') &&
+            !e.target.closest('a') &&
+            !e.target.closest('.btn-outline-danger')) { // Explicitly exclude Clear Cart button
+            togglePin(); // Toggle pin state - pin if unpinned, unpin if pinned
+        }
+    });
+    
+    cartIndicator.addEventListener('mouseleave', function() {
+        isMouseOverIndicator = false;
+        if (!isMouseOverCart && !isCartPinned) {
+            startHideTimer();
+        }
+    });
+    
+    cartIndicator.addEventListener('mouseenter', function() {
+        isMouseOverIndicator = true;
+        clearTimeout(cartTimeout);
+    });
+    
+    // Pin/Unpin toggle
+    cartPinToggle.addEventListener('click', togglePin);
+    
+    // Hide cart when clicking on products
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.product-card') || e.target.closest('.product-item')) {
+            if (!isCartPinned) {
+                hideCart();
+            }
+        }
+    });
+    
+    // Hide cart when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!cartSidebar.contains(e.target) && !cartIndicator.contains(e.target) && !isCartPinned) {
+            hideCart();
+        }
+    });
+});
+
+// Show cart
+function showCart() {
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartIndicator = document.getElementById('cartIndicator');
+    const mainContent = document.getElementById('mainContent');
+    
+    cartSidebar.classList.add('show');
+    cartIndicator.classList.add('hidden');
+    mainContent.classList.remove('cart-hidden');
+    mainContent.classList.add('cart-visible');
+    clearTimeout(cartTimeout);
+}
+
+// Hide cart
+function hideCart() {
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartIndicator = document.getElementById('cartIndicator');
+    const mainContent = document.getElementById('mainContent');
+    
+    cartSidebar.classList.remove('show');
+    cartIndicator.classList.remove('hidden');
+    mainContent.classList.remove('cart-visible');
+    mainContent.classList.add('cart-hidden');
+}
+
+// Toggle cart visibility
+function toggleCart() {
+    const cartSidebar = document.getElementById('cartSidebar');
+    
+    if (cartSidebar.classList.contains('show')) {
+        hideCart();
+    } else {
+        showCart();
+    }
+}
+
+// Toggle pin state
+function togglePin() {
+    const cartPinToggle = document.getElementById('cartPinToggle');
+    const pinIcon = document.getElementById('pinIcon');
+    
+    isCartPinned = !isCartPinned;
+    
+    if (isCartPinned) {
+        // Pin the cart
+        cartPinToggle.classList.add('pinned');
+        pinIcon.style.transform = 'rotate(45deg)';
+        showCart(); // Ensure cart is visible when pinned
+    } else {
+        // Unpin the cart
+        cartPinToggle.classList.remove('pinned');
+        pinIcon.style.transform = 'rotate(0deg)';
+        startHideTimer(); // Start auto-hide timer when unpinned
+    }
+}
+
+// Start hide timer
+function startHideTimer() {
+    clearTimeout(cartTimeout);
+    cartTimeout = setTimeout(() => {
+        if (!isMouseOverCart && !isMouseOverIndicator && !isCartPinned) {
+            hideCart();
+        }
+    }, 1000); // Hide after 1 second
+}
+
+// Show cart when item is added
+function showCartOnAdd() {
+    showCart();
+    
+    // Keep cart visible for 3 seconds unless pinned or mouse is over it
+    if (!isCartPinned) {
+        clearTimeout(cartTimeout);
+        cartTimeout = setTimeout(() => {
+            if (!isMouseOverCart && !isMouseOverIndicator) {
+                hideCart();
+            }
+        }, 3000);
+    }
+}
+
+// Update cart count indicator
+function updateCartCountIndicator() {
+    const cartCountIndicator = document.getElementById('cartCountIndicator');
+    const cartCount = document.getElementById('cartCount');
+    
+    if (cartCountIndicator && cartCount) {
+        cartCountIndicator.textContent = cartCount.textContent;
+    }
+}
 
 // Show variant selection modal
 function showVariantModal(name, brand, category) {
@@ -571,13 +1041,6 @@ function updateVariantSelection() {
     const puffs = puffSelect ? (puffSelect.value || null) : null;
     const { variants, categoryInfo, productName, brand, category } = window.currentVariantData;
     
-    console.log('updateVariantSelection called:', {
-        flavor,
-        puffs,
-        categoryInfo,
-        variantsCount: variants.length
-    });
-    
     // If flavor changed, update available puffs (only if puff select exists and puffs are required/optional)
     if (flavor && puffSelect && (categoryInfo.requires_puffs.required || categoryInfo.requires_puffs.optional)) {
         const availablePuffs = [...new Set(variants
@@ -606,21 +1069,15 @@ function updateVariantSelection() {
     // Find matching variant
     selectedVariant = null;
     
-    console.log('Looking for matching variant with:', { flavor, puffs });
-    
     for (let variant of variants) {
         let matches = true;
-        
-        console.log('Checking variant:', variant);
         
         // Check flavor requirement
         if (categoryInfo.requires_flavor) {
             if (!flavor) {
                 matches = false; // Flavor is required but not selected
-                console.log('Variant rejected: flavor required but not selected');
             } else {
                 matches = matches && variant.flavor === flavor;
-                console.log('Flavor check:', variant.flavor, '===', flavor, '=', matches);
             }
         }
         
@@ -628,45 +1085,33 @@ function updateVariantSelection() {
         if (categoryInfo.requires_puffs.required) {
             if (!puffs) {
                 matches = false; // Puffs are required but not selected
-                console.log('Variant rejected: puffs required but not selected');
             } else {
                 matches = matches && variant.puffs == puffs;
-                console.log('Required puffs check:', variant.puffs, '===', puffs, '=', matches);
             }
         } else if (categoryInfo.requires_puffs.optional) {
             // Puffs are optional - only filter if selected
             if (puffs) {
                 matches = matches && variant.puffs == puffs;
-                console.log('Optional puffs check:', variant.puffs, '===', puffs, '=', matches);
             }
         }
         // If puffs are not required or optional, don't filter by puffs
         
-        console.log('Final matches status for variant:', matches);
-        
         if (matches) {
             selectedVariant = variant;
-            console.log('Found matching variant:', selectedVariant);
             break;
         }
     }
     
-    console.log('Final selectedVariant:', selectedVariant);
-    
     const addBtn = document.getElementById('addVariantToCartBtn');
-    
-    console.log('About to set button state. selectedVariant:', selectedVariant);
     
     if (selectedVariant) {
         addBtn.disabled = selectedVariant.stock_qty <= 0;
-        console.log('Button enabled. Stock:', selectedVariant.stock_qty);
         
         if (selectedVariant.stock_qty <= 0) {
             alert('This variant is out of stock!');
         }
     } else {
         addBtn.disabled = true;
-        console.log('Button disabled - no variant selected');
     }
 }
 
@@ -731,6 +1176,9 @@ function addVariantToCart() {
     
     updateCart();
     
+    // Show cart when item is added
+    showCartOnAdd();
+    
     // Close modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('variantModal'));
     if (modal) {
@@ -770,6 +1218,9 @@ function addToCart(id, name, price, stock) {
     }
     
     updateCart();
+    
+    // Show cart when item is added
+    showCartOnAdd();
 }
 
 // Legacy addToCart function for products without variants (like Device category)
@@ -806,6 +1257,12 @@ function updateCart() {
         tax.textContent = '₱0.00';
         total.textContent = '₱0.00';
         processBtn.disabled = true;
+        
+        // Auto-unpin cart when empty
+        if (isCartPinned) {
+            togglePin();
+        }
+        
         return;
     }
     
@@ -859,6 +1316,14 @@ function updateCart() {
     tax.textContent = `₱${taxAmount.toFixed(2)}`;
     total.textContent = `₱${totalAmount.toFixed(2)}`;
     processBtn.disabled = false;
+    
+    // Auto-pin cart when items are added
+    if (!isCartPinned) {
+        togglePin();
+    }
+    
+    // Update cart count indicator
+    updateCartCountIndicator();
 }
 
 function cartPlus(index) {
@@ -1623,7 +2088,7 @@ function printReceipt() {
             <title>Receipt - Quick Puff Vape Shop</title>
             <style>
                 @page {
-                    size: 80mm auto;
+                    size: 89mm 127mm;
                     margin: 2mm;
                 }
                 body {
@@ -1634,11 +2099,11 @@ function printReceipt() {
                     padding: 0;
                     color: #000000;
                     background: white;
-                    width: 80mm;
-                    max-width: 80mm;
+                    width: 89mm;
+                    max-width: 89mm;
                 }
                 .receipt-container {
-                    width: 76mm;
+                    width: 85mm;
                     padding: 2mm;
                     background: white;
                     color: #000000;
@@ -1732,17 +2197,17 @@ function printReceipt() {
                 }
                 @media print {
                     @page {
-                        size: 80mm auto;
+                        size: 89mm 127mm;
                         margin: 2mm;
                     }
                     body {
-                        width: 80mm;
-                        max-width: 80mm;
+                        width: 89mm;
+                        max-width: 89mm;
                         margin: 0;
                         padding: 0;
                     }
                     .receipt-container {
-                        width: 76mm;
+                        width: 85mm;
                         padding: 2mm;
                     }
                 }
