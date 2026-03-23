@@ -1,0 +1,33 @@
+# CodeIgniter
+/vendor
+/system
+
+# Environment
+.env
+
+# Uploads
+/uploads/
+
+# Logs and cache
+/writable/logs/
+/writable/cache/
+/writable/session/
+/writable/debugbar/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
