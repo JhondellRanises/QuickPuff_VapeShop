@@ -15,22 +15,16 @@ class AddFlavorFieldsSimple extends Migration
                 'null'       => true,
                 'after'      => 'brand',
             ],
-            'flavor_category' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true,
-                'after'      => 'flavor',
-            ],
             'puffs' => [
                 'type'       => 'INT',
                 'null'       => true,
-                'after'      => 'flavor_category',
+                'after'      => 'flavor',
             ],
         ]);
     }
 
     public function down()
     {
-        $this->forge->dropColumn('products', ['flavor', 'flavor_category', 'puffs']);
+        $this->forge->dropColumn('products', ['flavor', 'puffs']);
     }
 }

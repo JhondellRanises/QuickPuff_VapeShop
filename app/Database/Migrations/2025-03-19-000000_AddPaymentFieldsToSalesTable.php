@@ -32,16 +32,10 @@ class AddPaymentFieldsToSalesTable extends Migration
                 'null'       => true,
                 'after'      => 'brand',
             ],
-            'flavor_category' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true,
-                'after'      => 'flavor',
-            ],
             'puffs' => [
                 'type'       => 'INT',
                 'null'       => true,
-                'after'      => 'flavor_category',
+                'after'      => 'flavor',
             ],
         ]);
     }
@@ -53,6 +47,6 @@ class AddPaymentFieldsToSalesTable extends Migration
         $this->forge->dropColumn('sales', 'change_amount');
         
         // Remove flavor fields from products table
-        $this->forge->dropColumn('products', ['flavor', 'flavor_category', 'puffs']);
+        $this->forge->dropColumn('products', ['flavor', 'puffs']);
     }
 }

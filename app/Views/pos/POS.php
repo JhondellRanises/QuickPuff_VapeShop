@@ -101,6 +101,14 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                             <?php foreach ($products as $product): ?>
                                 <?php
                                     $productImage = trim((string) ($product['image_url'] ?? ''));
+                                    $productFlavors = [];
+                                    foreach (($product['flavors'] ?? []) as $flavor) {
+                                        $flavor = trim((string) $flavor);
+                                        if ($flavor !== '' && !in_array($flavor, $productFlavors, true)) {
+                                            $productFlavors[] = $flavor;
+                                        }
+                                    }
+
                                     if ($productImage === '') {
                                         $productImage = $defaultVapeImage;
                                     } elseif (!preg_match('#^(?:https?:)?//#i', $productImage) && strpos($productImage, 'data:image') !== 0) {
@@ -110,7 +118,8 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                 <div class="col-md-6 col-lg-4 mb-3 product-item" 
                                      data-category="<?= esc($product['category']) ?>" 
                                      data-name="<?= esc($product['name']) ?>"
-                                     data-brand="<?= esc($product['brand'] ?? '') ?>">
+                                     data-brand="<?= esc($product['brand'] ?? '') ?>"
+                                     data-flavors="<?= esc(json_encode($productFlavors, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'attr') ?>">
                                     <div class="card h-100 product-card">
                                         <div class="product-image-wrap">
                                             <img src="<?= esc($productImage, 'attr') ?>"
@@ -949,6 +958,55 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     transition: all 0.3s ease-in-out;
 }
 
+#variantModal .modal-content {
+    background: linear-gradient(180deg, #11162c 0%, #0d1226 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f4f7ff;
+}
+
+#variantModal .modal-header,
+#variantModal .modal-footer {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+#variantModal .modal-title,
+#variantModal .form-label {
+    color: #f4f7ff;
+}
+
+#variantModal .btn-close {
+    filter: invert(1) grayscale(1);
+    opacity: 0.8;
+}
+
+#variantModal .btn-close:hover {
+    opacity: 1;
+}
+
+.variant-price-preview-card {
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.variant-price-label {
+    color: rgba(244, 247, 255, 0.7) !important;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+}
+
+.variant-price-value {
+    color: #ffffff !important;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.variant-price-stock {
+    color: rgba(244, 247, 255, 0.78) !important;
+    font-size: 0.92rem;
+}
+
 /* When cart is hidden, show more products per row on larger screens */
 @media (min-width: 1400px) {
     #mainContent.cart-hidden .product-item {
@@ -1031,12 +1089,242 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 let cart = [];
 let currentProductVariants = [];
 let selectedVariant = null;
+const flavorInventoryByCategory = <?= json_encode($flavorInventory ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 
 // Category Sidebar Variables
 let categoryTimeout = null;
 let isMouseOverCategory = false;
 let isMouseOverCategoryIndicator = false;
 let currentActiveCategory = '';
+let currentActiveFlavor = '';
+let currentSearchTerm = '';
+
+function formatCurrency(value) {
+    const amount = Number(value || 0);
+    return `₱${amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function getPuffOptionData(variants) {
+    const puffMap = new Map();
+
+    (variants || []).forEach((variant) => {
+        const puffValue = parseInt(variant.puffs || 0, 10);
+        if (!puffValue) {
+            return;
+        }
+
+        const priceValue = parseFloat(variant.price || 0);
+        if (!puffMap.has(puffValue)) {
+            puffMap.set(puffValue, {
+                puffs: puffValue,
+                minPrice: priceValue,
+                maxPrice: priceValue,
+            });
+            return;
+        }
+
+        const existing = puffMap.get(puffValue);
+        existing.minPrice = Math.min(existing.minPrice, priceValue);
+        existing.maxPrice = Math.max(existing.maxPrice, priceValue);
+    });
+
+    return Array.from(puffMap.values()).sort((a, b) => a.puffs - b.puffs);
+}
+
+function formatPuffOptionLabel(option) {
+    return `${Number(option.puffs || 0).toLocaleString('en-PH')} puffs`;
+}
+
+function getFlavorOptionData(variants, selectedPuffs = null) {
+    const normalizedPuffs = selectedPuffs === null || selectedPuffs === '' ? null : String(selectedPuffs);
+    const flavorMap = new Map();
+
+    (variants || []).forEach((variant) => {
+        const flavorValue = String(variant.flavor || '').trim();
+        if (!flavorValue) {
+            return;
+        }
+
+        if (normalizedPuffs !== null && String(variant.puffs || '') !== normalizedPuffs) {
+            return;
+        }
+
+        if (!flavorMap.has(flavorValue)) {
+            flavorMap.set(flavorValue, flavorValue);
+        }
+    });
+
+    return Array.from(flavorMap.values()).sort((left, right) => left.localeCompare(right));
+}
+
+function requiresExplicitPuffSelection(variants, categoryInfo) {
+    const puffOptions = getPuffOptionData(variants || []);
+    return (categoryInfo.requires_puffs.required || puffOptions.length > 1) && puffOptions.length > 0;
+}
+
+function renderVariantPricePreview(variant, variants, categoryInfo, flavor = null, puffs = null) {
+    const pricePreview = document.getElementById('variantPricePreview');
+    const stockPreview = document.getElementById('variantStockPreview');
+
+    if (!pricePreview || !stockPreview) {
+        return;
+    }
+
+    const relevantVariants = (variants || []).filter((item) => {
+        if (puffs && String(item.puffs || '') !== String(puffs)) {
+            return false;
+        }
+
+        if (flavor && item.flavor !== flavor) {
+            return false;
+        }
+
+        return true;
+    });
+
+    if (variant) {
+        pricePreview.textContent = formatCurrency(variant.price);
+        stockPreview.textContent = `${parseInt(variant.stock_qty || 0, 10)} in stock${variant.puffs ? ` • ${variant.puffs} puffs` : ''}`;
+        return;
+    }
+
+    if (!relevantVariants.length) {
+        pricePreview.textContent = 'Select options to view price';
+        stockPreview.textContent = requiresExplicitPuffSelection(variants, categoryInfo) && !puffs
+            ? 'Choose puffs first.'
+            : (categoryInfo.requires_flavor ? 'Choose a flavor first.' : '');
+        return;
+    }
+
+    const prices = relevantVariants
+        .map(item => parseFloat(item.price || 0))
+        .filter(value => !Number.isNaN(value));
+
+    if (!prices.length) {
+        pricePreview.textContent = 'Select options to view price';
+        stockPreview.textContent = '';
+        return;
+    }
+
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    pricePreview.textContent = minPrice === maxPrice
+        ? formatCurrency(minPrice)
+        : `${formatCurrency(minPrice)} to ${formatCurrency(maxPrice)}`;
+
+    if (requiresExplicitPuffSelection(variants, categoryInfo) && !puffs) {
+        stockPreview.textContent = 'Choose puffs first.';
+    } else if (categoryInfo.requires_flavor && !flavor) {
+        stockPreview.textContent = 'Choose a flavor to see the exact price.';
+    } else {
+        stockPreview.textContent = 'Price updates automatically from the matching variant.';
+    }
+}
+
+function normalizeCategoryKey(value) {
+    return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function normalizeFlavorKey(value) {
+    return String(value || '').trim().toLowerCase();
+}
+
+function isFlavorInventoryCategory(category) {
+    return ['pods', 'disposable', 'eliquid'].includes(normalizeCategoryKey(category));
+}
+
+function getFlavorInventoryForCategory(category) {
+    const requestedKey = normalizeCategoryKey(category);
+
+    for (const [categoryName, flavors] of Object.entries(flavorInventoryByCategory || {})) {
+        if (normalizeCategoryKey(categoryName) === requestedKey) {
+            return Array.isArray(flavors) ? flavors : [];
+        }
+    }
+
+    return [];
+}
+
+function parseProductFlavors(product) {
+    try {
+        const parsed = JSON.parse(product.dataset.flavors || '[]');
+        return Array.isArray(parsed)
+            ? parsed.map(flavor => String(flavor || '').trim()).filter(Boolean)
+            : [];
+    } catch (error) {
+        console.warn('Unable to parse product flavors:', error);
+        return [];
+    }
+}
+
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    }[character]));
+}
+
+function updateVisibleProductCount(count = null) {
+    const counter = document.getElementById('productCount');
+
+    if (!counter) {
+        return;
+    }
+
+    if (count === null) {
+        count = Array.from(document.querySelectorAll('.product-item'))
+            .filter(product => product.style.display !== 'none')
+            .length;
+    }
+
+    counter.textContent = count;
+}
+
+function applyProductFilters(options = {}) {
+    const { scrollToFirstMatch = false } = options;
+    const products = document.querySelectorAll('.product-item');
+    const normalizedFlavor = normalizeFlavorKey(currentActiveFlavor);
+    let visibleCount = 0;
+    let firstVisibleProduct = null;
+
+    products.forEach(product => {
+        const productFlavors = parseProductFlavors(product);
+        const name = (product.dataset.name || '').toLowerCase();
+        const brand = (product.dataset.brand || '').toLowerCase();
+
+        const matchesCategory = currentActiveCategory === '' || product.dataset.category === currentActiveCategory;
+        const matchesFlavor = normalizedFlavor === '' || productFlavors.some(flavor => normalizeFlavorKey(flavor) === normalizedFlavor);
+        const matchesSearch = currentSearchTerm === ''
+            || name.includes(currentSearchTerm)
+            || brand.includes(currentSearchTerm)
+            || productFlavors.some(flavor => flavor.toLowerCase().includes(currentSearchTerm));
+
+        const isVisible = matchesCategory && matchesFlavor && matchesSearch;
+        product.style.display = isVisible ? 'block' : 'none';
+
+        if (isVisible) {
+            visibleCount++;
+
+            if (!firstVisibleProduct) {
+                firstVisibleProduct = product;
+            }
+        }
+    });
+
+    updateVisibleProductCount(visibleCount);
+
+    if (scrollToFirstMatch && firstVisibleProduct) {
+        firstVisibleProduct.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+
+    return visibleCount;
+}
 
 // Initialize Category Sidebar
 document.addEventListener('DOMContentLoaded', function() {
@@ -1140,165 +1428,39 @@ function filterByCategorySidebar(category) {
         const activeItem = document.querySelector(`.category-item[data-category="${category}"]`);
         
         if (activeItem) activeItem.classList.add('active');
-        
-        // Load flavors for specific categories
-        loadFlavorsForCategory(category);
     } else {
         const activeItem = document.querySelector('.category-item[data-category=""]');
         if (activeItem) activeItem.classList.add('active');
-        
-        // Hide flavors section for "All Categories"
-        hideFlavorsSection();
     }
     
     currentActiveCategory = category;
-    
-    // Filter products
-    const products = document.querySelectorAll('.product-item');
-    
-    products.forEach(product => {
-        if (category === '' || product.dataset.category === category) {
-            product.style.display = 'block';
-            // Add smooth scroll animation
-            product.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        } else {
-            product.style.display = 'none';
-        }
+
+    currentActiveFlavor = '';
+    document.querySelectorAll('.flavor-item').forEach(item => {
+        item.classList.remove('active');
     });
+
+    if (category) {
+        loadFlavorsForCategory(category);
+    } else {
+        hideFlavorsSection();
+    }
+
+    applyProductFilters();
 }
 
 // Load flavors for specific category
 function loadFlavorsForCategory(category) {
     const flavorsSection = document.getElementById('flavorsSection');
-    const flavorsList = document.getElementById('flavorsList');
-    
-    // Categories that should show flavors
-    const flavorCategories = ['Pods', 'Disposable', 'E-Liquid'];
-    
-    if (!flavorCategories.includes(category)) {
+
+    if (!isFlavorInventoryCategory(category)) {
         hideFlavorsSection();
         return;
     }
-    
-    // Show loading state
-    flavorsList.innerHTML = '<div class="flavor-item"><span class="flavor-name">Loading flavors...</span></div>';
-    flavorsSection.style.display = 'block';
-    
-    // Extract flavors from existing products on the page
-    const products = document.querySelectorAll('.product-item');
-    const flavors = [];
-    
-    console.log(`Looking for flavors in category: ${category}`);
-    console.log(`Found ${products.length} total products`);
-    
-    products.forEach(product => {
-        if (product.dataset.category === category) {
-            const productName = product.dataset.name;
-            const brand = product.dataset.brand || '';
-            
-            console.log(`Processing product: ${productName} (Brand: ${brand})`);
-            
-            // Try multiple patterns to extract flavor
-            let flavor = '';
-            let puffs = '';
-            
-            // Pattern 1: Brand - Flavor - Type/Puffs
-            const nameParts = productName.split(' - ');
-            if (nameParts.length >= 2) {
-                // Middle part is likely the flavor
-                if (nameParts[1] && nameParts[1] !== brand) {
-                    flavor = nameParts[1].trim();
-                }
-            }
-            
-            // Pattern 2: Look for common flavor keywords
-            if (!flavor) {
-                const flavorKeywords = [
-                    'Mango', 'Strawberry', 'Blueberry', 'Watermelon', 'Grape', 'Apple', 'Peach',
-                    'Mint', 'Menthol', 'Tobacco', 'Coffee', 'Vanilla', 'Chocolate', 'Coconut',
-                    'Pineapple', 'Cherry', 'Raspberry', 'Lemon', 'Lime', 'Orange', 'Banana',
-                    'Kiwi', 'Pomegranate', 'Blackberry', 'Cotton Candy', 'Bubblegum'
-                ];
-                
-                for (const keyword of flavorKeywords) {
-                    if (productName.toLowerCase().includes(keyword.toLowerCase())) {
-                        flavor = keyword;
-                        break;
-                    }
-                }
-            }
-            
-            // Pattern 3: Extract anything between dashes that's not a brand or type
-            if (!flavor && nameParts.length >= 3) {
-                for (let i = 1; i < nameParts.length - 1; i++) {
-                    const part = nameParts[i].trim();
-                    if (part !== brand && !part.includes('Pod') && !part.includes('Disposable') && !part.includes('Liquid')) {
-                        flavor = part;
-                        break;
-                    }
-                }
-            }
-            
-            // Look for puff count in the product name
-            const puffMatch = productName.match(/(\d+)\s*(?:puffs|puff)/i);
-            if (puffMatch) {
-                puffs = parseInt(puffMatch[1]);
-            }
-            
-            // If we found a flavor, add it to the list
-            if (flavor && flavor.length > 1) {
-                flavors.push({
-                    flavor: flavor,
-                    puffs: puffs,
-                    stock_qty: Math.floor(Math.random() * 20) + 1, // Random stock for demo
-                    product_name: productName
-                });
-                console.log(`Found flavor: ${flavor}, Puffs: ${puffs}`);
-            }
-        }
-    });
-    
-    console.log(`Total flavors found: ${flavors.length}`);
-    
-    // Simulate loading delay for better UX
-    setTimeout(() => {
-        if (flavors.length > 0) {
-            displayFlavors(flavors);
-        } else {
-            // Show demo flavors if none found
-            const demoFlavors = getDemoFlavors(category);
-            displayFlavors(demoFlavors);
-        }
-    }, 500);
-}
 
-// Get demo flavors for testing
-function getDemoFlavors(category) {
-    const demoFlavors = {
-        'Pods': [
-            { flavor: 'Mango', puffs: 5000, stock_qty: 15, product_name: 'Vaporesso - Mango - Pods' },
-            { flavor: 'Mango Ice', puffs: 3000, stock_qty: 8, product_name: 'SMOK - Mango Ice - 3000 Puffs' },
-            { flavor: 'Strawberry', puffs: 4000, stock_qty: 12, product_name: 'Juul - Strawberry - Pods' },
-            { flavor: 'Mint', puffs: 2000, stock_qty: 10, product_name: 'Geek Bar - Mint - Pods' },
-            { flavor: 'Blueberry', puffs: 3500, stock_qty: 6, product_name: 'Lost Mary - Blueberry - Pods' }
-        ],
-        'Disposable': [
-            { flavor: 'Watermelon', puffs: 8000, stock_qty: 10, product_name: 'Elf Bar - Watermelon - 8000 Puffs' },
-            { flavor: 'Grape', puffs: 6000, stock_qty: 14, product_name: 'HQD - Grape - 6000 Puffs' },
-            { flavor: 'Peach', puffs: 5000, stock_qty: 9, product_name: 'Fume - Peach - 5000 Puffs' },
-            { flavor: 'Cool Mint', puffs: 7000, stock_qty: 11, product_name: 'Kado - Cool Mint - 7000 Puffs' },
-            { flavor: 'Strawberry Watermelon', puffs: 9000, stock_qty: 7, product_name: 'Raz - Strawberry Watermelon - 9000 Puffs' }
-        ],
-        'E-Liquid': [
-            { flavor: 'Tobacco', puffs: 0, stock_qty: 20, product_name: 'Naked 100 - Tobacco - E-Liquid' },
-            { flavor: 'Vanilla', puffs: 0, stock_qty: 16, product_name: 'Cuttwood - Vanilla - E-Liquid' },
-            { flavor: 'Menthol', puffs: 0, stock_qty: 11, product_name: 'Marina Vape - Menthol - E-Liquid' },
-            { flavor: 'Strawberry', puffs: 0, stock_qty: 13, product_name: 'Jam Monster - Strawberry - E-Liquid' },
-            { flavor: 'Blueberry', puffs: 0, stock_qty: 18, product_name: 'Kilo - Blueberry - E-Liquid' }
-        ]
-    };
-    
-    return demoFlavors[category] || [];
+    flavorsSection.style.display = 'block';
+
+    displayFlavors(getFlavorInventoryForCategory(category));
 }
 
 // Display flavors in the sidebar
@@ -1309,41 +1471,28 @@ function displayFlavors(flavors) {
         flavorsList.innerHTML = '<div class="flavor-item"><span class="flavor-name">No flavors available</span></div>';
         return;
     }
-    
-    // Group flavors by name and collect puffs and stock
-    const groupedFlavors = {};
-    flavors.forEach(flavor => {
-        const key = flavor.flavor || 'Unknown';
-        if (!groupedFlavors[key]) {
-            groupedFlavors[key] = {
-                variants: [],
-                totalStock: 0
-            };
-        }
-        groupedFlavors[key].variants.push(flavor);
-        groupedFlavors[key].totalStock += parseInt(flavor.stock_qty || 0);
-    });
-    
+
     let html = '';
-    Object.keys(groupedFlavors).sort().forEach(flavorName => {
-        const flavorData = groupedFlavors[flavorName];
-        
-        // Get unique puffs for this flavor
-        const uniquePuffs = [...new Set(flavorData.variants.map(v => v.puffs).filter(p => p && p > 0))];
-        const puffsText = uniquePuffs.length > 0 ? uniquePuffs.join(', ') + ' puffs' : 'Various puffs';
-        
-        // Make it more clickable with better styling
+    flavors.forEach(flavorItem => {
+        const flavorName = String(flavorItem.flavor || '').trim();
+        const totalStock = parseInt(flavorItem.total_stock || 0, 10);
+        const puffCounts = Array.isArray(flavorItem.puff_counts)
+            ? [...new Set(flavorItem.puff_counts.map(value => parseInt(value, 10)).filter(value => value > 0))]
+            : [];
+        const puffsText = puffCounts.length > 0 ? `${puffCounts.join(', ')} puffs` : 'Flavor available';
+        const encodedFlavorName = encodeURIComponent(flavorName);
+
         html += `
             <div class="flavor-item clickable" 
-                 onclick="filterByFlavor('${flavorName}')" 
-                 title="Click to show all ${flavorName} products"
-                 data-flavor="${flavorName}">
+                 onclick="filterByFlavor(decodeURIComponent(this.dataset.flavor))" 
+                 title="Click to show all ${escapeHtml(flavorName)} products"
+                 data-flavor="${encodedFlavorName}">
                 <i class="fas fa-tint me-2 flavor-icon"></i>
-                <span class="flavor-name">${flavorName}</span>
+                <span class="flavor-name">${escapeHtml(flavorName)}</span>
                 <div class="flavor-details">
-                    <span class="flavor-puffs">${puffsText}</span>
-                    <span class="flavor-stock ${flavorData.totalStock > 0 ? '' : 'out-of-stock'}">
-                        <i class="fas fa-box me-1"></i>${flavorData.totalStock > 0 ? flavorData.totalStock : 'Out of stock'}
+                    <span class="flavor-puffs">${escapeHtml(puffsText)}</span>
+                    <span class="flavor-stock ${totalStock > 0 ? '' : 'out-of-stock'}">
+                        <i class="fas fa-box me-1"></i>${totalStock > 0 ? totalStock : 'Out of stock'}
                     </span>
                 </div>
             </div>
@@ -1351,9 +1500,6 @@ function displayFlavors(flavors) {
     });
     
     flavorsList.innerHTML = html;
-    
-    // Add click sound effect (optional)
-    console.log(`Loaded ${Object.keys(groupedFlavors).length} flavors`);
 }
 
 // Hide flavors section
@@ -1372,105 +1518,24 @@ function filterByFlavor(flavorName) {
     });
     
     // Set active flavor
-    const clickedItem = document.querySelector(`[data-flavor="${flavorName}"]`);
+    const encodedFlavorName = encodeURIComponent(flavorName);
+    const clickedItem = Array.from(document.querySelectorAll('.flavor-item'))
+        .find(item => item.dataset.flavor === encodedFlavorName);
     if (clickedItem) {
         clickedItem.classList.add('active');
     }
     
-    // First, make sure products in the current category are visible
-    const currentCategory = currentActiveCategory || '';
-    const products = document.querySelectorAll('.product-item');
-    let foundCount = 0;
-    
-    console.log(`Searching in category: ${currentCategory}`);
-    console.log(`Total products to check: ${products.length}`);
-    
-    products.forEach(product => {
-        // Reset all products first
-        product.style.display = 'none';
-        
-        // Check if product matches current category (or all categories)
-        const matchesCategory = currentCategory === '' || product.dataset.category === currentCategory;
-        
-        if (matchesCategory) {
-            const productName = product.dataset.name.toLowerCase();
-            const productBrand = product.dataset.brand.toLowerCase();
-            const searchTerms = flavorName.toLowerCase().split(' ');
-            
-            console.log(`Checking product: ${product.dataset.name}`);
-            
-            // Check if product name contains the flavor
-            let matchesFlavor = false;
-            
-            // Direct name match
-            if (productName.includes(flavorName.toLowerCase())) {
-                matchesFlavor = true;
-                console.log(`Direct match found: ${product.dataset.name}`);
-            }
-            
-            // Check each term in flavor name
-            if (!matchesFlavor) {
-                for (const term of searchTerms) {
-                    if (term.length > 2 && productName.includes(term)) {
-                        matchesFlavor = true;
-                        console.log(`Term match found: ${term} in ${product.dataset.name}`);
-                        break;
-                    }
-                }
-            }
-            
-            // Brand check (some flavors might be in brand)
-            if (!matchesFlavor && productBrand.includes(flavorName.toLowerCase())) {
-                matchesFlavor = true;
-                console.log(`Brand match found: ${flavorName} in ${product.dataset.brand}`);
-            }
-            
-            if (matchesFlavor) {
-                product.style.display = 'block';
-                foundCount++;
-                console.log(`✓ Found product: ${product.dataset.name}`);
-                
-                // Add highlight effect briefly
-                product.style.transition = 'all 0.3s ease';
-                product.style.transform = 'scale(1.02)';
-                product.style.boxShadow = '0 4px 20px rgba(93, 155, 255, 0.3)';
-                
-                setTimeout(() => {
-                    product.style.transform = 'scale(1)';
-                    product.style.boxShadow = '';
-                }, 1000);
-            }
-        }
-    });
-    
-    console.log(`Total products found: ${foundCount}`);
-    
+    currentActiveFlavor = flavorName;
+    const foundCount = applyProductFilters({ scrollToFirstMatch: true });
     // Always show a message (success or info)
     if (foundCount > 0) {
-        // Scroll to first found product
-        const firstFoundProduct = document.querySelector('.product-item[style*="block"]');
-        if (firstFoundProduct) {
-            setTimeout(() => {
-                firstFoundProduct.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
-            }, 100);
-        }
-        
-        // Show success message
         showFlavorFilterMessage(flavorName, foundCount, false);
     } else {
-        // Show info message and show all products in category for better UX
-        console.log('No products found, showing all products in category');
-        products.forEach(product => {
-            const matchesCategory = currentCategory === '' || product.dataset.category === currentCategory;
-            if (matchesCategory) {
-                product.style.display = 'block';
-            }
-        });
-        
-        // Show info message (not error)
+        currentActiveFlavor = '';
+        if (clickedItem) {
+            clickedItem.classList.remove('active');
+        }
+        applyProductFilters();
         showFlavorFilterMessage(flavorName, 0, true);
     }
 }
@@ -1499,12 +1564,12 @@ function showFlavorFilterMessage(flavorName, count, isError = false) {
     if (isError) {
         message.innerHTML = `
             <i class="fas fa-info-circle me-2"></i>
-            Showing all products in category (no exact "${flavorName}" matches found)
+            Showing all products in category (no exact "${escapeHtml(flavorName)}" matches found)
         `;
     } else {
         message.innerHTML = `
             <i class="fas fa-check-circle me-2"></i>
-            Found ${count} product${count > 1 ? 's' : ''} for "${flavorName}"
+            Found ${count} product${count > 1 ? 's' : ''} for "${escapeHtml(flavorName)}"
         `;
     }
     
@@ -1747,11 +1812,13 @@ function showVariantModal(name, brand, category) {
                 if (data.success && data.variants.length > 0) {
                     selectedVariant = data.variants[0];
                     addVariantToCart();
-                } else {
+                } else if (data.success) {
                     // Handle no variants case
                     console.warn('No variants found for product:', name);
                     // Try to add as a simple product
                     legacyAddToCart(name, brand, category);
+                } else {
+                    alert(data.message || 'Error loading product variants');
                 }
             })
             .catch(error => {
@@ -1814,9 +1881,7 @@ function showVariantModal(name, brand, category) {
                 modal.show();
                 displayVariants(data.variants, data.category_info, name, brand, category);
             } else {
-                // If no variants found, add directly like Device category
-                console.log('No variants found, adding directly to cart like Device category');
-                legacyAddToCart(name, brand, category);
+                alert(data.message || 'Error loading product variants');
             }
         })
         .catch(error => {
@@ -1830,6 +1895,8 @@ function showVariantModal(name, brand, category) {
 function displayVariants(variants, categoryInfo, productName, brand, category) {
     const variantContent = document.getElementById('variantContent');
     const addBtn = document.getElementById('addVariantToCartBtn');
+    const puffOptions = getPuffOptionData(variants);
+    const showsPuffSelector = (categoryInfo.requires_puffs.required || categoryInfo.requires_puffs.optional) && puffOptions.length > 0;
     
     let html = `
         <div class="mb-3">
@@ -1837,38 +1904,46 @@ function displayVariants(variants, categoryInfo, productName, brand, category) {
         </div>
     `;
     
+    // Puff selection comes first
+    if (showsPuffSelector) {
+        const required = categoryInfo.requires_puffs.required ? ' <span class="text-danger">*</span>' : '';
+        html += `
+            <div class="mb-3">
+                <label class="form-label">Puffs${required}</label>
+                <select class="form-select" id="puffSelect" onchange="updateVariantSelection()">
+                    <option value="">Select Puffs</option>
+                    ${puffOptions.map(option => `<option value="${option.puffs}" ${puffOptions.length === 1 ? 'selected' : ''}>${escapeHtml(formatPuffOptionLabel(option))}</option>`).join('')}
+                </select>
+            </div>
+        `;
+    }
+    
     // Flavor selection
     if (categoryInfo.requires_flavor) {
-        const flavors = [...new Set(variants.filter(v => v.flavor).map(v => v.flavor))];
-        if (flavors.length > 0) {
+        const flavors = getFlavorOptionData(variants, puffOptions.length === 1 ? puffOptions[0].puffs : null);
+        if (flavors.length > 0 || !showsPuffSelector) {
+            const requiresPuffsFirst = showsPuffSelector && puffOptions.length > 1;
             html += `
                 <div class="mb-3">
                     <label class="form-label">Flavor <span class="text-danger">*</span></label>
-                    <select class="form-select" id="flavorSelect" onchange="updateVariantSelection()">
-                        <option value="">Select Flavor</option>
+                    <select class="form-select" id="flavorSelect" onchange="updateVariantSelection()" ${requiresPuffsFirst ? 'disabled' : ''}>
+                        <option value="">${requiresPuffsFirst ? 'Select Puffs First' : 'Select Flavor'}</option>
                         ${flavors.map(flavor => `<option value="${flavor}">${flavor}</option>`).join('')}
                     </select>
                 </div>
             `;
         }
     }
-    
-    // Puff selection
-    if (categoryInfo.requires_puffs.required || categoryInfo.requires_puffs.optional) {
-        const puffCounts = [...new Set(variants.filter(v => v.puffs).map(v => v.puffs))].sort((a, b) => a - b);
-        if (puffCounts.length > 0) {
-            const required = categoryInfo.requires_puffs.required ? ' <span class="text-danger">*</span>' : '';
-            html += `
-                <div class="mb-3">
-                    <label class="form-label">Puffs${required}</label>
-                    <select class="form-select" id="puffSelect" onchange="updateVariantSelection()">
-                        <option value="">Select Puffs</option>
-                        ${puffCounts.map(puffs => `<option value="${puffs}">${puffs} puffs</option>`).join('')}
-                    </select>
-                </div>
-            `;
-        }
-    }
+
+    html += `
+        <div class="variant-price-preview-card">
+            <div class="card-body py-3">
+                <small class="variant-price-label d-block mb-1">Selected Price</small>
+                <div class="variant-price-value" id="variantPricePreview">Select options to view price</div>
+                <small class="variant-price-stock d-block mt-1" id="variantStockPreview"></small>
+            </div>
+        </div>
+    `;
     
     variantContent.innerHTML = html;
     
@@ -1880,40 +1955,43 @@ function displayVariants(variants, categoryInfo, productName, brand, category) {
         brand: brand,
         category: category
     };
+
+    updateVariantSelection();
 }
 
 // Update variant selection based on dropdowns
 function updateVariantSelection() {
     const flavorSelect = document.getElementById('flavorSelect');
     const puffSelect = document.getElementById('puffSelect');
-    const flavor = flavorSelect ? (flavorSelect.value || null) : null;
-    const puffs = puffSelect ? (puffSelect.value || null) : null;
+    let puffs = puffSelect ? (puffSelect.value || null) : null;
     const { variants, categoryInfo, productName, brand, category } = window.currentVariantData;
-    
-    // If flavor changed, update available puffs (only if puff select exists and puffs are required/optional)
-    if (flavor && puffSelect && (categoryInfo.requires_puffs.required || categoryInfo.requires_puffs.optional)) {
-        const availablePuffs = [...new Set(variants
-            .filter(v => v.flavor === flavor)
-            .map(v => v.puffs)
-            .filter(Boolean)
-        )].sort((a, b) => a - b);
-        
-        // Update puff dropdown
-        puffSelect.innerHTML = '<option value="">Select Puffs</option>';
-        availablePuffs.forEach(puff => {
-            const option = document.createElement('option');
-            option.value = puff;
-            option.textContent = puff;
-            puffSelect.appendChild(option);
+
+    if (flavorSelect && categoryInfo.requires_flavor) {
+        const availableFlavors = getFlavorOptionData(variants, puffs);
+        const currentFlavor = flavorSelect.value || null;
+        const requiresPuffsFirst = requiresExplicitPuffSelection(variants, categoryInfo) && !puffs;
+
+        flavorSelect.innerHTML = `<option value="">${requiresPuffsFirst ? 'Select Puffs First' : 'Select Flavor'}</option>`;
+        availableFlavors.forEach((flavorOption) => {
+            const optionElement = document.createElement('option');
+            optionElement.value = flavorOption;
+            optionElement.textContent = flavorOption;
+            flavorSelect.appendChild(optionElement);
         });
-        
-        // Auto-select if only one puff available
-        if (availablePuffs.length === 1) {
-            puffSelect.value = availablePuffs[0];
-            // Call updateVariantSelection again after auto-selecting puff
-            setTimeout(() => updateVariantSelection(), 100);
+
+        flavorSelect.disabled = requiresPuffsFirst;
+
+        if (!requiresPuffsFirst && currentFlavor && availableFlavors.includes(currentFlavor)) {
+            flavorSelect.value = currentFlavor;
+        } else if (!requiresPuffsFirst && availableFlavors.length === 1) {
+            flavorSelect.value = availableFlavors[0];
+        } else {
+            flavorSelect.value = '';
         }
     }
+
+    const flavor = flavorSelect ? (flavorSelect.value || null) : null;
+    const puffSelectionRequired = requiresExplicitPuffSelection(variants, categoryInfo);
     
     // Find matching variant
     selectedVariant = null;
@@ -1931,19 +2009,17 @@ function updateVariantSelection() {
         }
         
         // Check puff requirement
-        if (categoryInfo.requires_puffs.required) {
+        if (puffSelectionRequired) {
             if (!puffs) {
-                matches = false; // Puffs are required but not selected
+                matches = false;
             } else {
                 matches = matches && variant.puffs == puffs;
             }
-        } else if (categoryInfo.requires_puffs.optional) {
-            // Puffs are optional - only filter if selected
+        } else if (categoryInfo.requires_puffs.optional || categoryInfo.requires_puffs.required) {
             if (puffs) {
                 matches = matches && variant.puffs == puffs;
             }
         }
-        // If puffs are not required or optional, don't filter by puffs
         
         if (matches) {
             selectedVariant = variant;
@@ -1952,6 +2028,7 @@ function updateVariantSelection() {
     }
     
     const addBtn = document.getElementById('addVariantToCartBtn');
+    renderVariantPricePreview(selectedVariant, variants, categoryInfo, flavor, puffs);
     
     if (selectedVariant) {
         addBtn.disabled = selectedVariant.stock_qty <= 0;
@@ -1967,7 +2044,7 @@ function updateVariantSelection() {
 // Add selected variant to cart
 function addVariantToCart() {
     if (!selectedVariant) {
-        const { categoryInfo } = window.currentVariantData;
+        const { categoryInfo, variants } = window.currentVariantData;
         const flavorSelect = document.getElementById('flavorSelect');
         const puffSelect = document.getElementById('puffSelect');
         const flavor = flavorSelect ? (flavorSelect.value || null) : null;
@@ -1976,11 +2053,11 @@ function addVariantToCart() {
         let errorMessage = 'Please select ';
         const missingFields = [];
         
+        if (requiresExplicitPuffSelection(variants, categoryInfo) && !puffs) {
+            missingFields.push('puffs');
+        }
         if (categoryInfo.requires_flavor && !flavor) {
             missingFields.push('flavor');
-        }
-        if (categoryInfo.requires_puffs.required && !puffs) {
-            missingFields.push('puffs');
         }
         
         if (missingFields.length > 0) {
@@ -2082,7 +2159,7 @@ function legacyAddToCart(name, brand, category) {
                 const variant = data.variants[0];
                 addToCart(variant.id, variant.name, variant.price, variant.stock_qty);
             } else {
-                alert('Product not found or out of stock');
+                alert(data.message || 'Product not found or out of stock');
             }
         })
         .catch(error => {
@@ -2549,26 +2626,12 @@ function processSale() {
 }
 
 function searchProducts() {
-    const searchTerm = document.getElementById('searchProduct').value.toLowerCase();
-    const products = document.querySelectorAll('.product-item');
-    
-    products.forEach(product => {
-        const name = product.dataset.name.toLowerCase();
-        const brand = product.dataset.brand.toLowerCase();
-        if (name.includes(searchTerm) || brand.includes(searchTerm)) {
-            product.style.display = 'block';
-        } else {
-            product.style.display = 'none';
-        }
-    });
+    currentSearchTerm = document.getElementById('searchProduct').value.toLowerCase().trim();
+    applyProductFilters();
 }
 
 function resetFilters() {
     document.getElementById('searchProduct').value = '';
-    const products = document.querySelectorAll('.product-item');
-    products.forEach(product => {
-        product.style.display = 'block';
-    });
     
     // Reset category sidebar active state
     document.querySelectorAll('.category-item').forEach(item => {
@@ -2590,6 +2653,9 @@ function resetFilters() {
     hideFlavorsSection();
     
     currentActiveCategory = '';
+    currentActiveFlavor = '';
+    currentSearchTerm = '';
+    applyProductFilters();
 }
 
 // Show receipt modal with sale data

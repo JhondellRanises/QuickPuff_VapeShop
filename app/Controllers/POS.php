@@ -29,6 +29,7 @@ class POS extends BaseController
         // Get grouped products using the model
         try {
             $products = $this->productModel->getGroupedProducts();
+            $flavorInventory = $this->productModel->getAvailableFlavorInventory();
             
             // Get categories from distinct values
             $categories = $this->productModel->getCategories();
@@ -36,12 +37,14 @@ class POS extends BaseController
         } catch (\Exception $e) {
             log_message('error', 'Error loading products: ' . $e->getMessage());
             $products = [];
+            $flavorInventory = [];
             $categories = [];
         }
         
         $data = [
             'title' => 'Point of Sale - Quick Puff Vape Shop',
             'products' => $products,
+            'flavorInventory' => $flavorInventory,
             'categories' => $categories,
             'cart' => session()->get('cart') ?? []
         ];
@@ -62,11 +65,11 @@ class POS extends BaseController
             ]);
         }
 
-        $name = $this->request->getGet('name');
-        $brand = $this->request->getGet('brand');
-        $category = $this->request->getGet('category');
+        $name = trim((string) $this->request->getGet('name'));
+        $brand = trim((string) $this->request->getGet('brand'));
+        $category = trim((string) $this->request->getGet('category'));
 
-        if (empty($name) || empty($brand) || empty($category)) {
+        if ($name === '' || $category === '') {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Missing required parameters'

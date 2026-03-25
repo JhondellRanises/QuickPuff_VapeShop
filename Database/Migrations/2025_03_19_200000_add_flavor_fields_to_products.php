@@ -15,16 +15,10 @@ class AddFlavorFieldsToProducts extends Migration
                 'null'       => true,
                 'after'      => 'brand',
             ],
-            'flavor_category' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-                'null'       => true,
-                'after'      => 'flavor',
-            ],
             'puffs' => [
                 'type'       => 'INT',
                 'null'       => true,
-                'after'      => 'flavor_category',
+                'after'      => 'flavor',
             ],
         ]);
 
@@ -37,12 +31,6 @@ class AddFlavorFieldsToProducts extends Migration
             $db->query('CREATE INDEX idx_products_flavor ON products(flavor)');
         }
         
-        // Check and add flavor_category index
-        $result = $db->query("SHOW INDEX FROM products WHERE Key_name = 'idx_products_flavor_category'");
-        if ($result->getNumRows() == 0) {
-            $db->query('CREATE INDEX idx_products_flavor_category ON products(flavor_category)');
-        }
-        
         // Check and add puffs index
         $result = $db->query("SHOW INDEX FROM products WHERE Key_name = 'idx_products_puffs'");
         if ($result->getNumRows() == 0) {
@@ -52,6 +40,6 @@ class AddFlavorFieldsToProducts extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('products', ['flavor', 'flavor_category', 'puffs']);
+        $this->forge->dropColumn('products', ['flavor', 'puffs']);
     }
 }
