@@ -39,6 +39,16 @@ class CreateSalesTable extends Migration
                 'constraint' => 50,
                 'default' => 'cash',
             ],
+            'amount_paid' => [
+                'type' => 'DECIMAL',
+                'constraint' => '10,2',
+                'default' => '0.00',
+            ],
+            'change_amount' => [
+                'type' => 'DECIMAL',
+                'constraint' => '10,2',
+                'default' => '0.00',
+            ],
             'processed_by' => [
                 'type' => 'INT',
                 'constraint' => 11,

@@ -29,6 +29,15 @@ class CreateProductsTable extends Migration
                 'constraint' => 100,
                 'null' => true,
             ],
+            'flavor' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
+            'puffs' => [
+                'type' => 'INT',
+                'null' => true,
+            ],
             'image_url' => [
                 'type' => 'VARCHAR',
                 'constraint' => 2048,

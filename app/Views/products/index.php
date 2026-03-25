@@ -728,6 +728,8 @@ hr.my-4 {
                                         break;
                                     }
                                 }
+                                $reservePuffsColumn = $showFlavorOptionsColumn && !$showPuffsColumn;
+                                $renderPuffsColumn = $showPuffsColumn || $reservePuffsColumn;
                                 ?>
                                 <span class="badge bg-success me-1"><?= $activeCount ?> Active</span>
                                 <?php if ($lowStockCount > 0): ?>
@@ -750,7 +752,7 @@ hr.my-4 {
                                     <?php if ($showFlavorOptionsColumn): ?>
                                         <col class="col-flavors">
                                     <?php endif; ?>
-                                    <?php if ($showPuffsColumn): ?>
+                                    <?php if ($renderPuffsColumn): ?>
                                         <col class="col-puffs">
                                     <?php endif; ?>
                                     <col class="col-price">
@@ -766,7 +768,7 @@ hr.my-4 {
                                         <?php if ($showFlavorOptionsColumn): ?>
                                             <th class="column-flavors" width="320">Flavor Options</th>
                                         <?php endif; ?>
-                                        <?php if ($showPuffsColumn): ?>
+                                        <?php if ($renderPuffsColumn): ?>
                                             <th class="column-puffs" width="120">Puffs</th>
                                         <?php endif; ?>
                                         <th class="column-price" width="110">Price</th>
@@ -861,9 +863,9 @@ hr.my-4 {
                                                     <?php endif; ?>
                                                 </td>
                                             <?php endif; ?>
-                                            <?php if ($showPuffsColumn): ?>
+                                            <?php if ($renderPuffsColumn): ?>
                                                 <td class="puffs-cell">
-                                                    <?php if (!empty($product['puff_counts'])): ?>
+                                                    <?php if ($showPuffsColumn && !empty($product['puff_counts'])): ?>
                                                         <?php if (count($product['puff_counts']) > 1): ?>
                                                             <span class="text-muted puffs-count value-stack">
                                                                 <?php foreach ($product['puff_counts'] as $puffCount): ?>
