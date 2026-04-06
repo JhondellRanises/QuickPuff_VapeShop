@@ -9,38 +9,193 @@ class ProductSeeder extends Seeder
     public function run()
     {
         $imageMap = $this->loadImageMap();
+        $timestamp = date('Y-m-d H:i:s');
+        $data = $this->expandSeedData($this->getSeedProducts($timestamp), $timestamp);
 
-        $data = [
-            // Pods Category - 5 products
+        foreach ($data as &$product) {
+            $seedName = trim((string) ($product['name'] ?? ''));
+            if ($seedName !== '' && isset($imageMap[$seedName]) && trim((string) $imageMap[$seedName]) !== '') {
+                $product['image_url'] = trim((string) $imageMap[$seedName]);
+            }
+        }
+        unset($product);
+
+        if ($data !== []) {
+            $this->db->table('products')->insertBatch($data);
+        }
+    }
+
+    private function getSeedProducts(string $timestamp): array
+    {
+        return [
+            // PODS Category - multiple flavors
             [
                 'name' => 'BLACK ELITE V2',
                 'category' => 'Pods',
                 'brand' => 'BLACK',
+                'image_url' => null,
+                'is_active' => 1,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Red Pulp (Watermelon)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Yellow Summer (Mango)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Rainbow Punch (Kool-Aid)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Very Baguio (Strawberry)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Green Tokyo (Matcha)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Bacteria Monster (Yakult)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Trouble Purple (Grapes)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Very More (Mixedberries)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Sweet Forest (Green Apple)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Yellow Green (Lemon Lime)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Black Wave (Black Currant)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Sticky Worms (Gummy Worms)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Tangy Plump (Nerdz)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    ['name' => 'Round Melo (Melon)', 'price' => 400.00, 'stock_qty' => 10, 'puffs' => 12000],
+                    // 25k puffs variant
+                    ['name' => 'Red Pulp (Watermelon)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Yellow Summer (Mango)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Rainbow Punch (Kool-Aid)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Very Baguio (Strawberry)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Green Tokyo (Matcha)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Bacteria Monster (Yakult)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Trouble Purple (Grapes)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Very More (Mixedberries)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Sweet Forest (Green Apple)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Yellow Green (Lemon Lime)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Black Wave (Black Currant)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Sticky Worms (Gummy Worms)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Tangy Plump (Nerdz)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Round Melo (Melon)', 'price' => 500.00, 'stock_qty' => 10, 'puffs' => 25000],
+                ],
+            ],
+            [
+                'name' => 'BLACK ELITE V1',
+                'category' => 'Pods',
+                'brand' => 'BLACK',
+                'image_url' => null,
+                'price' => 400.00,
+                'is_active' => 1,
+                'puffs' => 8000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Red Pulp (Watermelon)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Trouble Purple (Grapes)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Sparkle Squeeze (Lemon Cola)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Ice Monkey (Banana)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Very Baguio (Strawberry)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Black Wave (Black Currant)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Cheer Blast (Lychee)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Pitch Perfect (Peach)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Blue Freeze (Blueberry)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Very More (Mixed Berries)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Beer Sparkle (Rootbeer)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Red Cannon (Bazooka)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Green Tokyo (Matcha)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Bacteria Monster (Yakult)', 'stock_qty' => 10, 'puffs' => 8000],
+                    ['name' => 'Fresh Menthol (Mint)', 'stock_qty' => 10, 'puffs' => 8000],
+                ],
+            ],
+
+            [
+                'name' => 'BLACK? V2',
+                'category' => 'Pods',
+                'brand' => 'BLACK?',
                 'image_url' => null,
                 'price' => 500.00,
-                'stock_qty' => 25,
                 'is_active' => 1,
-                'flavor' => 'Mango',
                 'puffs' => 25000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'YKT (Yakult)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Red Fresh (Watermelon)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Mix Gem (Mixed Berries)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Purple Gem (Grapes)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Cheer Blast (Lychee)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Midnight Gem (Blackcurrant)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Kong Ice (Banana Ice)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Garden Fresh (Strawberry)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Bomb (Bubblegum)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Yellow Fresh (Mango Ice)', 'stock_qty' => 10, 'puffs' => 25000],
+                ],
             ],
+
             [
-                'name' => 'BLACK ELITE V2',
+                'name' => 'CRYSM ELITE',
                 'category' => 'Pods',
-                'brand' => 'BLACK',
+                'brand' => 'CRYSM',
                 'image_url' => null,
-                'price' => 380.00,
-                'stock_qty' => 20,
+                'price' => 500.00,
                 'is_active' => 1,
-                'flavor' => 'Grape',
-                'puffs' => 12000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'puffs' => 30000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Melon Milk Shake', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Matcha', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Avocado Milk Shake', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Strawberry Ice Cream', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Mix Berries', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Black Currant Grapes', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Taro Ice Cream', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Watermelon Ice', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Yakult', 'stock_qty' => 10, 'puffs' => 30000],
+                    ['name' => 'Bubblegum', 'stock_qty' => 10, 'puffs' => 30000],
+                ],
             ],
-            
-            
-            // Device Category - 5 products (no flavors)
+
+            [
+                'name' => 'VAPOR ZERO',
+                'category' => 'Pods',
+                'brand' => 'VAPOR',
+                'image_url' => null,
+                'price' => 500.00,
+                'is_active' => 1,
+                'puffs' => 25000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Purple Mamba (Black Currant Grape)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Fresh Red (Watermelon)', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Triple Mango', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Matcha', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Sea Salt Lemon', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Avocado', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Mint', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Lychee', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Ube', 'stock_qty' => 10, 'puffs' => 25000],
+                    ['name' => 'Creme Brulee', 'stock_qty' => 10, 'puffs' => 25000],
+                ],
+            ],
+
+            [
+                'name' => 'UOTOFO',
+                'category' => 'Pods',
+                'brand' => 'UOTOFO',
+                'image_url' => null,
+                'price' => 500.00,
+                'is_active' => 1,
+                'puffs' => 20000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Big Red (Watermelon)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Heart (Strawberry)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Lush (Lychee)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Frost (Mint)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Sparkle (Lemon Cola)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Blue (Bubble Gum)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Shirota (Yakult)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Purple (Grapes)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Rizz (Mix Berries)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Big Black (Black Currant)', 'stock_qty' => 10, 'puffs' => 20000],
+                ],
+            ],
+
+
+            // Device Category - no flavors
             [
                 'name' => 'MINICAN',
                 'category' => 'Device',
@@ -51,8 +206,8 @@ class ProductSeeder extends Seeder
                 'is_active' => 1,
                 'flavor' => null,
                 'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
             ],
             [
                 'name' => 'BLACK V1 BATTERY',
@@ -64,8 +219,8 @@ class ProductSeeder extends Seeder
                 'is_active' => 1,
                 'flavor' => null,
                 'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
             ],
             [
                 'name' => 'X-VAPE SLIMBAR DEVICE',
@@ -77,180 +232,186 @@ class ProductSeeder extends Seeder
                 'is_active' => 1,
                 'flavor' => null,
                 'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'VOOPOO DRAG KIT',
-                'category' => 'Device',
-                'brand' => 'VOOPOO',
-                'image_url' => null,
-                'price' => 1200.00,
-                'stock_qty' => 45,
-                'is_active' => 1,
-                'flavor' => null,
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'SMOK NOVO KIT',
-                'category' => 'Device',
-                'brand' => 'SMOK',
-                'image_url' => null,
-                'price' => 950.00,
-                'stock_qty' => 50,
-                'is_active' => 1,
-                'flavor' => null,
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            
-            // E-liquid Category - 5 products
-            [
-                'name' => 'POD FORMULA',
-                'category' => 'E-liquid',
-                'brand' => 'CODED',
-                'image_url' => null,
-                'price' => 180.00,
-                'stock_qty' => 25,
-                'is_active' => 1,
-                'flavor' => 'Tobacco',
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'POD FORMULA',
-                'category' => 'E-liquid',
-                'brand' => 'CODED',
-                'image_url' => null,
-                'price' => 180.00,
-                'stock_qty' => 30,
-                'is_active' => 1,
-                'flavor' => 'Vanilla',
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'POD FORMULA',
-                'category' => 'E-liquid',
-                'brand' => 'CODED',
-                'image_url' => null,
-                'price' => 180.00,
-                'stock_qty' => 20,
-                'is_active' => 1,
-                'flavor' => 'Menthol',
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'POD FORMULA',
-                'category' => 'E-liquid',
-                'brand' => 'CODED',
-                'image_url' => null,
-                'price' => 180.00,
-                'stock_qty' => 35,
-                'is_active' => 1,
-                'flavor' => 'Strawberry',
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'POD FORMULA',
-                'category' => 'E-liquid',
-                'brand' => 'CODED',
-                'image_url' => null,
-                'price' => 180.00,
-                'stock_qty' => 28,
-                'is_active' => 1,
-                'flavor' => 'Coffee',
-                'puffs' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            
-            // Disposable Category - 5 products
-            [
-                'name' => 'STORM',
-                'category' => 'Disposable',
-                'brand' => 'STORM',
-                'image_url' => null,
-                'price' => 450.00,
-                'stock_qty' => 10,
-                'is_active' => 1,
-                'flavor' => 'Mint',
-                'puffs' => 15000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'STORM',
-                'category' => 'Disposable',
-                'brand' => 'STORM',
-                'image_url' => null,
-                'price' => 450.00,
-                'stock_qty' => 15,
-                'is_active' => 1,
-                'flavor' => 'Blueberry',
-                'puffs' => 15000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'STORM',
-                'category' => 'Disposable',
-                'brand' => 'STORM',
-                'image_url' => null,
-                'price' => 450.00,
-                'stock_qty' => 12,
-                'is_active' => 1,
-                'flavor' => 'Mango',
-                'puffs' => 15000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'STORM',
-                'category' => 'Disposable',
-                'brand' => 'STORM',
-                'image_url' => null,
-                'price' => 450.00,
-                'stock_qty' => 18,
-                'is_active' => 1,
-                'flavor' => 'Grape',
-                'puffs' => 15000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name' => 'STORM',
-                'category' => 'Disposable',
-                'brand' => 'STORM',
-                'image_url' => null,
-                'price' => 450.00,
-                'stock_qty' => 20,
-                'is_active' => 1,
-                'flavor' => 'Strawberry',
-                'puffs' => 15000,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-        ];
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+            ],       
 
-        foreach ($data as &$product) {
-            $seedName = trim((string) ($product['name'] ?? ''));
-            if ($seedName !== '' && isset($imageMap[$seedName]) && trim((string) $imageMap[$seedName]) !== '') {
-                $product['image_url'] = trim((string) $imageMap[$seedName]);
+            // E-liquid Category - multiple flavors
+            [
+                'name' => 'POD FORMULA',
+                'category' => 'E-liquid',
+                'brand' => 'CODED',
+                'image_url' => null,
+                'price' => 180.00,
+                'is_active' => 1,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Tobacco', 'stock_qty' => 25],
+                    ['name' => 'Vanilla', 'stock_qty' => 30],
+                    ['name' => 'Menthol', 'stock_qty' => 20],
+                    ['name' => 'Strawberry', 'stock_qty' => 35],
+                    ['name' => 'Coffee', 'stock_qty' => 28],
+                ],
+            ],
+            // Disposable Category - multiple flavors
+            [
+                'name' => 'STORM',
+                'category' => 'Disposable',
+                'brand' => 'STORM',
+                'image_url' => null,
+                'price' => 450.00,
+                'is_active' => 1,
+                'puffs' => 15000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Watermelon', 'stock_qty' => 10],
+                    ['name' => 'Strawberry Ice Cream', 'stock_qty' => 10],
+                    ['name' => 'Grape Jelly', 'stock_qty' => 10],
+                    ['name' => 'Yakult', 'stock_qty' => 10],
+                    ['name' => 'Banana', 'stock_qty' => 10],
+                    ['name' => 'Matcha', 'stock_qty' => 10],
+                    ['name' => 'Blueberry', 'stock_qty' => 10],
+                    ['name' => 'Green Mango', 'stock_qty' => 10],
+                ],
+            ],  
+             [
+                'name' => 'BL?CK',
+                'category' => 'Disposable',
+                'brand' => 'BL?ACK',
+                'image_url' => null,
+                'price' => 380.00,
+                'is_active' => 1,
+                'puffs' => 30000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Bubblegum', 'stock_qty' => 10],
+                    ['name' => 'Yakult', 'stock_qty' => 10],
+                    ['name' => 'Watermelon', 'stock_qty' => 10],
+                    ['name' => 'Blackcurrant', 'stock_qty' => 10],
+                    ['name' => 'Mango', 'stock_qty' => 10],
+                    ['name' => 'Grapes', 'stock_qty' => 10],
+                    ['name' => 'Lychee', 'stock_qty' => 10],
+                    ['name' => 'Strawberry', 'stock_qty' => 10],
+                    ['name' => 'Mix Berries', 'stock_qty' => 10],
+                    ['name' => 'Banana Ice', 'stock_qty' => 10],
+                    
+                ],
+            ],
+            [
+                'name' => 'VI BAR',
+                'category' => 'Disposable',
+                'brand' => 'VI BAR',
+                'image_url' => null,
+                'price' => 380.00,
+                'is_active' => 1,
+                'puffs' => 30000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Red Blast (Watermelon Ice)', 'stock_qty' => 10],
+                    ['name' => 'Double Yellow (Double Mango)', 'stock_qty' => 10],
+                    ['name' => 'Very Baguio (Strawberry Ice)', 'stock_qty' => 10],
+                    ['name' => 'Green Tokyo (Matcha Ice)', 'stock_qty' => 10],
+                    ['name' => 'Shirota (Yakult)', 'stock_qty' => 10],
+                    ['name' => 'Trouble Purple (Grapes Ice)', 'stock_qty' => 10],
+                    ['name' => 'Mixed Garden (Mixed Berries)', 'stock_qty' => 10],
+                    ['name' => 'Crisp Green (Green Apple)', 'stock_qty' => 10],
+                    ['name' => 'Black Ice (Black Currant)', 'stock_qty' => 10],
+                    ['name' => 'Sour Neon (Gummy Bears)', 'stock_qty' => 10],
+                    ['name' => 'Round Melo (Melon Ice)', 'stock_qty' => 10],
+                    ['name' => 'Ice Sparkle (Iced Cola)', 'stock_qty' => 10],
+                    ['name' => 'Bluebomb (Bubblegum Ice)', 'stock_qty' => 10],
+                    ['name' => 'Puple Snow (Taro Ice Cream)', 'stock_qty' => 10],
+                    ['name' => 'Pink Snow (Strawberry Ice Cream)', 'stock_qty' => 10],
+                    ['name' => 'Cheesecake Supreme (Classic Cheesecake)', 'stock_qty' => 10],
+                    ['name' => 'Milky Almond (Nougat)', 'stock_qty' => 10],
+                    ['name' => 'Blueberry Cake (Blueberry Cheesecake)', 'stock_qty' => 10],
+                    ['name' => 'Purple Yam Swirl (Ube Swirl)', 'stock_qty' => 10],
+                    ['name' => 'Starbucks (Cappuccino Ice)', 'stock_qty' => 10],
+                ],
+            ],  
+            
+        ];
+    }
+
+    private function expandSeedData(array $seedProducts, string $timestamp): array
+    {
+        $products = [];
+
+        foreach ($seedProducts as $seedProduct) {
+            foreach ($this->expandSeedProduct($seedProduct, $timestamp) as $product) {
+                $products[] = $product;
             }
         }
-        unset($product);
 
-        $this->db->table('products')->insertBatch($data);
+        return $products;
+    }
+
+    private function expandSeedProduct(array $seedProduct, string $timestamp): array
+    {
+        $baseProduct = [
+            'name' => trim((string) ($seedProduct['name'] ?? '')),
+            'category' => trim((string) ($seedProduct['category'] ?? '')),
+            'brand' => $this->normalizeNullableString($seedProduct['brand'] ?? null),
+            'image_url' => $this->normalizeNullableString($seedProduct['image_url'] ?? null),
+            'is_active' => array_key_exists('is_active', $seedProduct) ? (int) $seedProduct['is_active'] : 1,
+            'created_at' => $seedProduct['created_at'] ?? $timestamp,
+            'updated_at' => $seedProduct['updated_at'] ?? $timestamp,
+        ];
+
+        $flavors = $seedProduct['flavors'] ?? null;
+        if (is_array($flavors) && $flavors !== []) {
+            $products = [];
+
+            foreach ($flavors as $flavorSeed) {
+                $products[] = $baseProduct + $this->buildVariantData($seedProduct, $flavorSeed);
+            }
+
+            return $products;
+        }
+
+        return [
+            $baseProduct + $this->buildVariantData($seedProduct, [
+                'flavor' => $seedProduct['flavor'] ?? null,
+                'price' => $seedProduct['price'] ?? 0,
+                'stock_qty' => $seedProduct['stock_qty'] ?? 0,
+                'puffs' => $seedProduct['puffs'] ?? null,
+            ]),
+        ];
+    }
+
+    private function buildVariantData(array $seedProduct, $variantSeed): array
+    {
+        if (!is_array($variantSeed)) {
+            $variantSeed = ['flavor' => $variantSeed];
+        }
+
+        $flavor = $variantSeed['flavor'] ?? $variantSeed['name'] ?? null;
+
+        return [
+            'price' => (float) ($variantSeed['price'] ?? $seedProduct['price'] ?? 0),
+            'stock_qty' => (int) ($variantSeed['stock_qty'] ?? $seedProduct['stock_qty'] ?? 0),
+            'flavor' => $this->normalizeNullableString($flavor),
+            'puffs' => $this->normalizeNullableInt($variantSeed['puffs'] ?? $seedProduct['puffs'] ?? null),
+        ];
+    }
+
+    private function normalizeNullableString($value): ?string
+    {
+        $normalized = trim((string) ($value ?? ''));
+        return $normalized === '' ? null : $normalized;
+    }
+
+    private function normalizeNullableInt($value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int) $value;
     }
 
     private function loadImageMap(): array

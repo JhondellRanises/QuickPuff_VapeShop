@@ -78,8 +78,8 @@ sort($availablePuffChoices, SORT_NUMERIC);
 <style>
 .inventory-grid-head,.flavor-inventory-row{grid-template-columns:minmax(0,1.65fr) minmax(140px,.8fr) minmax(140px,.72fr) 72px}
 .inventory-grid.with-puffs .inventory-grid-head,.inventory-grid.with-puffs .flavor-inventory-row{grid-template-columns:minmax(0,1.4fr) minmax(150px,.82fr) minmax(140px,.82fr) minmax(140px,.72fr) 72px}
-.inventory-price-heading,.variant-price-cell{display:block}
-@media (max-width:767.98px){.variant-price-cell{display:block}}
+.inventory-grid-head,.flavor-inventory-row,.inventory-grid.with-puffs .inventory-grid-head,.inventory-grid.with-puffs .flavor-inventory-row{grid-template-columns:minmax(0,1.9fr) minmax(140px,.72fr) 72px}
+.inventory-puffs-heading,.variant-puff-cell,.inventory-price-heading,.variant-price-cell{display:none!important}
 </style>
 
 <div class="container-fluid">
@@ -139,9 +139,9 @@ sort($availablePuffChoices, SORT_NUMERIC);
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="price" class="form-label" id="priceLabel"><?= $usesFlavorInventory ? 'Default Price *' : 'Price *' ?></label>
+                                <label for="price" class="form-label" id="priceLabel">Price *</label>
                                 <input type="number" class="form-control" id="price" name="price" required step="0.01" min="0" placeholder="0.00" value="<?= old('price', '0.00') ?>">
-                                <small class="text-muted" id="priceHelp"><?= $usesFlavorInventory ? 'Used as the default price for any flavor row without its own price.' : 'Price for this product.' ?></small>
+                                <small class="text-muted" id="priceHelp"><?= $usesFlavorInventory ? 'Applied to all flavor rows below.' : 'Price for this product.' ?></small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="stock_qty" class="form-label" id="stockQtyLabel"><?= $usesFlavorInventory ? 'Total Stock Quantity *' : 'Stock Quantity *' ?></label>
@@ -152,20 +152,29 @@ sort($availablePuffChoices, SORT_NUMERIC);
 
                         <div class="row" id="defaultPuffsFieldContainer" style="display:<?= $usesManagedPuffs ? 'flex' : 'none' ?>;">
                             <div class="col-md-6 mb-3">
-                                <label for="default_variant_puffs" class="form-label" id="defaultPuffsLabel">Default Puff Count</label>
-                                <select class="form-select" id="default_variant_puffs" name="default_variant_puffs">
-                                    <option value="">No default puff count</option>
+                                <label for="default_variant_puffs" class="form-label" id="defaultPuffsLabel">Puff Count</label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="default_variant_puffs"
+                                       name="default_variant_puffs"
+                                       min="1"
+                                       step="1"
+                                       inputmode="numeric"
+                                       list="puffChoiceList"
+                                       placeholder="Type puff count or pick a suggestion"
+                                       value="<?= esc((string) $defaultVariantPuffs) ?>">
+                                <datalist id="puffChoiceList">
                                     <?php foreach ($availablePuffChoices as $puffChoice): ?>
-                                        <option value="<?= (int) $puffChoice ?>" <?= (string) $defaultVariantPuffs === (string) $puffChoice ? 'selected' : '' ?>><?= esc(number_format((int) $puffChoice) . ' puffs') ?></option>
+                                        <option value="<?= (int) $puffChoice ?>"><?= esc(number_format((int) $puffChoice) . ' puffs') ?></option>
                                     <?php endforeach; ?>
-                                </select>
+                                </datalist>
                                 <div class="puff-shortcut-list" id="puffShortcutButtons">
                                     <?php foreach ($availablePuffChoices as $puffChoice): ?>
                                         <?php $shortcutLabel = ((int) $puffChoice % 1000 === 0) ? ((int) $puffChoice / 1000) . 'k' : number_format((int) $puffChoice); ?>
                                         <button type="button" class="btn puff-shortcut-btn <?= (string) $defaultVariantPuffs === (string) $puffChoice ? 'is-active' : '' ?>" data-puff-value="<?= (int) $puffChoice ?>"><?= esc($shortcutLabel) ?></button>
                                     <?php endforeach; ?>
                                 </div>
-                                <small class="text-muted" id="defaultPuffsHelp">Choose a puff preset or use the quick buttons. Clicking a quick button fills the default and any empty puff rows.</small>
+                                <small class="text-muted" id="defaultPuffsHelp">Type one puff count for all flavor rows or use the quick buttons.</small>
                             </div>
                         </div>
 
@@ -173,15 +182,13 @@ sort($availablePuffChoices, SORT_NUMERIC);
                             <div class="inventory-header">
                                 <div>
                                     <h6 class="inventory-title">Flavor Inventory</h6>
-                                    <p class="inventory-description">Add one row per exact flavor and puff combination. Stock is tracked separately per row, and total stock is calculated automatically.</p>
+                                    <p class="inventory-description">Add one row per flavor. The price and puff count above apply to all flavor rows, and total stock is calculated automatically.</p>
                                 </div>
                                 <button type="button" class="btn btn-add-flavor" id="addFlavorRowButton">+ Add Flavor</button>
                             </div>
                             <div class="inventory-grid <?= $usesManagedPuffs ? 'with-puffs' : '' ?>">
                                 <div class="inventory-grid-head">
                                     <div>Flavor Name</div>
-                                    <div class="inventory-puffs-heading">Puffs</div>
-                                    <div class="inventory-price-heading">Price</div>
                                     <div>Flavor Stock</div>
                                     <div class="text-end">Action</div>
                                 </div>
@@ -190,15 +197,6 @@ sort($availablePuffChoices, SORT_NUMERIC);
                                         <div class="flavor-inventory-row">
                                             <input type="hidden" name="variant_ids[]" value="<?= esc((string) ($row['id'] ?? '')) ?>">
                                             <div><input type="text" class="form-control variant-flavor-input" name="variant_flavors[]" placeholder="e.g. Bacteria Monster (Yakult)" value="<?= esc((string) ($row['flavor'] ?? '')) ?>"></div>
-                                            <div class="variant-puff-cell">
-                                                <select class="form-select variant-puff-input" name="variant_puffs[]">
-                                                    <option value="">Select puffs...</option>
-                                                    <?php foreach ($availablePuffChoices as $puffChoice): ?>
-                                                        <option value="<?= (int) $puffChoice ?>" <?= (string) ($row['puffs'] ?? '') === (string) $puffChoice ? 'selected' : '' ?>><?= esc(number_format((int) $puffChoice) . ' puffs') ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                            <div class="variant-price-cell"><input type="number" class="form-control variant-price-input" name="variant_prices[]" min="0" step="0.01" placeholder="0.00" value="<?= esc((string) ($row['price'] ?? '')) ?>"></div>
                                             <div><input type="number" class="form-control variant-stock-input" name="variant_stocks[]" min="0" step="1" placeholder="0" value="<?= esc((string) ($row['stock_qty'] ?? '')) ?>"></div>
                                             <div class="text-md-end"><button type="button" class="inventory-remove-btn" aria-label="Remove flavor row">x</button></div>
                                         </div>
@@ -282,22 +280,6 @@ function formatPuffLabel(value) {
     return `${Number(value).toLocaleString()} puffs`;
 }
 
-function getAllowedPuffChoices() {
-    return availablePuffChoices.map((value) => String(value));
-}
-
-function buildPuffSelectMarkup(selectedValue = '', useDefaultLabel = false) {
-    const normalizedSelectedValue = String(selectedValue ?? '').trim();
-    const blankLabel = useDefaultLabel ? 'No default puff count' : 'Select puffs...';
-    let options = `<option value="">${blankLabel}</option>`;
-
-    getAllowedPuffChoices().forEach((value) => {
-        options += `<option value="${value}" ${normalizedSelectedValue === value ? 'selected' : ''}>${formatPuffLabel(Number(value))}</option>`;
-    });
-
-    return options;
-}
-
 function getDefaultVariantPuffValue() {
     const puffInput = document.getElementById('default_variant_puffs');
     return puffInput && !puffInput.disabled ? puffInput.value.trim() : '';
@@ -311,23 +293,17 @@ function getDefaultVariantPriceValue() {
 function getResolvedVariantPuffValue(row) {
     const puffInput = row.querySelector('.variant-puff-input');
     if (!puffInput || puffInput.disabled) {
-        return '';
+        return getDefaultVariantPuffValue();
     }
 
     return puffInput.value.trim() || getDefaultVariantPuffValue();
 }
 
 function createFlavorRow(row = {}) {
-    const usesManagedPuffs = categoryUsesManagedPuffs(getSelectedCategoryValue());
-    const puffValue = row.puffs ?? (usesManagedPuffs ? getDefaultVariantPuffValue() : '');
-    const priceValue = row.price ?? getDefaultVariantPriceValue();
-
     return `
         <div class="flavor-inventory-row">
             <input type="hidden" name="variant_ids[]" value="${escapeHtml(row.id ?? '')}">
             <div><input type="text" class="form-control variant-flavor-input" name="variant_flavors[]" placeholder="e.g. Bacteria Monster (Yakult)" value="${escapeHtml(row.flavor ?? '')}"></div>
-            <div class="variant-puff-cell"><select class="form-select variant-puff-input" name="variant_puffs[]">${buildPuffSelectMarkup(puffValue)}</select></div>
-            <div class="variant-price-cell"><input type="number" class="form-control variant-price-input" name="variant_prices[]" min="0" step="0.01" placeholder="0.00" value="${escapeHtml(priceValue)}"></div>
             <div><input type="number" class="form-control variant-stock-input" name="variant_stocks[]" min="0" step="1" placeholder="0" value="${escapeHtml(row.stock_qty ?? '')}"></div>
             <div class="text-md-end"><button type="button" class="inventory-remove-btn" aria-label="Remove flavor row">x</button></div>
         </div>
@@ -360,38 +336,22 @@ function updatePuffFieldState(categoryValue) {
 
     container.style.display = usesManagedPuffs ? 'flex' : 'none';
     puffInput.disabled = !usesManagedPuffs;
+    puffInput.required = usesManagedPuffs && categoryRequiresPuffs(categoryValue);
 
     if (!usesManagedPuffs) {
         return;
     }
 
-    puffHelp.textContent = 'Choose a puff preset or use the quick buttons. Clicking a quick button fills the default and any empty puff rows.';
+    puffHelp.textContent = 'Type one puff count for all flavor rows or use the quick buttons.';
 }
 
 function refreshPuffControls() {
     const usesManagedPuffs = categoryUsesManagedPuffs(getSelectedCategoryValue());
-    const defaultPuffInput = document.getElementById('default_variant_puffs');
-    const currentDefaultValue = defaultPuffInput ? defaultPuffInput.value.trim() : '';
-
-    if (defaultPuffInput) {
-        defaultPuffInput.innerHTML = buildPuffSelectMarkup(currentDefaultValue, true);
-        defaultPuffInput.value = getAllowedPuffChoices().includes(currentDefaultValue) ? currentDefaultValue : '';
-    }
-
-    getFlavorRows().forEach((row) => {
-        const puffInput = row.querySelector('.variant-puff-input');
-        if (!puffInput) {
-            return;
-        }
-
-        const currentValue = puffInput.value.trim();
-        puffInput.innerHTML = buildPuffSelectMarkup(currentValue);
-        puffInput.value = getAllowedPuffChoices().includes(currentValue) ? currentValue : '';
-    });
+    const currentDefaultValue = getDefaultVariantPuffValue();
 
     const shortcutButtons = Array.from(document.querySelectorAll('#puffShortcutButtons [data-puff-value]'));
     shortcutButtons.forEach((button) => {
-        const isActive = usesManagedPuffs && button.dataset.puffValue === getDefaultVariantPuffValue();
+        const isActive = usesManagedPuffs && button.dataset.puffValue === currentDefaultValue;
         button.classList.toggle('is-active', isActive);
     });
 }
@@ -412,15 +372,15 @@ function syncFlavorInventoryState() {
 
     inventoryPanel.style.display = usesInventory ? 'block' : 'none';
     inventoryGrid.classList.toggle('with-puffs', usesManagedPuffs);
-    priceInput.required = !usesInventory;
+    priceInput.required = true;
     stockQtyInput.readOnly = usesInventory;
     stockQtyLabel.textContent = usesInventory ? 'Total Stock Quantity *' : 'Stock Quantity *';
     stockQtyHelp.textContent = usesInventory
         ? 'Total stock is based on the sum of all flavor quantities below.'
         : 'Current stock for this product.';
-    priceLabel.textContent = usesInventory ? 'Default Price *' : 'Price *';
+    priceLabel.textContent = 'Price *';
     priceHelp.textContent = usesInventory
-        ? 'Used as the default price for any flavor row without its own price.'
+        ? 'Applied to all flavor rows below.'
         : 'Price for this product.';
 
     if (usesInventory && getFlavorRows().length === 0) {
@@ -429,17 +389,11 @@ function syncFlavorInventoryState() {
 
     getFlavorRows().forEach((row) => {
         const flavorInput = row.querySelector('.variant-flavor-input');
-        const puffInput = row.querySelector('.variant-puff-input');
-        const priceInput = row.querySelector('.variant-price-input');
         const stockInput = row.querySelector('.variant-stock-input');
         const removeButton = row.querySelector('.inventory-remove-btn');
 
         flavorInput.disabled = !usesInventory;
         flavorInput.required = usesInventory;
-        puffInput.disabled = !usesInventory || !usesManagedPuffs;
-        puffInput.required = usesInventory && usesManagedPuffs && requiresPuffs;
-        priceInput.disabled = !usesInventory;
-        priceInput.required = usesInventory;
         stockInput.disabled = !usesInventory;
         stockInput.required = usesInventory;
         removeButton.disabled = !usesInventory;
@@ -592,9 +546,8 @@ document.getElementById('createProductForm').addEventListener('submit', function
 
         for (const row of rows) {
             const flavorInput = row.querySelector('.variant-flavor-input');
-            const priceInput = row.querySelector('.variant-price-input');
             const stockInput = row.querySelector('.variant-stock-input');
-            if (flavorInput.value.trim() === '' || priceInput.value.trim() === '' || stockInput.value.trim() === '') {
+            if (flavorInput.value.trim() === '' || stockInput.value.trim() === '') {
                 event.preventDefault();
                 alert('Complete every flavor row before saving.');
                 return;
@@ -602,7 +555,7 @@ document.getElementById('createProductForm').addEventListener('submit', function
 
             if (categoryRequiresPuffs(categoryValue) && getResolvedVariantPuffValue(row) === '') {
                 event.preventDefault();
-                alert('Choose a puff preset for every flavor row, or set a default puff count.');
+                alert('Enter a puff count for every flavor row, or set a default puff count.');
                 return;
             }
         }

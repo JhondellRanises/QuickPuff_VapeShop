@@ -279,7 +279,7 @@ hr.my-4 {
 }
 
 .inventory-category-table col.col-actions {
-    width: 150px;
+    width: 190px;
 }
 
 .inventory-category-table thead th {
@@ -354,6 +354,324 @@ hr.my-4 {
 
 .inventory-category-table .action-cell .btn {
     border-radius: 12px;
+}
+
+.flavor-summary-card {
+    display: grid;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.flavor-summary-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1rem;
+    align-items: center;
+}
+
+.flavor-summary-stat {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.flavor-summary-stat strong {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 0.3rem;
+}
+
+.flavor-summary-puffs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.flavor-summary-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.32rem 0.62rem;
+    border-radius: 999px;
+    background: rgba(93, 173, 226, 0.12);
+    border: 1px solid rgba(93, 173, 226, 0.28);
+    color: #a7d8ff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.flavor-summary-chip.is-muted {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.btn-view-flavors {
+    border-color: rgba(89, 201, 255, 0.55);
+    color: #8adfff;
+    background: rgba(89, 201, 255, 0.08);
+}
+
+.btn-view-flavors:hover {
+    border-color: rgba(120, 216, 255, 0.78);
+    color: #ffffff;
+    background: rgba(89, 201, 255, 0.2);
+}
+
+.flavor-view-modal .modal-dialog {
+    max-width: 980px;
+}
+
+.flavor-view-modal .modal-content {
+    background: linear-gradient(180deg, rgba(33, 35, 51, 0.98) 0%, rgba(24, 25, 39, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+    color: #ffffff;
+}
+
+.flavor-view-modal .modal-header,
+.flavor-view-modal .modal-footer {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.flavor-view-modal .modal-header {
+    padding: 1.4rem 1.5rem 1.15rem;
+}
+
+.flavor-view-modal .modal-body {
+    padding: 1.35rem 1.5rem 1.5rem;
+}
+
+.flavor-view-kicker {
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.flavor-view-title {
+    margin: 0.3rem 0 0;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.05;
+}
+
+.flavor-view-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 0.9rem;
+}
+
+.flavor-view-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.78rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.flavor-view-meta-pill.is-brand {
+    background: rgba(80, 200, 180, 0.12);
+    border-color: rgba(80, 200, 180, 0.22);
+    color: #b4fff2;
+}
+
+.flavor-view-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1.2rem;
+}
+
+.flavor-view-stat {
+    min-width: 0;
+    padding: 1rem 1.05rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.flavor-view-stat.is-wide {
+    grid-column: span 2;
+}
+
+.flavor-view-stat-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.flavor-view-stat-value {
+    display: block;
+    color: #ffffff;
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.flavor-view-stat-subvalue {
+    display: block;
+    margin-top: 0.35rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.flavor-view-price-list {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.flavor-view-price-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: #ffffff;
+}
+
+.flavor-view-price-label {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.flavor-view-price-value {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.flavor-view-groups {
+    display: grid;
+    gap: 1rem;
+}
+
+.flavor-view-group {
+    padding: 1rem 1.05rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.flavor-view-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.95rem;
+}
+
+.flavor-view-group-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.flavor-view-group-subtitle {
+    margin: 0.28rem 0 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.82rem;
+}
+
+.flavor-view-group-price {
+    color: #ffffff;
+    font-size: 0.96rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.flavor-view-list {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.flavor-view-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.flavor-view-item-main {
+    min-width: 0;
+}
+
+.flavor-view-item-name {
+    display: block;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    overflow-wrap: break-word;
+}
+
+.flavor-view-item-note {
+    display: block;
+    margin-top: 0.22rem;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.78rem;
+}
+
+.flavor-view-stock {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 54px;
+    padding: 0.42rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.flavor-view-stock.is-good {
+    background: rgba(46, 204, 113, 0.16);
+    color: #9bffbf;
+    border: 1px solid rgba(46, 204, 113, 0.26);
+}
+
+.flavor-view-stock.is-low {
+    background: rgba(241, 196, 15, 0.16);
+    color: #ffe59a;
+    border: 1px solid rgba(241, 196, 15, 0.24);
+}
+
+.flavor-view-stock.is-out {
+    background: rgba(255, 99, 132, 0.14);
+    color: #ffb4c4;
+    border: 1px solid rgba(255, 99, 132, 0.24);
+}
+
+.flavor-view-empty {
+    padding: 1.2rem 1rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px dashed rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.68);
+    text-align: center;
 }
 
 .stock-badge {
@@ -442,6 +760,13 @@ hr.my-4 {
     grid-template-columns: minmax(0, 1.4fr) minmax(150px, 0.82fr) minmax(140px, 0.82fr) minmax(140px, 0.72fr) 72px;
 }
 
+.inventory-grid-head,
+.flavor-inventory-row,
+.inventory-grid.with-puffs .inventory-grid-head,
+.inventory-grid.with-puffs .flavor-inventory-row {
+    grid-template-columns: minmax(0, 1.9fr) minmax(140px, 0.72fr) 72px;
+}
+
 .inventory-grid-head {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.88);
@@ -459,6 +784,13 @@ hr.my-4 {
 .inventory-price-heading,
 .variant-price-cell {
     display: block;
+}
+
+.inventory-puffs-heading,
+.variant-puff-cell,
+.inventory-price-heading,
+.variant-price-cell {
+    display: none !important;
 }
 
 .inventory-grid.with-puffs .inventory-puffs-heading,
@@ -552,12 +884,56 @@ hr.my-4 {
         grid-template-columns: 1fr;
     }
 
-    .variant-puff-cell {
-        display: block;
-    }
-
     .inventory-remove-btn {
         width: 100%;
+    }
+
+    .inventory-category-table col.col-actions {
+        width: 220px;
+    }
+
+    .flavor-view-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .flavor-view-stat.is-wide {
+        grid-column: span 2;
+    }
+
+    .flavor-view-group-header {
+        flex-direction: column;
+    }
+
+    .flavor-view-group-price {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .flavor-summary-card {
+        padding: 0.8rem 0.85rem;
+    }
+
+    .flavor-view-title {
+        font-size: 1.3rem;
+    }
+
+    .flavor-view-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .flavor-view-stat.is-wide {
+        grid-column: span 1;
+    }
+
+    .flavor-view-price-line {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .flavor-view-item {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 </style>
@@ -798,66 +1174,30 @@ hr.my-4 {
                                                 <td class="flavor-options-cell">
                                                     <?php if (!empty($product['variant_options'])): ?>
                                                         <?php
-                                                        $puffCounts = array_values(array_filter(array_map(
+                                                        $summaryFlavorCount = count($product['flavors'] ?? []);
+                                                        $summaryPuffCounts = array_values(array_filter(array_map(
                                                             static fn ($puff) => $puff === null || $puff === '' ? null : (int) $puff,
                                                             $product['puff_counts'] ?? []
                                                         )));
-                                                        $showOptionPuffs = count($puffCounts) > 1;
-                                                        $variantOptionGroups = [];
-
-                                                        if ($showOptionPuffs) {
-                                                            foreach ($puffCounts as $puffCount) {
-                                                                $variantOptionGroups[(string) $puffCount] = [
-                                                                    'label' => number_format($puffCount) . ' puffs',
-                                                                    'options' => [],
-                                                                ];
-                                                            }
-
-                                                            foreach ($product['variant_options'] as $option) {
-                                                                $optionPuffs = (int) ($option['puffs'] ?? 0);
-                                                                $groupKey = (string) $optionPuffs;
-
-                                                                if (!isset($variantOptionGroups[$groupKey])) {
-                                                                    $variantOptionGroups[$groupKey] = [
-                                                                        'label' => $optionPuffs > 0 ? number_format($optionPuffs) . ' puffs' : 'No puffs',
-                                                                        'options' => [],
-                                                                    ];
-                                                                }
-
-                                                                $variantOptionGroups[$groupKey]['options'][] = $option;
-                                                            }
-                                                        }
-                                                        $visibleVariantOptionGroups = array_values(array_filter(
-                                                            $variantOptionGroups,
-                                                            static fn (array $optionGroup): bool => !empty($optionGroup['options'])
-                                                        ));
+                                                        $summaryVisiblePuffs = array_slice($summaryPuffCounts, 0, 3);
+                                                        $summaryRemainingPuffs = max(0, count($summaryPuffCounts) - count($summaryVisiblePuffs));
                                                         ?>
-                                                        <?php if ($showOptionPuffs): ?>
-                                                            <div class="flavor-puff-grid" style="--puff-group-columns: <?= max(1, min(count($visibleVariantOptionGroups), 3)) ?>;">
-                                                                <?php foreach ($visibleVariantOptionGroups as $optionGroup): ?>
-                                                                    <div class="flavor-puff-group">
-                                                                        <div class="flavor-puff-heading"><?= esc((string) ($optionGroup['label'] ?? '')) ?></div>
-                                                                        <div class="flavor-group-list">
-                                                                            <?php foreach ($optionGroup['options'] as $option): ?>
-                                                                                <span class="badge bg-dark text-white flavor-badge flavor-badge-stock" title="<?= esc((string) ($option['variant_count'] ?? 0)) ?> variant<?= (int) ($option['variant_count'] ?? 0) === 1 ? '' : 's' ?>">
-                                                                                    <span><?= esc((string) ($option['flavor'] ?? '')) ?></span>
-                                                                                    <span class="text-info"><?= (int) ($option['stock_qty'] ?? 0) ?></span>
-                                                                                </span>
-                                                                            <?php endforeach; ?>
-                                                                        </div>
-                                                                    </div>
-                                                                <?php endforeach; ?>
+                                                        <div class="flavor-summary-card">
+                                                            <div class="flavor-summary-stats">
+                                                                <span class="flavor-summary-stat"><strong><?= $summaryFlavorCount ?></strong> Flavors</span>
+                                                                <span class="flavor-summary-stat"><strong><?= count($summaryPuffCounts) ?></strong> Puff Groups</span>
                                                             </div>
-                                                        <?php else: ?>
-                                                            <div class="flavor-group-list">
-                                                                <?php foreach ($product['variant_options'] as $option): ?>
-                                                                    <span class="badge bg-dark text-white flavor-badge flavor-badge-stock" title="<?= esc((string) ($option['variant_count'] ?? 0)) ?> variant<?= (int) ($option['variant_count'] ?? 0) === 1 ? '' : 's' ?>">
-                                                                        <span><?= esc((string) ($option['flavor'] ?? '')) ?></span>
-                                                                        <span class="text-info"><?= (int) ($option['stock_qty'] ?? 0) ?></span>
-                                                                    </span>
-                                                                <?php endforeach; ?>
-                                                            </div>
-                                                        <?php endif; ?>
+                                                            <?php if ($summaryVisiblePuffs !== []): ?>
+                                                                <div class="flavor-summary-puffs">
+                                                                    <?php foreach ($summaryVisiblePuffs as $summaryPuffCount): ?>
+                                                                        <span class="flavor-summary-chip"><?= esc(number_format($summaryPuffCount)) ?></span>
+                                                                    <?php endforeach; ?>
+                                                                    <?php if ($summaryRemainingPuffs > 0): ?>
+                                                                        <span class="flavor-summary-chip is-muted">+<?= $summaryRemainingPuffs ?> more</span>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
                                                     <?php else: ?>
                                                         <span class="text-muted">-</span>
                                                     <?php endif; ?>
@@ -911,6 +1251,17 @@ hr.my-4 {
                                             </td>
                                             <td class="action-cell">
                                                 <div class="btn-group btn-group-sm" role="group">
+                                                    <?php if (!empty($product['variant_options'])): ?>
+                                                        <button type="button"
+                                                                class="btn btn-view-flavors"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#viewFlavorsModal"
+                                                                data-product-id="<?= (int) $product['id'] ?>"
+                                                                title="View Flavors"
+                                                                aria-label="View flavors for <?= esc((string) ($product['name'] ?? '')) ?>">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    <?php endif; ?>
                                                     <a href="<?= site_url('/products/edit/' . $product['id']) ?>" 
                                                        class="btn btn-outline-primary" 
                                                        title="<?= (int) ($product['variant_count'] ?? 0) > 1 ? 'Edit Product Group' : 'Edit Product' ?>">
@@ -954,6 +1305,68 @@ hr.my-4 {
 </div>
 
 <?php
+$flavorViewProducts = [];
+foreach (($groupedProducts ?? []) as $categoryProducts) {
+    foreach ($categoryProducts as $product) {
+        $productId = (int) ($product['id'] ?? 0);
+        if ($productId <= 0) {
+            continue;
+        }
+
+        $flavorViewProducts[$productId] = [
+            'id' => $productId,
+            'name' => (string) ($product['name'] ?? ''),
+            'brand' => (string) ($product['brand'] ?? ''),
+            'category' => (string) ($product['category'] ?? ''),
+            'total_stock' => (int) ($product['total_stock'] ?? 0),
+            'flavors' => array_values(array_map(
+                static function (array $flavor): array {
+                    $puffCounts = array_values(array_filter(array_map(
+                        static fn ($puff) => $puff === null || $puff === '' ? null : (int) $puff,
+                        $flavor['puff_counts'] ?? []
+                    )));
+                    sort($puffCounts, SORT_NUMERIC);
+
+                    return [
+                        'flavor' => (string) ($flavor['flavor'] ?? ''),
+                        'stock_qty' => (int) ($flavor['stock_qty'] ?? 0),
+                        'variant_count' => (int) ($flavor['variant_count'] ?? 0),
+                        'puff_counts' => $puffCounts,
+                    ];
+                },
+                $product['flavors'] ?? []
+            )),
+            'variant_options' => array_values(array_map(
+                static function (array $option): array {
+                    $puffs = $option['puffs'] ?? null;
+
+                    return [
+                        'flavor' => (string) ($option['flavor'] ?? ''),
+                        'puffs' => $puffs === null || $puffs === '' ? null : (int) $puffs,
+                        'stock_qty' => (int) ($option['stock_qty'] ?? 0),
+                        'variant_count' => (int) ($option['variant_count'] ?? 0),
+                    ];
+                },
+                $product['variant_options'] ?? []
+            )),
+            'puff_counts' => array_values(array_filter(array_map(
+                static fn ($puff) => $puff === null || $puff === '' ? null : (int) $puff,
+                $product['puff_counts'] ?? []
+            ))),
+            'puff_prices' => array_values(array_map(
+                static function (array $puffPrice): array {
+                    return [
+                        'puffs' => (int) ($puffPrice['puffs'] ?? 0),
+                        'price_display' => html_entity_decode((string) ($puffPrice['price_display'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+                    ];
+                },
+                $product['puff_prices'] ?? []
+            )),
+            'price_display' => html_entity_decode((string) ($product['price_display'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+        ];
+    }
+}
+
 $modalSelectedCategoryOption = old('category', '');
 $modalSelectedCategoryValue = $modalSelectedCategoryOption === '__new__' ? old('new_category') : $modalSelectedCategoryOption;
 $modalNormalizedCategory = strtolower(trim((string) $modalSelectedCategoryValue));
@@ -1025,6 +1438,28 @@ $modalAvailablePuffChoices = array_values($modalAvailablePuffChoiceMap);
 sort($modalAvailablePuffChoices, SORT_NUMERIC);
 ?>
 
+<div class="modal fade flavor-view-modal" id="viewFlavorsModal" tabindex="-1" aria-labelledby="viewFlavorsModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <div class="flavor-view-kicker">Flavor Details</div>
+                    <h5 class="modal-title flavor-view-title" id="viewFlavorsModalTitle">Flavor Details</h5>
+                    <div class="flavor-view-meta" id="viewFlavorsModalMeta"></div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="flavor-view-stats" id="viewFlavorsModalStats"></div>
+                <div class="flavor-view-groups" id="viewFlavorsModalGroups"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Add Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -1082,7 +1517,7 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="price" class="form-label" id="priceLabel"><?= $modalUsesFlavorInventory ? 'Default Price *' : 'Price *' ?></label>
+                            <label for="price" class="form-label" id="priceLabel">Price *</label>
                             <input type="number"
                                    class="form-control"
                                    id="price"
@@ -1092,7 +1527,7 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
                                    min="0"
                                    placeholder="0.00"
                                    value="<?= old('price', '0.00') ?>">
-                            <small class="text-muted" id="priceHelp"><?= $modalUsesFlavorInventory ? 'Used as the default price for any flavor row without its own price.' : 'Price for this product.' ?></small>
+                            <small class="text-muted" id="priceHelp"><?= $modalUsesFlavorInventory ? 'Applied to all flavor rows below.' : 'Price for this product.' ?></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="stock_qty" class="form-label" id="stockQtyLabel"><?= $modalUsesFlavorInventory ? 'Total Stock Quantity *' : 'Stock Quantity *' ?></label>
@@ -1112,20 +1547,29 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
 
                     <div class="row" id="defaultPuffsFieldContainer" style="display:<?= $modalUsesManagedPuffs ? 'flex' : 'none' ?>;">
                         <div class="col-md-6 mb-3">
-                            <label for="default_variant_puffs" class="form-label" id="defaultPuffsLabel">Default Puff Count</label>
-                            <select class="form-select" id="default_variant_puffs" name="default_variant_puffs">
-                                <option value="">No default puff count</option>
+                            <label for="default_variant_puffs" class="form-label" id="defaultPuffsLabel">Puff Count</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="default_variant_puffs"
+                                   name="default_variant_puffs"
+                                   min="1"
+                                   step="1"
+                                   inputmode="numeric"
+                                   list="puffChoiceList"
+                                   placeholder="Type puff count or pick a suggestion"
+                                   value="<?= esc((string) $modalDefaultVariantPuffs) ?>">
+                            <datalist id="puffChoiceList">
                                 <?php foreach ($modalAvailablePuffChoices as $puffChoice): ?>
-                                    <option value="<?= (int) $puffChoice ?>" <?= (string) $modalDefaultVariantPuffs === (string) $puffChoice ? 'selected' : '' ?>><?= esc(number_format((int) $puffChoice) . ' puffs') ?></option>
+                                    <option value="<?= (int) $puffChoice ?>"><?= esc(number_format((int) $puffChoice) . ' puffs') ?></option>
                                 <?php endforeach; ?>
-                            </select>
+                            </datalist>
                             <div class="puff-shortcut-list" id="puffShortcutButtons">
                                 <?php foreach ($modalAvailablePuffChoices as $puffChoice): ?>
                                     <?php $shortcutLabel = ((int) $puffChoice % 1000 === 0) ? ((int) $puffChoice / 1000) . 'k' : number_format((int) $puffChoice); ?>
                                     <button type="button" class="btn puff-shortcut-btn <?= (string) $modalDefaultVariantPuffs === (string) $puffChoice ? 'is-active' : '' ?>" data-puff-value="<?= (int) $puffChoice ?>"><?= esc($shortcutLabel) ?></button>
                                 <?php endforeach; ?>
                             </div>
-                            <small class="text-muted" id="defaultPuffsHelp">Choose a puff preset or use the quick buttons. Clicking a quick button fills the default and any empty puff rows.</small>
+                            <small class="text-muted" id="defaultPuffsHelp">Type one puff count for all flavor rows or use the quick buttons.</small>
                         </div>
                     </div>
 
@@ -1133,15 +1577,13 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
                         <div class="inventory-header">
                             <div>
                                 <h6 class="inventory-title">Flavor Inventory</h6>
-                                <p class="inventory-description">Add one row per exact flavor and puff combination. Stock is tracked separately per row, and total stock is calculated automatically.</p>
+                                <p class="inventory-description">Add one row per flavor. The price and puff count above apply to all flavor rows, and total stock is calculated automatically.</p>
                             </div>
                             <button type="button" class="btn btn-add-flavor" id="addFlavorRowButton">+ Add Flavor</button>
                         </div>
-                        <div class="inventory-grid <?= $modalUsesManagedPuffs ? 'with-puffs' : '' ?>">
+                            <div class="inventory-grid <?= $modalUsesManagedPuffs ? 'with-puffs' : '' ?>">
                             <div class="inventory-grid-head">
                                 <div>Flavor Name</div>
-                                <div class="inventory-puffs-heading">Puffs</div>
-                                <div class="inventory-price-heading">Price</div>
                                 <div>Flavor Stock</div>
                                 <div class="text-end">Action</div>
                             </div>
@@ -1150,15 +1592,6 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
                                     <div class="flavor-inventory-row">
                                         <input type="hidden" name="variant_ids[]" value="<?= esc((string) ($row['id'] ?? '')) ?>">
                                         <div><input type="text" class="form-control variant-flavor-input" name="variant_flavors[]" placeholder="e.g. Bacteria Monster (Yakult)" value="<?= esc((string) ($row['flavor'] ?? '')) ?>"></div>
-                                        <div class="variant-puff-cell">
-                                            <select class="form-select variant-puff-input" name="variant_puffs[]">
-                                                <option value="">Select puffs...</option>
-                                                <?php foreach ($modalAvailablePuffChoices as $puffChoice): ?>
-                                                    <option value="<?= (int) $puffChoice ?>" <?= (string) ($row['puffs'] ?? '') === (string) $puffChoice ? 'selected' : '' ?>><?= esc(number_format((int) $puffChoice) . ' puffs') ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="variant-price-cell"><input type="number" class="form-control variant-price-input" name="variant_prices[]" min="0" step="0.01" placeholder="0.00" value="<?= esc((string) ($row['price'] ?? '')) ?>"></div>
                                         <div><input type="number" class="form-control variant-stock-input" name="variant_stocks[]" min="0" step="1" placeholder="0" value="<?= esc((string) ($row['stock_qty'] ?? '')) ?>"></div>
                                         <div class="text-md-end"><button type="button" class="inventory-remove-btn" aria-label="Remove flavor row">x</button></div>
                                     </div>
@@ -1201,6 +1634,7 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
 
 <script>
 const availablePuffChoices = <?= json_encode(array_values($modalAvailablePuffChoices), JSON_UNESCAPED_SLASHES) ?>;
+const flavorViewProductMap = <?= json_encode($flavorViewProducts, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 
 function getSelectedCategoryValue() {
     const categorySelect = document.getElementById('category');
@@ -1248,20 +1682,196 @@ function formatPuffLabel(value) {
     return `${Number(value).toLocaleString()} puffs`;
 }
 
-function getAllowedPuffChoices() {
-    return availablePuffChoices.map((value) => String(value));
+function getFlavorViewProduct(productId) {
+    const normalizedProductId = String(productId ?? '').trim();
+    if (normalizedProductId === '' || !Object.prototype.hasOwnProperty.call(flavorViewProductMap, normalizedProductId)) {
+        return null;
+    }
+
+    return flavorViewProductMap[normalizedProductId];
 }
 
-function buildPuffSelectMarkup(selectedValue = '', useDefaultLabel = false) {
-    const normalizedSelectedValue = String(selectedValue ?? '').trim();
-    const blankLabel = useDefaultLabel ? 'No default puff count' : 'Select puffs...';
-    let options = `<option value="">${blankLabel}</option>`;
+function getFlavorViewPriceLines(product) {
+    const puffPrices = Array.isArray(product?.puff_prices) ? [...product.puff_prices] : [];
+    puffPrices.sort((left, right) => (parseInt(left?.puffs ?? 0, 10) || 0) - (parseInt(right?.puffs ?? 0, 10) || 0));
 
-    getAllowedPuffChoices().forEach((value) => {
-        options += `<option value="${value}" ${normalizedSelectedValue === value ? 'selected' : ''}>${formatPuffLabel(Number(value))}</option>`;
+    if (puffPrices.length > 1) {
+        return puffPrices.map((puffPrice) => {
+            const puffValue = parseInt(puffPrice?.puffs ?? 0, 10) || 0;
+            return {
+                label: puffValue > 0 ? formatPuffLabel(puffValue) : 'All Flavors',
+                value: String(puffPrice?.price_display ?? product?.price_display ?? '-'),
+            };
+        });
+    }
+
+    return [
+        {
+            label: 'Price',
+            value: String(product?.price_display ?? '-'),
+        }
+    ];
+}
+
+function getFlavorViewStockBadgeClass(stockQty) {
+    const normalizedStock = parseInt(stockQty ?? 0, 10) || 0;
+
+    if (normalizedStock <= 0) {
+        return 'is-out';
+    }
+
+    if (normalizedStock <= 10) {
+        return 'is-low';
+    }
+
+    return 'is-good';
+}
+
+function getFlavorViewGroups(product) {
+    const groupedOptions = new Map();
+    const priceByPuff = new Map();
+    const puffPrices = Array.isArray(product?.puff_prices) ? product.puff_prices : [];
+
+    puffPrices.forEach((puffPrice) => {
+        const puffValue = parseInt(puffPrice?.puffs ?? 0, 10) || 0;
+        priceByPuff.set(puffValue > 0 ? String(puffValue) : 'all', String(puffPrice?.price_display ?? product?.price_display ?? '-'));
     });
 
-    return options;
+    const sourceOptions = Array.isArray(product?.variant_options) && product.variant_options.length > 0
+        ? product.variant_options
+        : Array.isArray(product?.flavors)
+            ? product.flavors.map((flavor) => ({
+                flavor: flavor?.flavor ?? '',
+                puffs: Array.isArray(flavor?.puff_counts) && flavor.puff_counts.length > 0 ? flavor.puff_counts[0] : null,
+                stock_qty: flavor?.stock_qty ?? 0,
+                variant_count: flavor?.variant_count ?? 0,
+            }))
+            : [];
+
+    sourceOptions.forEach((option) => {
+        const puffValue = option?.puffs === null || option?.puffs === '' ? null : (parseInt(option.puffs, 10) || 0);
+        const groupKey = puffValue && puffValue > 0 ? String(puffValue) : 'all';
+
+        if (!groupedOptions.has(groupKey)) {
+            groupedOptions.set(groupKey, {
+                puffs: puffValue && puffValue > 0 ? puffValue : null,
+                label: puffValue && puffValue > 0 ? formatPuffLabel(puffValue) : 'All Flavors',
+                price_display: priceByPuff.get(groupKey) || String(product?.price_display ?? '-'),
+                options: [],
+            });
+        }
+
+        groupedOptions.get(groupKey).options.push({
+            flavor: String(option?.flavor ?? ''),
+            stock_qty: parseInt(option?.stock_qty ?? 0, 10) || 0,
+            variant_count: parseInt(option?.variant_count ?? 0, 10) || 0,
+        });
+    });
+
+    const groups = Array.from(groupedOptions.values());
+    groups.sort((left, right) => {
+        const leftSort = left.puffs === null ? Number.MAX_SAFE_INTEGER : left.puffs;
+        const rightSort = right.puffs === null ? Number.MAX_SAFE_INTEGER : right.puffs;
+
+        if (leftSort !== rightSort) {
+            return leftSort - rightSort;
+        }
+
+        return String(left.label ?? '').localeCompare(String(right.label ?? ''), undefined, { sensitivity: 'base' });
+    });
+
+    groups.forEach((group) => {
+        group.options.sort((left, right) => String(left.flavor ?? '').localeCompare(String(right.flavor ?? ''), undefined, { sensitivity: 'base' }));
+    });
+
+    return groups;
+}
+
+function renderFlavorViewModal(productId) {
+    const titleElement = document.getElementById('viewFlavorsModalTitle');
+    const metaElement = document.getElementById('viewFlavorsModalMeta');
+    const statsElement = document.getElementById('viewFlavorsModalStats');
+    const groupsElement = document.getElementById('viewFlavorsModalGroups');
+    const product = getFlavorViewProduct(productId);
+
+    if (!titleElement || !metaElement || !statsElement || !groupsElement) {
+        return;
+    }
+
+    if (!product) {
+        titleElement.textContent = 'Flavor Details';
+        metaElement.innerHTML = '';
+        statsElement.innerHTML = '';
+        groupsElement.innerHTML = '<div class="flavor-view-empty">Flavor details are not available for this product.</div>';
+        return;
+    }
+
+    const normalizedName = String(product.name || 'Flavor Details').trim() || 'Flavor Details';
+    const normalizedCategory = String(product.category || '').trim() || 'Uncategorized';
+    const normalizedBrand = String(product.brand || '').trim();
+    const priceLines = getFlavorViewPriceLines(product);
+    const groups = getFlavorViewGroups(product);
+    const flavorCount = Array.isArray(product.flavors) ? product.flavors.length : 0;
+    const puffGroupCount = groups.length;
+    const hasExplicitPuffGrouping = Array.isArray(product.puff_counts) && product.puff_counts.length > 0;
+
+    titleElement.textContent = normalizedName;
+    metaElement.innerHTML = `
+        <span class="flavor-view-meta-pill">${escapeHtml(normalizedCategory)}</span>
+        ${normalizedBrand !== '' ? `<span class="flavor-view-meta-pill is-brand">${escapeHtml(normalizedBrand)}</span>` : ''}
+    `;
+    statsElement.innerHTML = `
+        <div class="flavor-view-stat">
+            <span class="flavor-view-stat-label">Flavors</span>
+            <span class="flavor-view-stat-value">${flavorCount}</span>
+            <span class="flavor-view-stat-subvalue">unique flavor options</span>
+        </div>
+        <div class="flavor-view-stat">
+            <span class="flavor-view-stat-label">Puff Groups</span>
+            <span class="flavor-view-stat-value">${puffGroupCount}</span>
+            <span class="flavor-view-stat-subvalue">${hasExplicitPuffGrouping ? 'grouped by puff count' : (puffGroupCount > 0 ? 'single flavor list' : 'no puff grouping')}</span>
+        </div>
+        <div class="flavor-view-stat">
+            <span class="flavor-view-stat-label">Total Stock</span>
+            <span class="flavor-view-stat-value">${Number(product.total_stock || 0).toLocaleString()}</span>
+            <span class="flavor-view-stat-subvalue">units available</span>
+        </div>
+        <div class="flavor-view-stat ${priceLines.length > 1 ? 'is-wide' : ''}">
+            <span class="flavor-view-stat-label">Price</span>
+            <div class="flavor-view-price-list">
+                ${priceLines.map((priceLine) => `
+                    <div class="flavor-view-price-line">
+                        ${priceLines.length > 1 ? `<span class="flavor-view-price-label">${escapeHtml(priceLine.label)}</span>` : ''}
+                        <span class="flavor-view-price-value">${escapeHtml(priceLine.value)}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    groupsElement.innerHTML = groups.length > 0
+        ? groups.map((group) => `
+            <section class="flavor-view-group">
+                <div class="flavor-view-group-header">
+                    <div>
+                        <h6 class="flavor-view-group-title">${escapeHtml(group.label)}</h6>
+                        <p class="flavor-view-group-subtitle">${group.options.length} flavor${group.options.length === 1 ? '' : 's'}</p>
+                    </div>
+                    <div class="flavor-view-group-price">${escapeHtml(group.price_display || String(product.price_display || '-'))}</div>
+                </div>
+                <div class="flavor-view-list">
+                    ${group.options.map((option) => `
+                        <div class="flavor-view-item">
+                            <div class="flavor-view-item-main">
+                                <span class="flavor-view-item-name">${escapeHtml(option.flavor || 'Unnamed Flavor')}</span>
+                                ${option.variant_count > 1 ? `<span class="flavor-view-item-note">${option.variant_count} variants combined</span>` : ''}
+                            </div>
+                            <span class="flavor-view-stock ${getFlavorViewStockBadgeClass(option.stock_qty)}">${Number(option.stock_qty || 0).toLocaleString()}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+        `).join('')
+        : '<div class="flavor-view-empty">No flavor details are available for this product.</div>';
 }
 
 function getDefaultVariantPuffValue() {
@@ -1277,23 +1887,17 @@ function getDefaultVariantPriceValue() {
 function getResolvedVariantPuffValue(row) {
     const puffInput = row.querySelector('.variant-puff-input');
     if (!puffInput || puffInput.disabled) {
-        return '';
+        return getDefaultVariantPuffValue();
     }
 
     return puffInput.value.trim() || getDefaultVariantPuffValue();
 }
 
 function createFlavorRow(row = {}) {
-    const usesManagedPuffs = categoryUsesManagedPuffs(getSelectedCategoryValue());
-    const puffValue = row.puffs ?? (usesManagedPuffs ? getDefaultVariantPuffValue() : '');
-    const priceValue = row.price ?? getDefaultVariantPriceValue();
-
     return `
         <div class="flavor-inventory-row">
             <input type="hidden" name="variant_ids[]" value="${escapeHtml(row.id ?? '')}">
             <div><input type="text" class="form-control variant-flavor-input" name="variant_flavors[]" placeholder="e.g. Bacteria Monster (Yakult)" value="${escapeHtml(row.flavor ?? '')}"></div>
-            <div class="variant-puff-cell"><select class="form-select variant-puff-input" name="variant_puffs[]">${buildPuffSelectMarkup(puffValue)}</select></div>
-            <div class="variant-price-cell"><input type="number" class="form-control variant-price-input" name="variant_prices[]" min="0" step="0.01" placeholder="0.00" value="${escapeHtml(priceValue)}"></div>
             <div><input type="number" class="form-control variant-stock-input" name="variant_stocks[]" min="0" step="1" placeholder="0" value="${escapeHtml(row.stock_qty ?? '')}"></div>
             <div class="text-md-end"><button type="button" class="inventory-remove-btn" aria-label="Remove flavor row">x</button></div>
         </div>
@@ -1326,38 +1930,22 @@ function updatePuffFieldState(categoryValue) {
 
     container.style.display = usesManagedPuffs ? 'flex' : 'none';
     puffInput.disabled = !usesManagedPuffs;
+    puffInput.required = usesManagedPuffs && categoryRequiresPuffs(categoryValue);
 
     if (!usesManagedPuffs) {
         return;
     }
 
-    puffHelp.textContent = 'Choose a puff preset or use the quick buttons. Clicking a quick button fills the default and any empty puff rows.';
+    puffHelp.textContent = 'Type one puff count for all flavor rows or use the quick buttons.';
 }
 
 function refreshPuffControls() {
     const usesManagedPuffs = categoryUsesManagedPuffs(getSelectedCategoryValue());
-    const defaultPuffInput = document.getElementById('default_variant_puffs');
-    const currentDefaultValue = defaultPuffInput ? defaultPuffInput.value.trim() : '';
-
-    if (defaultPuffInput) {
-        defaultPuffInput.innerHTML = buildPuffSelectMarkup(currentDefaultValue, true);
-        defaultPuffInput.value = getAllowedPuffChoices().includes(currentDefaultValue) ? currentDefaultValue : '';
-    }
-
-    getFlavorRows().forEach((row) => {
-        const puffInput = row.querySelector('.variant-puff-input');
-        if (!puffInput) {
-            return;
-        }
-
-        const currentValue = puffInput.value.trim();
-        puffInput.innerHTML = buildPuffSelectMarkup(currentValue);
-        puffInput.value = getAllowedPuffChoices().includes(currentValue) ? currentValue : '';
-    });
+    const currentDefaultValue = getDefaultVariantPuffValue();
 
     const shortcutButtons = Array.from(document.querySelectorAll('#puffShortcutButtons [data-puff-value]'));
     shortcutButtons.forEach((button) => {
-        const isActive = usesManagedPuffs && button.dataset.puffValue === getDefaultVariantPuffValue();
+        const isActive = usesManagedPuffs && button.dataset.puffValue === currentDefaultValue;
         button.classList.toggle('is-active', isActive);
     });
 }
@@ -1378,15 +1966,15 @@ function syncFlavorInventoryState() {
 
     inventoryPanel.style.display = usesInventory ? 'block' : 'none';
     inventoryGrid.classList.toggle('with-puffs', usesManagedPuffs);
-    priceInput.required = !usesInventory;
+    priceInput.required = true;
     stockQtyInput.readOnly = usesInventory;
     stockQtyLabel.textContent = usesInventory ? 'Total Stock Quantity *' : 'Stock Quantity *';
     stockQtyHelp.textContent = usesInventory
         ? 'Total stock is based on the sum of all flavor quantities below.'
         : 'Current stock for this product.';
-    priceLabel.textContent = usesInventory ? 'Default Price *' : 'Price *';
+    priceLabel.textContent = 'Price *';
     priceHelp.textContent = usesInventory
-        ? 'Used as the default price for any flavor row without its own price.'
+        ? 'Applied to all flavor rows below.'
         : 'Price for this product.';
 
     if (usesInventory && getFlavorRows().length === 0) {
@@ -1395,17 +1983,11 @@ function syncFlavorInventoryState() {
 
     getFlavorRows().forEach((row) => {
         const flavorInput = row.querySelector('.variant-flavor-input');
-        const puffInput = row.querySelector('.variant-puff-input');
-        const priceInput = row.querySelector('.variant-price-input');
         const stockInput = row.querySelector('.variant-stock-input');
         const removeButton = row.querySelector('.inventory-remove-btn');
 
         flavorInput.disabled = !usesInventory;
         flavorInput.required = usesInventory;
-        puffInput.disabled = !usesInventory || !usesManagedPuffs;
-        puffInput.required = usesInventory && usesManagedPuffs && requiresPuffs;
-        priceInput.disabled = !usesInventory;
-        priceInput.required = usesInventory;
         stockInput.disabled = !usesInventory;
         stockInput.required = usesInventory;
         removeButton.disabled = !usesInventory;
@@ -1531,15 +2113,14 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
 
         for (const row of rows) {
             const flavorInput = row.querySelector('.variant-flavor-input');
-            const priceInput = row.querySelector('.variant-price-input');
             const stockInput = row.querySelector('.variant-stock-input');
-            if (flavorInput.value.trim() === '' || priceInput.value.trim() === '' || stockInput.value.trim() === '') {
+            if (flavorInput.value.trim() === '' || stockInput.value.trim() === '') {
                 showAlert('Complete every flavor row before saving.', 'danger');
                 return;
             }
 
             if (categoryRequiresPuffs(categoryValue) && getResolvedVariantPuffValue(row) === '') {
-                showAlert('Choose a puff preset for every flavor row, or set a default puff count.', 'danger');
+                showAlert('Enter a puff count for every flavor row, or set a default puff count.', 'danger');
                 return;
             }
         }
@@ -1699,6 +2280,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addProductModal) {
         addProductModal.addEventListener('hidden.bs.modal', function() {
             resetAddProductFormState();
+        });
+    }
+
+    const viewFlavorsModal = document.getElementById('viewFlavorsModal');
+    if (viewFlavorsModal) {
+        viewFlavorsModal.addEventListener('show.bs.modal', function(event) {
+            const trigger = event.relatedTarget;
+            const productId = trigger ? trigger.getAttribute('data-product-id') : '';
+            renderFlavorViewModal(productId);
         });
     }
 });
