@@ -193,6 +193,56 @@ class ProductSeeder extends Seeder
                     ['name' => 'Big Black (Black Currant)', 'stock_qty' => 10, 'puffs' => 20000],
                 ],
             ],
+            [
+                'name' => 'XVAPE SLIMBAR',
+                'category' => 'Pods',
+                'brand' => 'XVAPE',
+                'image_url' => null,
+                'price' => 395.00,
+                'is_active' => 1,
+                'puffs' => 15000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Strawberry Ice', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Blueberry Ice', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Mixed Berries', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Yakult', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Mango Ice', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Watermelon Bubblegum', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Grapes', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Taro Ice Cream', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Tobacco', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Blackcurrant Ice', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Watermelon Ice', 'stock_qty' => 10, 'puffs' => 15000],
+                    ['name' => 'Lychee Ice', 'stock_qty' => 10, 'puffs' => 15000],
+                ],
+            ],
+            [
+                'name' => 'KALO V2',
+                'category' => 'Pods',
+                'brand' => 'KALO',
+                'image_url' => null,
+                'price' => 270.00,
+                'is_active' => 1,
+                'puffs' => 20000,
+                'created_at' => $timestamp,
+                'updated_at' => $timestamp,
+                'flavors' => [
+                    ['name' => 'Red (Watermelon)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Heart (Strawberry)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Lush (Lychee)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Frost (Mint)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Sparkle (Lemon Cola)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Blue (Bubble Gum)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Shirota (Yakult)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Purple (Grapes)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Rizz (Mix Berries)', 'stock_qty' => 10, 'puffs' => 20000],
+                    ['name' => 'Black (Black Currant)', 'stock_qty' => 10, 'puffs' => 20000],
+                ],
+            ],
+
+
 
 
             // Device Category - no flavors
@@ -427,6 +477,39 @@ class ProductSeeder extends Seeder
         }
 
         $decoded = json_decode($raw, true);
-        return is_array($decoded) ? $decoded : [];
+        if (!is_array($decoded)) {
+            return [];
+        }
+
+        $normalizedMap = [];
+        $mapUpdated = false;
+
+        foreach ($decoded as $name => $imageUrl) {
+            $normalizedName = trim((string) $name);
+            if ($normalizedName === '') {
+                $mapUpdated = true;
+                continue;
+            }
+
+            $normalizedImageUrl = trim((string) (normalize_product_image_path($imageUrl, true) ?? ''));
+            if ($normalizedImageUrl === '') {
+                $mapUpdated = true;
+                continue;
+            }
+
+            $normalizedMap[$normalizedName] = $normalizedImageUrl;
+            if ($normalizedImageUrl !== trim((string) $imageUrl)) {
+                $mapUpdated = true;
+            }
+        }
+
+        if ($mapUpdated) {
+            @file_put_contents(
+                $mapPath,
+                json_encode($normalizedMap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+            );
+        }
+
+        return $normalizedMap;
     }
 }

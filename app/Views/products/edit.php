@@ -152,11 +152,7 @@ foreach ($inventoryRows as $inventoryRow) {
 }
 
 $stockValue = old('stock_qty', $usesFlavorInventory ? $inventoryTotalStock : ($product['stock_qty'] ?? 0));
-$currentImageSrc = null;
-if (!empty($product['image_url'])) {
-    $currentImageUrl = (string) $product['image_url'];
-    $currentImageSrc = preg_match('#^(?:https?:)?//#i', $currentImageUrl) || strpos($currentImageUrl, 'data:image') === 0 ? $currentImageUrl : base_url(ltrim($currentImageUrl, '/'));
-}
+$currentImageSrc = product_image_url($product['image_url'] ?? null);
 ?>
 
 <style>

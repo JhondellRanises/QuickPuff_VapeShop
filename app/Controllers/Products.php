@@ -265,6 +265,8 @@ class Products extends BaseController
             return redirect()->to('/products');
         }
 
+        $existingImageUrl = normalize_product_image_path($product['image_url'] ?? null, true);
+
         $data = $this->getProductFormData();
         $flavorInventoryRows = $this->getFlavorInventoryRowsFromRequest();
         $usesFlavorInventory = $this->shouldUseFlavorInventoryEditor(
@@ -292,6 +294,8 @@ class Products extends BaseController
             $uploadedImagePath = $this->uploadProductImage($product['image_url'] ?? null);
             if ($uploadedImagePath !== null) {
                 $data['image_url'] = $uploadedImagePath;
+            } elseif ($existingImageUrl !== null && $existingImageUrl !== ($product['image_url'] ?? null)) {
+                $data['image_url'] = $existingImageUrl;
             }
 
             if ($usesFlavorInventory) {
@@ -825,7 +829,8 @@ class Products extends BaseController
             throw new \RuntimeException('Image upload failed. Allowed types: JPG, PNG, WEBP, GIF.');
         }
 
-        $uploadDir = rtrim(FCPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'products';
+        $trackedImageDirectory = trim(str_replace('\\', '/', product_image_tracked_directory()), '/');
+        $uploadDir = rtrim(FCPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $trackedImageDirectory);
         if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)) {
             throw new \RuntimeException('Image upload failed. Unable to prepare upload folder.');
         }
@@ -833,7 +838,7 @@ class Products extends BaseController
         $newFileName = $file->getRandomName();
         $file->move($uploadDir, $newFileName);
 
-        $newRelativePath = 'uploads/products/' . $newFileName;
+        $newRelativePath = $trackedImageDirectory . '/' . $newFileName;
         $this->deleteOldUploadedImage($existingImageUrl);
 
         return $newRelativePath;
@@ -846,7 +851,8 @@ class Products extends BaseController
         }
 
         $normalizedPath = ltrim(str_replace('\\', '/', $existingImageUrl), '/');
-        if (strpos($normalizedPath, 'uploads/products/') !== 0) {
+        $trackedImageDirectory = trim(str_replace('\\', '/', product_image_tracked_directory()), '/');
+        if ($trackedImageDirectory === '' || !str_starts_with($normalizedPath, $trackedImageDirectory . '/')) {
             return;
         }
 
@@ -860,7 +866,7 @@ class Products extends BaseController
     {
         $normalizedOldName = trim((string) $oldName);
         $normalizedNewName = trim((string) $newName);
-        $normalizedImageUrl = trim((string) ($imageUrl ?? ''));
+        $normalizedImageUrl = trim((string) (normalize_product_image_path($imageUrl, true) ?? ''));
 
         $mapPath = WRITEPATH . 'product_image_seed_map.json';
         $map = [];
@@ -914,7 +920,7 @@ class Products extends BaseController
                 continue;
             }
 
-            $imageUrl = trim((string) ($product['image_url'] ?? ''));
+            $imageUrl = trim((string) (normalize_product_image_path($product['image_url'] ?? null, true) ?? ''));
             if ($imageUrl === '') {
                 unset($map[$name]);
             } else {

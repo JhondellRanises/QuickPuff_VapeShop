@@ -100,7 +100,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                         <?php if (!empty($products)): ?>
                             <?php foreach ($products as $product): ?>
                                 <?php
-                                    $productImage = trim((string) ($product['image_url'] ?? ''));
+                                    $productImage = product_image_url($product['image_url'] ?? null);
                                     $productFlavors = [];
                                     foreach (($product['flavors'] ?? []) as $flavor) {
                                         $flavor = trim((string) $flavor);
@@ -109,10 +109,8 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                         }
                                     }
 
-                                    if ($productImage === '') {
+                                    if ($productImage === null || $productImage === '') {
                                         $productImage = $defaultVapeImage;
-                                    } elseif (!preg_match('#^(?:https?:)?//#i', $productImage) && strpos($productImage, 'data:image') !== 0) {
-                                        $productImage = base_url(ltrim($productImage, '/'));
                                     }
                                 ?>
                                 <div class="col-md-6 col-lg-4 mb-3 product-item" 
@@ -124,6 +122,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                         <div class="product-image-wrap">
                                             <img src="<?= esc($productImage, 'attr') ?>"
                                                  class="product-image"
+                                                 style="object-fit: contain; width: 100%; height: 100%;"
                                                  alt="<?= esc($product['name']) ?> image"
                                                  loading="lazy"
                                                  onerror="this.onerror=null;this.src='<?= esc($defaultVapeImage, 'attr') ?>';">
@@ -304,7 +303,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 .product-card .product-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
