@@ -117,6 +117,27 @@ class SaleModel extends Model
         return $builder->findAll();
     }
 
+    // Get paginated sales for reporting
+    public function getSalesReportPaginated($startDate = null, $endDate = null, int $perPage = 10, int $page = 1)
+    {
+        $builder = $this->select('
+            sales.*,
+            users.full_name as cashier_name
+        ')
+        ->join('users', 'users.id = sales.processed_by')
+        ->orderBy('sales.created_at', 'DESC');
+
+        if ($startDate) {
+            $builder->where('DATE(sales.created_at) >=', $startDate);
+        }
+
+        if ($endDate) {
+            $builder->where('DATE(sales.created_at) <=', $endDate);
+        }
+
+        return $builder->paginate($perPage, 'sales', $page);
+    }
+
     // Get sales summary
     public function getSalesSummary($startDate = null, $endDate = null)
     {

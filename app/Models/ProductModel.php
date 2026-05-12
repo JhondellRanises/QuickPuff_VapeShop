@@ -8,7 +8,7 @@ class ProductModel extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'category', 'brand', 'image_url', 'price', 'stock_qty', 'is_active', 'flavor', 'puffs'];
+    protected $allowedFields = ['name', 'barcode', 'category', 'brand', 'image_url', 'price', 'stock_qty', 'is_active', 'flavor', 'puffs'];
     protected $returnType = 'array';
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
@@ -17,6 +17,7 @@ class ProductModel extends Model
     // Validation rules
     protected $validationRules = [
         'name' => 'required|max_length[255]',
+        'barcode' => 'permit_empty|max_length[100]',
         'category' => 'required|max_length[100]',
         'brand' => 'max_length[100]',
         'image_url' => 'permit_empty|max_length[2048]',
@@ -73,10 +74,11 @@ class ProductModel extends Model
     public function searchProducts($searchTerm)
     {
         return $this->where('is_active', 1)
-                    ->like('name', $searchTerm)
-                    ->orLike('brand', $searchTerm)
-                    ->orderBy('name', 'ASC')
-                    ->findAll();
+                ->like('name', $searchTerm)
+                ->orLike('brand', $searchTerm)
+                ->orLike('barcode', $searchTerm)
+                ->orderBy('name', 'ASC')
+                ->findAll();
     }
 
     /**
@@ -87,6 +89,17 @@ class ProductModel extends Model
         return $this->where('id', $id)
                     ->where('is_active', 1)
                     ->first();
+    }
+
+    /**
+     * Get a single active product variant by exact barcode.
+     */
+    public function getActiveVariantByBarcode(string $barcode)
+    {
+        return $this->where('barcode', $barcode)
+            ->where('is_active', 1)
+            ->orderBy('id', 'DESC')
+            ->first();
     }
 
     /**
@@ -173,6 +186,7 @@ class ProductModel extends Model
                 ->like('name', $search)
                 ->orLike('category', $search)
                 ->orLike('brand', $search)
+                ->orLike('barcode', $search)
                 ->orLike('flavor', $search)
                 ->groupEnd();
         }
@@ -205,6 +219,7 @@ class ProductModel extends Model
                 ->like('name', $search)
                 ->orLike('category', $search)
                 ->orLike('brand', $search)
+                ->orLike('barcode', $search)
                 ->groupEnd();
         }
 
@@ -221,7 +236,7 @@ class ProductModel extends Model
     public function getStockSummary(): array
     {
         $products = $this->builder()
-            ->select('id, name, category, brand, price, stock_qty, is_active, flavor, puffs')
+            ->select('id, name, barcode, category, brand, price, stock_qty, is_active, flavor, puffs')
             ->orderBy('category', 'ASC')
             ->orderBy('brand', 'ASC')
             ->orderBy('name', 'ASC')
@@ -296,6 +311,7 @@ class ProductModel extends Model
         
         $result = $builder->select([
             'name',
+            'GROUP_CONCAT(DISTINCT CASE WHEN barcode IS NOT NULL AND barcode != "" THEN barcode END) as barcodes',
             'brand', 
             'category',
             'MIN(price) as min_price',
@@ -316,6 +332,7 @@ class ProductModel extends Model
         // Process the results
         foreach ($result as &$product) {
             $product['flavors'] = $product['flavors'] ? explode(',', $product['flavors']) : [];
+            $product['barcodes'] = $product['barcodes'] ? array_values(array_filter(explode(',', $product['barcodes']))) : [];
             $product['puff_counts'] = $product['puff_counts'] ? array_filter(explode(',', $product['puff_counts'])) : [];
             $product['min_price'] = (float) $product['min_price'];
             $product['max_price'] = (float) $product['max_price'];
@@ -453,6 +470,7 @@ class ProductModel extends Model
             $category = trim((string) ($product['category'] ?? ''));
             $category = $category === '' ? 'Uncategorized' : $category;
             $name = trim((string) ($product['name'] ?? ''));
+            $barcode = trim((string) ($product['barcode'] ?? ''));
             $brand = trim((string) ($product['brand'] ?? ''));
             $groupKey = strtolower($category) . '|' . strtolower($name) . '|' . strtolower($brand);
 
@@ -462,6 +480,7 @@ class ProductModel extends Model
                 $groupedProducts[$category][$groupKey] = [
                     'id' => (int) ($product['id'] ?? 0),
                     'name' => $name,
+                    'barcode' => $barcode === '' ? null : $barcode,
                     'category' => $category,
                     'brand' => $brand === '' ? null : $brand,
                     'min_price' => $price,

@@ -76,7 +76,11 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                     <div class="row g-3">
                         <div class="col-md-9">
                             <input type="text" class="form-control" id="searchProduct" 
-                                   placeholder="Search products..." onkeyup="searchProducts()">
+                                   placeholder="Search product name, brand, flavor, or barcode..." onkeyup="searchProducts()">
+                            <small class="text-muted d-block mt-2">
+                                <span class="badge bg-secondary me-2" id="scannerStatusBadge">Scanner: Listening...</span>
+                                <span id="scannerLastScanHint">No barcode scanned yet.</span>
+                            </small>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-outline-primary w-100" onclick="resetFilters()">
@@ -117,6 +121,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                      data-category="<?= esc($product['category']) ?>" 
                                      data-name="<?= esc($product['name']) ?>"
                                      data-brand="<?= esc($product['brand'] ?? '') ?>"
+                                     data-barcodes="<?= esc(json_encode($product['barcodes'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'attr') ?>"
                                      data-flavors="<?= esc(json_encode($productFlavors, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'attr') ?>">
                                     <div class="card h-100 product-card">
                                         <div class="product-image-wrap">
@@ -409,6 +414,31 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 
 #receiptModal .btn-close:hover {
     opacity: 1;
+}
+
+@media print {
+    body.printing-receipt * {
+        visibility: hidden !important;
+    }
+
+    body.printing-receipt #posPrintArea,
+    body.printing-receipt #posPrintArea * {
+        visibility: visible !important;
+    }
+
+    body.printing-receipt #posPrintArea {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        min-height: 100vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        z-index: 2147483647 !important;
+    }
 }
 
 /* Category Sidebar Styles */
@@ -1054,6 +1084,9 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
     </div>
 </div>
 
+<!-- Dedicated print-only container -->
+<div id="posPrintArea" style="display: none;"></div>
+
 <!-- Product Variant Selection Modal -->
 <div class="modal fade" id="variantModal" tabindex="-1" aria-labelledby="variantModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1097,6 +1130,30 @@ let isMouseOverCategoryIndicator = false;
 let currentActiveCategory = '';
 let currentActiveFlavor = '';
 let currentSearchTerm = '';
+const scannerCaptureState = {
+    buffer: '',
+    lastKeyAt: null,
+    intervals: [],
+};
+
+function setScannerBadge(message, level = 'secondary') {
+    const badge = document.getElementById('scannerStatusBadge');
+    if (!badge) {
+        return;
+    }
+
+    badge.className = `badge bg-${level} me-2`;
+    badge.textContent = message;
+}
+
+function setScannerHint(message) {
+    const hint = document.getElementById('scannerLastScanHint');
+    if (!hint) {
+        return;
+    }
+
+    hint.textContent = message;
+}
 
 function formatCurrency(value) {
     const amount = Number(value || 0);
@@ -1256,6 +1313,18 @@ function parseProductFlavors(product) {
     }
 }
 
+function parseProductBarcodes(product) {
+    try {
+        const parsed = JSON.parse(product.dataset.barcodes || '[]');
+        return Array.isArray(parsed)
+            ? parsed.map(barcode => String(barcode || '').trim()).filter(Boolean)
+            : [];
+    } catch (error) {
+        console.warn('Unable to parse product barcodes:', error);
+        return [];
+    }
+}
+
 function escapeHtml(value) {
     return String(value || '').replace(/[&<>"']/g, character => ({
         '&': '&amp;',
@@ -1291,6 +1360,7 @@ function applyProductFilters(options = {}) {
 
     products.forEach(product => {
         const productFlavors = parseProductFlavors(product);
+        const productBarcodes = parseProductBarcodes(product);
         const name = (product.dataset.name || '').toLowerCase();
         const brand = (product.dataset.brand || '').toLowerCase();
 
@@ -1299,7 +1369,8 @@ function applyProductFilters(options = {}) {
         const matchesSearch = currentSearchTerm === ''
             || name.includes(currentSearchTerm)
             || brand.includes(currentSearchTerm)
-            || productFlavors.some(flavor => flavor.toLowerCase().includes(currentSearchTerm));
+            || productFlavors.some(flavor => flavor.toLowerCase().includes(currentSearchTerm))
+            || productBarcodes.some(barcode => barcode.toLowerCase().includes(currentSearchTerm));
 
         const isVisible = matchesCategory && matchesFlavor && matchesSearch;
         product.style.display = isVisible ? 'block' : 'none';
@@ -1794,6 +1865,86 @@ function updateCartCountIndicator() {
     }
 }
 
+function addScannedVariantToCart(variant) {
+    if (!variant) {
+        return;
+    }
+
+    if ((parseInt(variant.stock_qty || 0, 10)) <= 0) {
+        setScannerBadge('Scanner: Out of stock', 'danger');
+        setScannerHint(`Scanned ${variant.barcode || ''} but stock is 0.`);
+        return;
+    }
+
+    const variantId = parseInt(variant.id, 10);
+    const variantFlavor = variant.flavor || '';
+    const variantPuffs = parseInt(variant.puffs || 0, 10);
+    const existingItem = cart.find(item =>
+        item.id === variantId &&
+        item.flavor === variantFlavor &&
+        item.puffs === variantPuffs
+    );
+
+    if (existingItem) {
+        if (existingItem.quantity >= parseInt(variant.stock_qty, 10)) {
+            setScannerBadge('Scanner: Stock limit reached', 'warning');
+            setScannerHint(`Cannot add more ${variant.name}. Max stock reached.`);
+            return;
+        }
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            id: variantId,
+            name: variant.name,
+            price: parseFloat(variant.price),
+            quantity: 1,
+            stock: parseInt(variant.stock_qty, 10),
+            flavor: variantFlavor,
+            puffs: variantPuffs
+        });
+    }
+
+    updateCart();
+    showCartOnAdd();
+    setScannerBadge('Scanner: Connected', 'success');
+    setScannerHint(`Added ${variant.name}${variantFlavor ? ' - ' + variantFlavor : ''} to cart.`);
+}
+
+function processScannedBarcode(barcode) {
+    const normalizedBarcode = String(barcode || '').trim();
+    if (!normalizedBarcode) {
+        return;
+    }
+
+    // Also mirror scanned code to search box for visual feedback/filtering.
+    const searchInput = document.getElementById('searchProduct');
+    if (searchInput) {
+        searchInput.value = normalizedBarcode;
+        searchProducts();
+    }
+
+    fetch(`<?= site_url('/pos/barcode-scan') ?>?barcode=${encodeURIComponent(normalizedBarcode)}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success || !data.variant) {
+            setScannerBadge('Scanner: Barcode not found', 'danger');
+            setScannerHint(data.message || `Barcode ${normalizedBarcode} not found.`);
+            return;
+        }
+
+        addScannedVariantToCart(data.variant);
+    })
+    .catch(() => {
+        setScannerBadge('Scanner: Lookup error', 'danger');
+        setScannerHint('Unable to process barcode right now.');
+    });
+}
+
 // Show variant selection modal
 function showVariantModal(name, brand, category) {
     const modal = new bootstrap.Modal(document.getElementById('variantModal'));
@@ -2279,6 +2430,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const addVariantBtn = document.getElementById('addVariantToCartBtn');
     if (addVariantBtn) {
         addVariantBtn.addEventListener('click', addVariantToCart);
+    }
+});
+
+document.addEventListener('keydown', function(event) {
+    const activeElement = document.activeElement;
+    const isTypingInTextArea = activeElement && activeElement.tagName === 'TEXTAREA';
+    if (isTypingInTextArea) {
+        return;
+    }
+
+    const now = Date.now();
+
+    if (event.key === 'Enter') {
+        const scannedValue = scannerCaptureState.buffer.trim();
+        const avgInterval = scannerCaptureState.intervals.length > 0
+            ? scannerCaptureState.intervals.reduce((sum, value) => sum + value, 0) / scannerCaptureState.intervals.length
+            : 999;
+
+        const looksLikeScannerInput = scannedValue.length >= 6 && avgInterval <= 60;
+        if (looksLikeScannerInput) {
+            event.preventDefault();
+            processScannedBarcode(scannedValue);
+        }
+
+        scannerCaptureState.buffer = '';
+        scannerCaptureState.intervals = [];
+        scannerCaptureState.lastKeyAt = null;
+        return;
+    }
+
+    if (event.key.length !== 1) {
+        return;
+    }
+
+    if (scannerCaptureState.lastKeyAt !== null) {
+        scannerCaptureState.intervals.push(now - scannerCaptureState.lastKeyAt);
+    }
+
+    scannerCaptureState.lastKeyAt = now;
+    scannerCaptureState.buffer += event.key;
+
+    // Safety reset if buffer grows too much without Enter.
+    if (scannerCaptureState.buffer.length > 64) {
+        scannerCaptureState.buffer = '';
+        scannerCaptureState.intervals = [];
+        scannerCaptureState.lastKeyAt = null;
     }
 });
 let changeCalcElements = null;
@@ -2842,38 +3039,26 @@ function generateReceiptHTML(saleData) {
                 color: #000000;
             }
             @media print {
-                body * { visibility: hidden; }
-                #receiptContent, #receiptContent * { visibility: visible; }
-                #receiptContent { 
-                    position: absolute; 
-                    left: 0; 
-                    top: 0; 
-                    width: 100%; 
-                    background: white !important;
-                    background-color: #ffffff !important;
-                }
-                .modal-footer { display: none !important; }
-                .modal-header { display: none !important; }
                 .receipt-container {
-                    max-width: 100%;
-                    margin: 0;
-                    padding: 5px;
+                    max-width: 760px;
+                    margin: 0 auto;
+                    padding: 14px;
                     border: none;
                     border-radius: 0;
                     box-shadow: none;
-                    font-size: 10px;
-                    line-height: 1.1;
+                    font-size: 14px;
+                    line-height: 1.3;
                 }
-                .receipt-shop-name { font-size: 12px; }
-                .receipt-shop-address { font-size: 8px; }
-                .receipt-sale-info { padding: 5px; font-size: 9px; }
-                .receipt-items-table { font-size: 9px; }
+                .receipt-shop-name { font-size: 20px; }
+                .receipt-shop-address { font-size: 12px; }
+                .receipt-sale-info { padding: 12px; font-size: 14px; }
+                .receipt-items-table { font-size: 13px; }
                 .receipt-items-table th,
-                .receipt-items-table td { padding: 2px; }
-                .receipt-totals { font-size: 9px; }
-                .receipt-grand-total { font-size: 10px; }
-                .receipt-footer { font-size: 8px; }
-                .receipt-success-badge { font-size: 10px; padding: 5px 10px; }
+                .receipt-items-table td { padding: 8px; }
+                .receipt-totals { font-size: 13px; }
+                .receipt-grand-total { font-size: 15px; }
+                .receipt-footer { font-size: 12px; }
+                .receipt-success-badge { font-size: 14px; padding: 10px 20px; }
             }
             @media screen {
                 .receipt-container {
@@ -2968,187 +3153,92 @@ function generateReceiptHTML(saleData) {
 function printReceipt() {
     console.log('Print receipt called');
     
-    // Get the current sale data from the modal
     const receiptContent = document.getElementById('receiptContent');
     if (!receiptContent) {
         console.error('Receipt content not found');
         alert('Error: Receipt content not found');
         return;
     }
-    
-    // Get the receipt container HTML
+
+    const printArea = document.getElementById('posPrintArea');
+    if (!printArea) {
+        console.error('Print area not found');
+        alert('Error: Print area not found');
+        return;
+    }
+
+    // Keep print area at <body> level to avoid hidden/clipped parent containers.
+    if (printArea.parentElement !== document.body) {
+        document.body.appendChild(printArea);
+    }
+
     const receiptContainer = receiptContent.querySelector('.receipt-container');
     if (!receiptContainer) {
         console.error('Receipt container not found');
-        alert('Error: Receipt container not found');
+        alert('Error: Receipt layout not found');
         return;
     }
-    
-    console.log('Receipt container found:', receiptContainer);
-    
-    // Create a new window for printing with small paper size
-    const printWindow = window.open('', '_blank');
-    
-    // Get the current sale data from the global scope or recreate it
-    const saleData = window.currentSaleData;
-    if (!saleData) {
-        console.error('No sale data available for printing');
-        alert('Error: No sale data available for printing');
-        return;
-    }
-    
-    console.log('Sale data for printing:', saleData);
-    
-    // Generate print-optimized receipt HTML
-    const printHTML = generatePrintReceiptHTML(saleData);
-    
-    printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Receipt - Quick Puff Vape Shop</title>
-            <style>
-                @page {
-                    size: 89mm 127mm;
-                    margin: 2mm;
-                }
-                body {
-                    font-family: 'Courier New', monospace;
-                    font-size: 12px;
-                    line-height: 1.25;
-                    margin: 0;
-                    padding: 0;
-                    color: #000000;
-                    background: white;
-                    width: 89mm;
-                    max-width: 89mm;
-                }
-                .receipt-container {
-                    width: 85mm;
-                    padding: 2mm;
-                    background: white;
-                    color: #000000;
-                    box-sizing: border-box;
-                    margin: 0 auto;
-                }
-                .receipt-header {
-                    text-align: center;
-                    border-bottom: 2px dashed #000000;
-                    padding-bottom: 4px;
-                    margin-bottom: 4px;
-                }
-                .receipt-shop-name {
-                    font-size: 14px;
-                    font-weight: bold;
-                    margin-bottom: 2px;
-                    color: #000000;
-                }
-                .receipt-shop-address {
-                    font-size: 10px;
-                    color: #000000;
-                    margin-bottom: 1px;
-                }
-                .receipt-sale-info {
-                    background: #f8f8f8;
-                    padding: 4px;
-                    border: 1px solid #000000;
-                    margin-bottom: 4px;
-                    font-size: 11px;
-                }
-                .receipt-items-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 4px;
-                    font-size: 11px;
-                }
-                .receipt-items-table th,
-                .receipt-items-table td {
-                    border: 1px solid #000000;
-                    padding: 3px;
-                    text-align: left;
-                    color: #000000;
-                }
-                .receipt-items-table th {
-                    background: #f0f0f0;
-                    font-weight: bold;
-                    color: #000000;
-                    font-size: 10px;
-                }
-                .receipt-totals {
-                    text-align: right;
-                    margin-bottom: 4px;
-                    font-size: 11px;
-                }
-                .receipt-total-row {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 2px;
-                    color: #000000;
-                }
-                .receipt-grand-total {
-                    font-weight: bold;
-                    font-size: 13px;
-                    border-top: 2px solid #000000;
-                    padding-top: 3px;
-                    color: #000000;
-                }
-                .receipt-footer {
-                    text-align: center;
-                    border-top: 2px dashed #000000;
-                    padding-top: 4px;
-                    margin-top: 4px;
-                    color: #000000;
-                    font-size: 10px;
-                }
-                .receipt-success-badge {
-                    background: #000000;
-                    color: #ffffff;
-                    padding: 4px 8px;
-                    text-align: center;
-                    margin-bottom: 4px;
-                    font-size: 11px;
-                    font-weight: bold;
-                }
-                .receipt-label {
-                    font-weight: bold;
-                    color: #000000;
-                }
-                .receipt-value {
-                    color: #000000;
-                }
-                @media print {
-                    @page {
-                        size: 89mm 127mm;
-                        margin: 2mm;
-                    }
-                    body {
-                        width: 89mm;
-                        max-width: 89mm;
-                        margin: 0;
-                        padding: 0;
-                    }
-                    .receipt-container {
-                        width: 85mm;
-                        padding: 2mm;
-                    }
-                }
-            </style>
-        </head>
-        <body>
-            ${printHTML}
-        </body>
-        </html>
-    `);
-    
-    printWindow.document.close();
-    printWindow.focus();
-    
-    // Wait for content to load, then print
+
+    // Print only the receipt markup to avoid conflicting inline @media print rules.
+    printArea.innerHTML = `
+        <style>
+            #posPrintArea {
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-family: 'Courier New', monospace;
+            }
+            #posPrintArea .receipt-container {
+                background: #ffffff !important;
+                color: #000000 !important;
+                max-width: 760px;
+                margin: 0 auto;
+                padding: 14px;
+                border: none;
+                box-shadow: none;
+                border-radius: 0;
+                font-size: 14px;
+                line-height: 1.3;
+            }
+            #posPrintArea .receipt-shop-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+            #posPrintArea .receipt-shop-address { font-size: 12px; margin-bottom: 3px; }
+            #posPrintArea .receipt-sale-info { padding: 12px; border: 1px solid #000; margin-bottom: 15px; }
+            #posPrintArea .receipt-items-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 13px; }
+            #posPrintArea .receipt-items-table th,
+            #posPrintArea .receipt-items-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+            #posPrintArea .receipt-totals { font-size: 13px; margin-bottom: 15px; }
+            #posPrintArea .receipt-total-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+            #posPrintArea .receipt-grand-total { border-top: 2px solid #000; padding-top: 8px; font-size: 15px; font-weight: bold; }
+            #posPrintArea .receipt-footer { border-top: 2px dashed #000; padding-top: 15px; margin-top: 15px; text-align: center; font-size: 12px; }
+            #posPrintArea .receipt-success-badge { background: #000 !important; color: #fff !important; padding: 10px 20px; border-radius: 5px; text-align: center; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
+        </style>
+        ${receiptContainer.outerHTML}
+    `;
+
+    // Print directly from current page/modal. No new tab/window.
+    document.body.classList.add('printing-receipt');
+    const cleanupOnFocus = () => {
+        window.removeEventListener('focus', cleanupOnFocus);
+        setTimeout(cleanupReceiptPrintState, 250);
+    };
+    window.addEventListener('focus', cleanupOnFocus);
+    window.focus();
     setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-    }, 500);
+        window.print();
+    }, 50);
+
+    // Keep print markup until the print dialog closes.
+    // Early cleanup can cause blank print previews on slower machines.
 }
+
+function cleanupReceiptPrintState() {
+    document.body.classList.remove('printing-receipt');
+    const printArea = document.getElementById('posPrintArea');
+    if (printArea) {
+        printArea.innerHTML = '';
+    }
+}
+
+window.addEventListener('afterprint', cleanupReceiptPrintState);
 
 // Generate print-optimized receipt HTML
 function generatePrintReceiptHTML(saleData) {

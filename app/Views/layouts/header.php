@@ -169,6 +169,23 @@
             border: 1px solid var(--border-color);
         }
 
+        .user-profile-trigger {
+            border: 0;
+            background: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        .user-profile-trigger:focus {
+            outline: 2px solid rgba(123, 104, 238, 0.6);
+            outline-offset: 2px;
+            border-radius: 10px;
+        }
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -180,6 +197,28 @@
             color: var(--text-primary);
             font-weight: 600;
             font-size: 1.1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+        }
+
+        .user-avatar-trigger {
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .user-avatar-trigger:focus {
+            outline: 2px solid rgba(123, 104, 238, 0.6);
+            outline-offset: 2px;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
         .user-details {
@@ -1095,14 +1134,46 @@
 
                 <!-- User Info -->
                 <div class="navbar-nav">
+                    <?php
+                        $currentUserFullName = (string) session()->get('full_name', 'User');
+                        $currentUserRole = (string) session()->get('role', 'staff');
+                        $currentUserProfileImage = trim((string) session()->get('profile_image', ''));
+
+                        $fallbackAvatarLabel = $currentUserRole === 'admin' ? 'ADMIN' : 'STAFF';
+                        $fallbackAvatarInitial = $currentUserRole === 'admin' ? 'A' : 'S';
+                        $fallbackAvatarColorA = $currentUserRole === 'admin' ? '#4A90E2' : '#00D68F';
+                        $fallbackAvatarColorB = $currentUserRole === 'admin' ? '#7B68EE' : '#4A90E2';
+
+                        $fallbackAvatarSvg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'>"
+                            . "<defs><linearGradient id='avatarGrad' x1='0' y1='0' x2='1' y2='1'>"
+                            . "<stop offset='0%' stop-color='{$fallbackAvatarColorA}'/>"
+                            . "<stop offset='100%' stop-color='{$fallbackAvatarColorB}'/>"
+                            . "</linearGradient></defs>"
+                            . "<rect width='120' height='120' rx='24' fill='url(#avatarGrad)'/>"
+                            . "<circle cx='60' cy='44' r='20' fill='rgba(255,255,255,0.95)'/>"
+                            . "<path d='M24 102c7-19 21-29 36-29s29 10 36 29' fill='rgba(255,255,255,0.95)'/>"
+                            . "<text x='60' y='114' font-family='Arial, sans-serif' font-size='14' text-anchor='middle' fill='rgba(255,255,255,0.9)'>{$fallbackAvatarLabel}</text>"
+                            . "</svg>";
+                        $fallbackAvatarSrc = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($fallbackAvatarSvg);
+                        $avatarSrc = $currentUserProfileImage !== '' ? base_url($currentUserProfileImage) : $fallbackAvatarSrc;
+                    ?>
                     <div class="user-info">
-                        <div class="user-avatar">
-                            <?= strtoupper(substr(session()->get('full_name', 'U'), 0, 1)) ?>
-                        </div>
-                        <div class="user-details">
-                            <div class="user-name"><?= session()->get('full_name', 'User') ?></div>
-                            <div class="user-role"><?= ucfirst(session()->get('role', 'staff')) ?></div>
-                        </div>
+                        <button type="button"
+                                class="user-profile-trigger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#profileImageModal"
+                                title="Open account settings"
+                                aria-label="Open account settings">
+                            <div class="user-avatar">
+                                <img src="<?= esc($avatarSrc, 'attr') ?>"
+                                     alt="<?= esc($currentUserFullName) ?> avatar"
+                                     onerror="this.onerror=null;this.src='<?= esc($fallbackAvatarSrc, 'attr') ?>';">
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name"><?= esc($currentUserFullName) ?></div>
+                                <div class="user-role"><?= esc(ucfirst($currentUserRole)) ?></div>
+                            </div>
+                        </button>
                         <a class="nav-link" href="<?= site_url('/logout') ?>">
                             <i class="fas fa-sign-out-alt"></i>
                         </a>
@@ -1148,6 +1219,165 @@
             </div>
         </div>
     <?php endif; ?>
+
+    <!-- Account Settings Modal -->
+    <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileImageModalLabel">Account Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="<?= site_url('/auth/account-settings') ?>" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <?= csrf_field() ?>
+                        <?php
+                            $roleAccess = $currentUserRole === 'admin'
+                                ? ['Dashboard', 'POS', 'Reports', 'Stock Management', 'Staff Management', 'Account Settings']
+                                : ['Dashboard', 'POS', 'Reports', 'Account Settings'];
+                        ?>
+
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <div>
+                                <span class="badge bg-info"><?= esc(ucfirst($currentUserRole)) ?></span>
+                            </div>
+                            <small class="text-muted">Permissions are based on your role.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="account_full_name" class="form-label">Full Name</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="account_full_name"
+                                   name="full_name"
+                                   value="<?= esc($currentUserFullName) ?>"
+                                   maxlength="255"
+                                   required>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="profile_image_file" class="form-label">Profile Image</label>
+                            <?php if ($currentUserProfileImage !== ''): ?>
+                                <div class="mb-2 d-flex align-items-center gap-3">
+                                    <div class="user-avatar" style="width: 52px; height: 52px;">
+                                        <img src="<?= esc($avatarSrc, 'attr') ?>"
+                                             alt="<?= esc($currentUserFullName) ?> profile preview"
+                                             onerror="this.onerror=null;this.src='<?= esc($fallbackAvatarSrc, 'attr') ?>';">
+                                    </div>
+                                    <button type="button"
+                                       class="btn btn-sm btn-outline-primary"
+                                       data-bs-dismiss="modal"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#profileImagePreviewModal">
+                                        View Full Image
+                                    </button>
+                                </div>
+                            <?php endif; ?>
+                            <input type="file"
+                                   class="form-control"
+                                   id="profile_image_file"
+                                   name="profile_image_file"
+                                   accept="image/jpeg,image/png,image/webp">
+                            <small class="text-muted">Optional. Allowed: JPG, PNG, WEBP. Max size: 3MB.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">Password</label>
+                            <button type="button"
+                                    class="btn btn-outline-primary btn-sm"
+                                    data-bs-dismiss="modal"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changePasswordModal">
+                                Change Password
+                            </button>
+                            <small class="text-muted d-block mt-2">Open a separate popup form to update your password.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <?php if ($currentUserProfileImage !== ''): ?>
+    <div class="modal fade" id="profileImagePreviewModal" tabindex="-1" aria-labelledby="profileImagePreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileImagePreviewModalLabel">Profile Image Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="<?= esc($avatarSrc, 'attr') ?>"
+                         alt="<?= esc($currentUserFullName) ?> full profile image"
+                         style="max-width: 100%; max-height: 70vh; border-radius: 10px;"
+                         onerror="this.onerror=null;this.src='<?= esc($fallbackAvatarSrc, 'attr') ?>';">
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="<?= site_url('/auth/account-settings-password') ?>" method="POST">
+                    <div class="modal-body">
+                        <?= csrf_field() ?>
+                        <div class="mb-3">
+                            <label for="current_password_modal" class="form-label">Current Password</label>
+                            <input type="password"
+                                   class="form-control"
+                                   id="current_password_modal"
+                                   name="current_password"
+                                   autocomplete="current-password"
+                                   required>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="new_password_modal" class="form-label">New Password</label>
+                                <input type="password"
+                                       class="form-control"
+                                       id="new_password_modal"
+                                       name="new_password"
+                                       minlength="6"
+                                       autocomplete="new-password"
+                                       required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirm_password_modal" class="form-label">Confirm New Password</label>
+                                <input type="password"
+                                       class="form-control"
+                                       id="confirm_password_modal"
+                                       name="confirm_password"
+                                       minlength="6"
+                                       autocomplete="new-password"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal"
+                                data-bs-toggle="modal"
+                                data-bs-target="#profileImageModal">Back</button>
+                        <button type="submit" class="btn btn-primary">Save Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <div class="main-content">

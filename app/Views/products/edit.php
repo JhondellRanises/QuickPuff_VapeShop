@@ -195,6 +195,12 @@ $currentImageSrc = product_image_url($product['image_url'] ?? null);
                             <input type="text" class="form-control" id="name" name="name" required maxlength="255" placeholder="Enter product name" value="<?= old('name', $product['name']) ?>">
                         </div>
 
+                        <div class="mb-3">
+                            <label for="barcode" class="form-label">Barcode</label>
+                            <input type="text" class="form-control" id="barcode" name="barcode" maxlength="100" placeholder="Scan or type barcode" value="<?= old('barcode', $product['barcode'] ?? '') ?>">
+                            <small class="text-muted">Optional. Barcode should be unique for each product.</small>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="category" class="form-label">Category *</label>

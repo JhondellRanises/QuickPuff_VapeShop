@@ -365,6 +365,18 @@ hr.my-4 {
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.flavor-summary-card.is-clickable {
+    cursor: pointer;
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.flavor-summary-card.is-clickable:hover,
+.flavor-summary-card.is-clickable:focus {
+    transform: translateY(-1px);
+    border-color: rgba(88, 140, 255, 0.55);
+    background: rgba(88, 140, 255, 0.12);
+}
+
 .flavor-summary-stats {
     display: flex;
     flex-wrap: wrap;
@@ -678,6 +690,10 @@ hr.my-4 {
     color: #ffffff !important;
 }
 
+.stock-badge-trigger {
+    cursor: pointer;
+}
+
 .status-badge {
     color: #ffffff !important;
 }
@@ -945,10 +961,16 @@ hr.my-4 {
                 <h1 class="page-title" style="color: #ffffff !important;">Stock Management</h1>
                 <p class="page-subtitle" style="color: #ffffff !important;">Create, update, and monitor product inventory</p>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                <i class="fas fa-plus me-2"></i>
-                Add Product
-            </button>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="fas fa-plus me-2"></i>
+                    Add Product
+                </button>
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addBarcodeProductModal">
+                    <i class="fas fa-barcode me-2"></i>
+                    Add via Barcode
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1182,7 +1204,16 @@ hr.my-4 {
                                                         $summaryVisiblePuffs = array_slice($summaryPuffCounts, 0, 3);
                                                         $summaryRemainingPuffs = max(0, count($summaryPuffCounts) - count($summaryVisiblePuffs));
                                                         ?>
-                                                        <div class="flavor-summary-card">
+                                                        <div class="flavor-summary-card <?= !empty($product['variant_options']) ? 'is-clickable' : '' ?>"
+                                                            <?php if (!empty($product['variant_options'])): ?>
+                                                                role="button"
+                                                                tabindex="0"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#viewFlavorsModal"
+                                                                data-product-id="<?= (int) $product['id'] ?>"
+                                                                title="View flavor details"
+                                                                aria-label="View flavors for <?= esc((string) ($product['name'] ?? '')) ?>"
+                                                            <?php endif; ?>>
                                                             <div class="flavor-summary-stats">
                                                                 <span class="flavor-summary-stat"><strong><?= $summaryFlavorCount ?></strong> Flavors</span>
                                                                 <span class="flavor-summary-stat"><strong><?= count($summaryPuffCounts) ?></strong> Puff Groups</span>
@@ -1232,12 +1263,30 @@ hr.my-4 {
                                                 <?php endif; ?>
                                             </td>
                                             <td class="stock-cell">
-                                                <?php if (($product['total_stock'] ?? 0) > 10): ?>
-                                                    <span class="badge bg-success stock-badge"><?= (int) ($product['total_stock'] ?? 0) ?></span>
-                                                <?php elseif (($product['total_stock'] ?? 0) > 0): ?>
-                                                    <span class="badge bg-warning stock-badge"><?= (int) ($product['total_stock'] ?? 0) ?></span>
+                                                <?php if (!empty($product['variant_options'])): ?>
+                                                    <button type="button"
+                                                            class="btn p-0 border-0 bg-transparent stock-badge-trigger"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#viewFlavorsModal"
+                                                            data-product-id="<?= (int) $product['id'] ?>"
+                                                            title="View stocks by flavor and puffs"
+                                                            aria-label="View stocks by flavor and puffs for <?= esc((string) ($product['name'] ?? '')) ?>">
+                                                        <?php if (($product['total_stock'] ?? 0) > 10): ?>
+                                                            <span class="badge bg-success stock-badge"><?= (int) ($product['total_stock'] ?? 0) ?></span>
+                                                        <?php elseif (($product['total_stock'] ?? 0) > 0): ?>
+                                                            <span class="badge bg-warning stock-badge"><?= (int) ($product['total_stock'] ?? 0) ?></span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-danger stock-badge">0</span>
+                                                        <?php endif; ?>
+                                                    </button>
                                                 <?php else: ?>
-                                                    <span class="badge bg-danger stock-badge">0</span>
+                                                    <?php if (($product['total_stock'] ?? 0) > 10): ?>
+                                                        <span class="badge bg-success stock-badge"><?= (int) ($product['total_stock'] ?? 0) ?></span>
+                                                    <?php elseif (($product['total_stock'] ?? 0) > 0): ?>
+                                                        <span class="badge bg-warning stock-badge"><?= (int) ($product['total_stock'] ?? 0) ?></span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-danger stock-badge">0</span>
+                                                    <?php endif; ?>
                                                 <?php endif; ?>
                                             </td>
                                             <td class="status-cell">
@@ -1297,6 +1346,9 @@ hr.my-4 {
                     <p class="text-muted">Try adjusting your search filters or add your first product.</p>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
                         <i class="fas fa-plus me-2"></i>Add Your First Product
+                    </button>
+                    <button type="button" class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#addBarcodeProductModal">
+                        <i class="fas fa-barcode me-2"></i>Add via Barcode
                     </button>
                 </div>
             <?php endif; ?>
@@ -1626,6 +1678,123 @@ sort($modalAvailablePuffChoices, SORT_NUMERIC);
                 </button>
                 <button type="submit" form="addProductForm" class="btn btn-primary">
                     <i class="fas fa-save me-2"></i>Save Product
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Product via Barcode Modal -->
+<div class="modal fade" id="addBarcodeProductModal" tabindex="-1" aria-labelledby="addBarcodeProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBarcodeProductModalLabel">
+                    <i class="fas fa-barcode me-2"></i>Add Product via Barcode
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= site_url('/products/store') ?>" method="POST" id="addBarcodeProductForm">
+                    <?= csrf_field() ?>
+
+                    <div class="alert alert-info mb-3">
+                        <strong>Scanner mode:</strong> Scanner is ready automatically when this modal opens.
+                        If no scanner is connected, you can still type barcode manually.
+                    </div>
+
+                    <div class="d-flex gap-2 mb-3">
+                        <span class="badge bg-warning d-flex align-items-center" id="barcodeScannerStatusBadge">Scanner: Waiting for scan...</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="barcode_quick" class="form-label">Barcode *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="barcode_quick"
+                               name="barcode"
+                               required
+                               maxlength="100"
+                               placeholder="Scan barcode here or type manually">
+                        <small class="text-muted">Barcode must be unique.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name_quick" class="form-label">Product Name *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="name_quick"
+                               name="name"
+                               required
+                               maxlength="255"
+                               placeholder="Enter product name">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="category_quick" class="form-label">Category *</label>
+                            <select class="form-select" id="category_quick" name="category" required>
+                                <option value="">Select category...</option>
+                                <?php if (!empty($categories ?? [])): ?>
+                                    <?php foreach ($categories as $cat): ?>
+                                        <option value="<?= esc($cat['category']) ?>"><?= esc($cat['category']) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="brand_quick" class="form-label">Brand</label>
+                            <select class="form-select" id="brand_quick" name="brand">
+                                <option value="">Select brand...</option>
+                                <?php if (!empty($brands ?? [])): ?>
+                                    <?php foreach ($brands as $brand): ?>
+                                        <option value="<?= esc($brand['brand']) ?>"><?= esc($brand['brand']) ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="price_quick" class="form-label">Price *</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="price_quick"
+                                   name="price"
+                                   required
+                                   step="0.01"
+                                   min="0"
+                                   value="0.00">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="stock_qty_quick" class="form-label">Stock Quantity *</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="stock_qty_quick"
+                                   name="stock_qty"
+                                   required
+                                   step="1"
+                                   min="0"
+                                   value="0">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="is_active_quick" class="form-label">Status *</label>
+                        <select class="form-select" id="is_active_quick" name="is_active" required>
+                            <option value="1" selected>Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button type="submit" form="addBarcodeProductForm" class="btn btn-primary" id="saveBarcodeProductBtn">
+                    <i class="fas fa-save me-2"></i>Save via Barcode
                 </button>
             </div>
         </div>
@@ -2043,6 +2212,122 @@ function resetAddProductFormState() {
     syncBrandInputState();
 }
 
+const scannerState = {
+    listening: false,
+    capture: '',
+    intervals: [],
+    lastKeyTime: null,
+};
+
+function updateScannerStatus(message, level = 'secondary') {
+    const badge = document.getElementById('barcodeScannerStatusBadge');
+    if (!badge) {
+        return;
+    }
+
+    badge.className = 'badge d-flex align-items-center bg-' + level;
+    badge.textContent = message;
+}
+
+function applyBarcodeAutofill(product) {
+    if (!product) {
+        return;
+    }
+
+    const nameInput = document.getElementById('name_quick');
+    const categorySelect = document.getElementById('category_quick');
+    const brandSelect = document.getElementById('brand_quick');
+    const priceInput = document.getElementById('price_quick');
+    const statusSelect = document.getElementById('is_active_quick');
+
+    if (nameInput && !nameInput.value.trim()) {
+        nameInput.value = String(product.name || '');
+    }
+
+    if (categorySelect && product.category) {
+        const categoryMatch = Array.from(categorySelect.options).some(option => option.value === product.category);
+        if (categoryMatch) {
+            categorySelect.value = product.category;
+        }
+    }
+
+    if (brandSelect && product.brand) {
+        const brandMatch = Array.from(brandSelect.options).some(option => option.value === product.brand);
+        if (brandMatch) {
+            brandSelect.value = product.brand;
+        }
+    }
+
+    if (priceInput) {
+        priceInput.value = Number(product.price || 0).toFixed(2);
+    }
+
+    if (statusSelect) {
+        statusSelect.value = String((product.is_active ?? 1) === 0 ? 0 : 1);
+    }
+}
+
+function lookupBarcodeAndAutofill(barcodeValue) {
+    const barcode = String(barcodeValue || '').trim();
+    if (!barcode) {
+        return;
+    }
+
+    fetch('<?= site_url('/products/barcode-lookup') ?>?barcode=' + encodeURIComponent(barcode), {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.product) {
+            applyBarcodeAutofill(data.product);
+            updateScannerStatus('Scanner: Product details auto-filled', 'success');
+            return;
+        }
+
+        updateScannerStatus('No existing product details for this barcode. Fill manually.', 'warning');
+    })
+    .catch(() => {
+        updateScannerStatus('Unable to lookup barcode right now. Fill manually.', 'danger');
+    });
+}
+
+function resetAddBarcodeFormState() {
+    const form = document.getElementById('addBarcodeProductForm');
+    if (!form) {
+        return;
+    }
+
+    form.reset();
+    document.getElementById('price_quick').value = '0.00';
+    document.getElementById('stock_qty_quick').value = '0';
+    document.getElementById('is_active_quick').value = '1';
+    updateScannerStatus('Scanner: Waiting for scan...', 'warning');
+    document.getElementById('barcode_quick').focus();
+    document.getElementById('barcode_quick').select();
+    scannerState.listening = false;
+    scannerState.capture = '';
+    scannerState.intervals = [];
+    scannerState.lastKeyTime = null;
+}
+
+function beginAutoScannerListening() {
+    scannerState.listening = true;
+    scannerState.capture = '';
+    scannerState.intervals = [];
+    scannerState.lastKeyTime = null;
+
+    const barcodeInput = document.getElementById('barcode_quick');
+    if (barcodeInput) {
+        barcodeInput.focus();
+        barcodeInput.select();
+    }
+
+    updateScannerStatus('Scanner: Waiting for scan...', 'warning');
+}
+
 document.getElementById('category').addEventListener('change', syncCategoryInputState);
 document.getElementById('new_category').addEventListener('input', syncFlavorInventoryState);
 document.getElementById('brand').addEventListener('change', syncBrandInputState);
@@ -2172,6 +2457,92 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
     });
 });
 
+document.getElementById('barcode_quick').addEventListener('keydown', function(event) {
+    if (!scannerState.listening) {
+        return;
+    }
+
+    const now = Date.now();
+
+    if (event.key === 'Enter') {
+        event.preventDefault();
+
+        const value = scannerState.capture.trim();
+        const avgInterval = scannerState.intervals.length > 0
+            ? scannerState.intervals.reduce((sum, v) => sum + v, 0) / scannerState.intervals.length
+            : 999;
+        const scannerDetected = value.length >= 6 && avgInterval <= 60;
+
+        if (scannerDetected) {
+            this.value = value;
+            updateScannerStatus('Scanner: Connected and detected', 'success');
+            lookupBarcodeAndAutofill(value);
+        } else {
+            updateScannerStatus('Scanner not detected. You can type barcode manually.', 'danger');
+        }
+
+        scannerState.listening = false;
+        scannerState.capture = '';
+        scannerState.intervals = [];
+        scannerState.lastKeyTime = null;
+        return;
+    }
+
+    if (event.key.length === 1) {
+        if (scannerState.lastKeyTime !== null) {
+            scannerState.intervals.push(now - scannerState.lastKeyTime);
+        }
+        scannerState.lastKeyTime = now;
+        scannerState.capture += event.key;
+    }
+});
+
+document.getElementById('addBarcodeProductForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('saveBarcodeProductBtn');
+    const originalText = submitBtn.innerHTML;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('addBarcodeProductModal'));
+    const formData = new FormData(this);
+
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+    submitBtn.disabled = true;
+
+    fetch('<?= site_url('/products/store') ?>', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert(data.message, 'success');
+            modal.hide();
+            resetAddBarcodeFormState();
+            setTimeout(() => window.location.reload(), 1500);
+        } else {
+            showAlert(data.message, 'danger');
+        }
+    })
+    .catch(() => {
+        showAlert('An error occurred while saving the barcode product.', 'danger');
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+
+document.getElementById('barcode_quick').addEventListener('change', function() {
+    lookupBarcodeAndAutofill(this.value);
+});
+
+document.getElementById('barcode_quick').addEventListener('blur', function() {
+    lookupBarcodeAndAutofill(this.value);
+});
+
 // Clear default values on focus
 document.getElementById('price').addEventListener('focus', function() {
     if (this.value === '0.00') {
@@ -2283,6 +2654,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    const addBarcodeProductModal = document.getElementById('addBarcodeProductModal');
+    if (addBarcodeProductModal) {
+        addBarcodeProductModal.addEventListener('shown.bs.modal', function() {
+            beginAutoScannerListening();
+        });
+
+        addBarcodeProductModal.addEventListener('hidden.bs.modal', function() {
+            scannerState.listening = false;
+            resetAddBarcodeFormState();
+        });
+    }
+
     const viewFlavorsModal = document.getElementById('viewFlavorsModal');
     if (viewFlavorsModal) {
         viewFlavorsModal.addEventListener('show.bs.modal', function(event) {
@@ -2291,6 +2674,18 @@ document.addEventListener('DOMContentLoaded', function() {
             renderFlavorViewModal(productId);
         });
     }
+
+    document.addEventListener('keydown', function(event) {
+        const clickableSummaryCard = event.target.closest('.flavor-summary-card.is-clickable');
+        if (!clickableSummaryCard) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            clickableSummaryCard.click();
+        }
+    });
 });
 
 window.resetSearch = function() {

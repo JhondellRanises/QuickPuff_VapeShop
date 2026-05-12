@@ -1,4 +1,7 @@
+<?php $embedMode = isset($embed_mode) && $embed_mode === true; ?>
+<?php if (!$embedMode): ?>
 <?= $this->include('layouts/header') ?>
+<?php endif; ?>
 
 <style>
 @media print {
@@ -22,107 +25,150 @@
     }
 }
 
+<?php if ($embedMode): ?>
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+}
+.container-fluid,
+.row {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#receiptContent {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 18px 20px !important;
+}
+<?php endif; ?>
+
 #receiptContent {
     background-color: #ffffff !important;
-    color: #333 !important;
+    color: #111 !important;
+    font-family: "Courier New", Courier, monospace;
 }
 
 #receiptContent * {
     color: inherit;
 }
 
+.receipt-success-badge {
+    background: #000;
+    color: #fff !important;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
 .receipt-header {
     text-align: center;
-    border-bottom: 2px dashed #333;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    background-color: #ffffff !important;
+    border-bottom: 3px dashed #111;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    background-color: #fff !important;
 }
 
 .receipt-shop-name {
-    font-size: 24px;
+    font-size: 38px;
     font-weight: bold;
-    margin-bottom: 5px;
-    color: #333 !important;
+    margin-bottom: 10px;
+    line-height: 1.08;
 }
 
 .receipt-shop-address {
-    font-size: 12px;
-    color: #666 !important;
-    margin-bottom: 3px;
+    font-size: 17px;
+    color: #333 !important;
+    margin-bottom: 6px;
 }
 
 .receipt-sale-info {
-    background: #f8f9fa;
-    background-color: #f8f9fa !important;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    background: #fff;
+    border: 1px solid #111;
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+}
+
+.receipt-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 6px;
+    font-size: 22px;
+}
+
+.receipt-info-row:last-child {
+    margin-bottom: 0;
 }
 
 .receipt-items-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .receipt-items-table th,
 .receipt-items-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: 1px solid #111;
+    padding: 10px 8px;
     text-align: left;
-    background-color: #ffffff !important;
+    background-color: #fff !important;
+    font-size: 20px;
 }
 
 .receipt-items-table th {
-    background: #f8f9fa;
-    background-color: #f8f9fa !important;
     font-weight: bold;
-    color: #333 !important;
 }
 
-.receipt-items-table td {
-    color: #333 !important;
+.receipt-items-table th:nth-child(2),
+.receipt-items-table td:nth-child(2) {
+    width: 70px;
+    text-align: center;
+}
+
+.receipt-items-table th:nth-child(3),
+.receipt-items-table td:nth-child(3) {
+    width: 180px;
+    text-align: right;
 }
 
 .receipt-totals {
-    text-align: right;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .receipt-total-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 5px;
-    color: #333 !important;
-    background-color: #ffffff !important;
+    font-size: 22px;
 }
 
 .receipt-grand-total {
     font-weight: bold;
-    font-size: 16px;
-    border-top: 2px solid #333;
+    font-size: 26px;
+    border-top: 2px solid #111;
     padding-top: 10px;
-    color: #333 !important;
 }
 
 .receipt-footer {
     text-align: center;
-    border-top: 2px dashed #333;
-    padding-top: 20px;
-    margin-top: 20px;
-    color: #666 !important;
-    background-color: #ffffff !important;
+    border-top: 3px dashed #111;
+    padding-top: 16px;
+    margin-top: 18px;
 }
 
-.receipt-success-badge {
-    background: #28a745;
-    color: white !important;
-    padding: 10px 20px;
-    border-radius: 5px;
+.receipt-footer .headline {
+    font-size: 24px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
+}
+
+.receipt-footer .subline {
+    font-size: 19px;
 }
 
 .receipt-actions {
@@ -162,17 +208,13 @@
 }
 </style>
 
-<div class="container-fluid py-4">
+<div class="<?= $embedMode ? '' : 'container-fluid py-4' ?>">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card">
+        <div class="<?= $embedMode ? 'col-12' : 'col-md-8 col-lg-6' ?>">
+            <div class="card" style="<?= $embedMode ? 'border: none; box-shadow: none; background: #ffffff !important; border-radius: 0;' : '' ?>">
                 <div class="card-body" id="receiptContent">
-                    <!-- Success Badge -->
-                    <div class="receipt-success-badge">
-                        <i class="fas fa-check-circle me-2"></i>SALE COMPLETED
-                    </div>
+                    <div class="receipt-success-badge">✓ SALE COMPLETED</div>
 
-                    <!-- Receipt Header -->
                     <div class="receipt-header">
                         <div class="receipt-shop-name">QuickPuff VapeShop</div>
                         <div class="receipt-shop-address">Bula, General Santos City, South Cotabato</div>
@@ -180,37 +222,31 @@
                         <div class="receipt-shop-address">Email: quickpuff@gmail.com</div>
                     </div>
 
-                    <!-- Sale Information -->
+                    <?php $receiptDateTime = isset($sale['created_at']) ? strtotime($sale['created_at']) : time(); ?>
                     <div class="receipt-sale-info">
-                        <div class="row">
-                            <div class="col-6">
-                                <strong>Sale Code:</strong><br>
-                                <span id="saleCode"><?= isset($sale['sale_code']) ? esc($sale['sale_code']) : 'SALE-' . date('Ymd') . '-' . str_pad($sale_id, 4, '0', STR_PAD_LEFT) ?></span>
-                            </div>
-                            <div class="col-6 text-end">
-                                <strong>Date & Time:</strong><br>
-                                <span><?= isset($sale['created_at']) ? date('M d, Y h:i A', strtotime($sale['created_at'])) : date('M d, Y h:i A') ?></span>
-                            </div>
+                        <div class="receipt-info-row">
+                            <strong>Sale Code:</strong>
+                            <span id="saleCode"><?= isset($sale['sale_code']) ? esc($sale['sale_code']) : 'SALE-' . date('Ymd') . '-' . str_pad($sale_id, 4, '0', STR_PAD_LEFT) ?></span>
                         </div>
-                        <div class="row mt-2">
-                            <div class="col-6">
-                                <strong>Cashier:</strong><br>
-                                <span><?= session()->get('full_name') ?? session()->get('username') ?? 'Staff' ?></span>
-                            </div>
-                            <div class="col-6 text-end">
-                                <strong>Payment:</strong><br>
-                                <span><?= isset($sale['payment_method']) ? ucfirst($sale['payment_method']) : 'Cash' ?></span>
-                            </div>
+                        <div class="receipt-info-row">
+                            <strong>Date:</strong>
+                            <span><?= date('n/j/Y', $receiptDateTime) ?></span>
+                        </div>
+                        <div class="receipt-info-row">
+                            <strong>Time:</strong>
+                            <span><?= date('h:i:s A', $receiptDateTime) ?></span>
+                        </div>
+                        <div class="receipt-info-row">
+                            <strong>Cashier:</strong>
+                            <span><?= session()->get('role') === 'admin' ? 'Admin' : 'Staff' ?></span>
                         </div>
                     </div>
 
-                    <!-- Items Table -->
                     <table class="receipt-items-table">
                         <thead>
                             <tr>
                                 <th>Item</th>
                                 <th>Qty</th>
-                                <th>Price</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -219,64 +255,67 @@
                                 <?php foreach ($sale['items'] as $item): ?>
                                     <tr>
                                         <td><?= esc($item['product_name'] ?? $item['name'] ?? 'Unknown Product') ?></td>
-                                        <td><?= $item['quantity'] ?></td>
-                                        <td>₱<?= number_format($item['price'], 2) ?></td>
-                                        <td>₱<?= number_format(($item['price'] * $item['quantity']), 2) ?></td>
+                                        <td><?= (int) ($item['quantity'] ?? 0) ?></td>
+                                        <td>₱<?= number_format((float) ($item['total'] ?? (($item['price'] ?? 0) * ($item['quantity'] ?? 0))), 2) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="4" style="text-align: center;">No items found</td>
+                                    <td colspan="3" style="text-align: center;">No items found</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
 
-                    <!-- Totals -->
                     <div class="receipt-totals">
                         <div class="receipt-total-row">
                             <span>Subtotal:</span>
-                            <span>₱<?= number_format(isset($sale['subtotal']) ? $sale['subtotal'] : 0, 2) ?></span>
+                            <span>₱<?= number_format((float) ($sale['subtotal'] ?? 0), 2) ?></span>
                         </div>
                         <div class="receipt-total-row">
                             <span>Tax (10%):</span>
-                            <span>₱<?= number_format(isset($sale['tax_amount']) ? $sale['tax_amount'] : 0, 2) ?></span>
+                            <span>₱<?= number_format((float) ($sale['tax_amount'] ?? 0), 2) ?></span>
+                        </div>
+                        <div class="receipt-total-row">
+                            <span>TOTAL:</span>
+                            <span>₱<?= number_format((float) ($sale['total_amount'] ?? 0), 2) ?></span>
+                        </div>
+                        <div class="receipt-total-row">
+                            <span>Amount Paid:</span>
+                            <span>₱<?= number_format((float) ($sale['amount_paid'] ?? 0), 2) ?></span>
                         </div>
                         <div class="receipt-total-row receipt-grand-total">
-                            <span>Total:</span>
-                            <span>₱<?= number_format(isset($sale['total_amount']) ? $sale['total_amount'] : 0, 2) ?></span>
+                            <span>CHANGE:</span>
+                            <span>₱<?= number_format((float) ($sale['change_amount'] ?? 0), 2) ?></span>
                         </div>
                     </div>
 
-                    <!-- Receipt Footer -->
                     <div class="receipt-footer">
-                        <div class="mb-2">
-                            <strong>Thank you for your purchase!</strong>
-                        </div>
-                        <div class="mb-2">
-                            Please come again
-                        </div>
+                        <div class="headline">Thank you for your purchase!</div>
+                        <div class="subline">Please come again</div>
                     </div>
                 </div>
 
-                <div class="card-footer no-print receipt-actions">
-                    <button type="button" class="btn receipt-print-btn" onclick="window.print()">
-                        <i class="fas fa-print me-2"></i>Print Receipt
-                    </button>
-                    <a href="<?= site_url('/pos') ?>" class="btn receipt-text-btn">
-                        <i class="fas fa-shopping-cart me-2"></i>New Sale
-                    </a>
-                    <button type="button" class="btn receipt-text-btn"
-                            onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='<?= site_url('/pos') ?>'; }">
-                        Close
-                    </button>
-                </div>
+                <?php if (!$embedMode): ?>
+                    <div class="card-footer no-print receipt-actions">
+                        <button type="button" class="btn receipt-print-btn" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i>Print Receipt
+                        </button>
+                        <a href="<?= site_url('/pos') ?>" class="btn receipt-text-btn">
+                            <i class="fas fa-shopping-cart me-2"></i>New Sale
+                        </a>
+                        <button type="button" class="btn receipt-text-btn"
+                                onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href='<?= site_url('/pos') ?>'; }">
+                            Close
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Auto-redirect script (Hidden when printing) -->
+<?php if (!$embedMode): ?>
 <script class="no-print">
 let redirectTimer = 30;
 let timerInterval;
@@ -286,7 +325,7 @@ function updateTimer() {
     if (timerElement) {
         timerElement.textContent = redirectTimer;
     }
-    
+
     if (redirectTimer <= 0) {
         clearInterval(timerInterval);
         window.location.href = '<?= site_url('/pos') ?>';
@@ -302,11 +341,13 @@ function cancelRedirect() {
     }
 }
 
-// Start timer when page loads
 document.addEventListener('DOMContentLoaded', function() {
     timerInterval = setInterval(updateTimer, 1000);
-    updateTimer(); // Initial call
+    updateTimer();
 });
 </script>
+<?php endif; ?>
 
+<?php if (!$embedMode): ?>
 <?= $this->include('layouts/footer') ?>
+<?php endif; ?>

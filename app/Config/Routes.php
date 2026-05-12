@@ -12,6 +12,9 @@ $routes->get('/', 'Auth::login');
 // Authentication routes
 $routes->get('login', 'Auth::login');
 $routes->post('auth/attemptLogin', 'Auth::attemptLogin');
+$routes->post('auth/account-settings', 'Auth::updateAccountSettings', ['filter' => 'auth']);
+$routes->post('auth/account-settings-password', 'Auth::updateAccountSettingsPassword', ['filter' => 'auth']);
+$routes->post('auth/profile-image', 'Auth::updateProfileImage', ['filter' => 'auth']);
 $routes->get('logout', 'Auth::logout');
 
 // Simple POS route without auth filter for testing
@@ -31,6 +34,7 @@ $routes->group('pos', ['filter' => 'auth'], function($routes) {
     $routes->get('receipt/(:num)', 'POS::receipt/$1');
     $routes->get('search', 'POS::searchProducts');
     $routes->get('variants', 'POS::getProductVariants');
+    $routes->get('barcode-scan', 'POS::barcodeScan');
 });
 
 // Admin only routes
@@ -48,6 +52,7 @@ $routes->group('staff', ['filter' => 'auth:admin'], function($routes) {
 $routes->group('products', ['filter' => 'auth:admin'], function($routes) {
     $routes->get('/', 'Products::index');
     $routes->get('create', 'Products::create');
+    $routes->get('barcode-lookup', 'Products::barcodeLookup');
     $routes->post('store', 'Products::store');
     $routes->get('edit/(:num)', 'Products::edit/$1');
     $routes->post('update/(:num)', 'Products::update/$1');

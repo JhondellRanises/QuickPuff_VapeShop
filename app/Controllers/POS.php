@@ -98,6 +98,48 @@ class POS extends BaseController
         }
     }
 
+    /**
+     * Resolve scanned barcode into an active sellable product variant.
+     */
+    public function barcodeScan()
+    {
+        if (!session()->get('is_logged_in')) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Please login to access this feature'
+            ]);
+        }
+
+        $barcode = trim((string) $this->request->getGet('barcode'));
+        if ($barcode === '') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Barcode is required.'
+            ]);
+        }
+
+        $variant = $this->productModel->getActiveVariantByBarcode($barcode);
+        if (!$variant) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Barcode not found in active products.'
+            ]);
+        }
+
+        if ((int) ($variant['stock_qty'] ?? 0) <= 0) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'This product is out of stock.',
+                'variant' => $variant
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'variant' => $variant
+        ]);
+    }
+
     public function processSale()
     {
         // Log the attempt
@@ -397,6 +439,7 @@ class POS extends BaseController
                 'success' => true,
                 'message' => 'Sale processed successfully!',
                 'sale' => [
+                    'sale_id' => $saleId,
                     'sale_code' => $saleCode,
                     'subtotal' => (float) $subtotal,
                     'tax_amount' => (float) $taxAmount,
@@ -487,7 +530,8 @@ class POS extends BaseController
         $data = [
             'title' => 'Receipt - Quick Puff Vape Shop',
             'sale' => $sale,
-            'sale_id' => $saleId
+            'sale_id' => $saleId,
+            'embed_mode' => $this->request->getGet('embed') === '1'
         ];
 
         return view('pos/receipt', $data);

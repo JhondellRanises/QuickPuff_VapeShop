@@ -108,6 +108,12 @@ sort($availablePuffChoices, SORT_NUMERIC);
                             <input type="text" class="form-control" id="name" name="name" required maxlength="255" placeholder="Enter product name" value="<?= old('name') ?>">
                         </div>
 
+                        <div class="mb-3">
+                            <label for="barcode" class="form-label">Barcode</label>
+                            <input type="text" class="form-control" id="barcode" name="barcode" maxlength="100" placeholder="Scan or type barcode" value="<?= old('barcode') ?>">
+                            <small class="text-muted">Optional. Supports scanner input and must be unique per product.</small>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="category" class="form-label">Category *</label>

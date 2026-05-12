@@ -21,10 +21,16 @@ class Reports extends BaseController
      */
     public function sales()
     {
+        $perPage = 10;
+        $currentPage = max(1, (int) ($this->request->getGet('page_sales') ?? 1));
+
         $data = [
             'title' => 'Sales Report - Quick Puff Vape Shop',
             'user' => $this->getCurrentUser(),
             'sales' => [],
+            'pager' => null,
+            'currentPage' => $currentPage,
+            'perPage' => $perPage,
             'summary' => [
                 'total_sales' => 0,
                 'total_revenue' => 0,
@@ -50,7 +56,8 @@ class Reports extends BaseController
 
         // Get sales data
         if ($startDate) {
-            $data['sales'] = $this->saleModel->getSalesReport($startDate, $endDate);
+            $data['sales'] = $this->saleModel->getSalesReportPaginated($startDate, $endDate, $perPage, $currentPage);
+            $data['pager'] = $this->saleModel->pager;
             $data['summary'] = $this->saleModel->getSalesSummary($startDate, $endDate);
         }
 

@@ -157,19 +157,47 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="<?= site_url('/pos/receipt/' . $sale['id']) ?>" 
-                                           class="btn btn-sm btn-outline-primary" 
-                                           target="_blank" 
+                                        <button type="button"
+                                           class="btn btn-sm btn-outline-primary"
+                                           onclick="showReceiptModal('<?= site_url('/pos/receipt/' . $sale['id']) ?>', '<?= esc($sale['sale_code'], 'js') ?>')"
                                            title="View Receipt">
                                             <i class="fas fa-receipt"></i>
-                                        </a>
+                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
+                <?php if (isset($pager) && $pager): ?>
+                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+                        <div></div>
+                        <div class="d-flex align-items-center gap-2">
+                            <?= $pager->links('sales', 'sales_numeric') ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="receiptModalLabel">Receipt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe id="receiptModalFrame"
+                            src="about:blank"
+                            title="Receipt Preview"
+                            style="width: 100%; height: 72vh; border: 0; background: #ffffff;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Exit</button>
+                </div>
+            </div>
         </div>
     </div>
     </main>
@@ -195,12 +223,64 @@ function toggleFilterFields() {
     }
 }
 
+function showReceiptModal(url, saleCode) {
+    const receiptModalEl = document.getElementById('receiptModal');
+    const receiptModalTitle = document.getElementById('receiptModalLabel');
+    const receiptModalFrame = document.getElementById('receiptModalFrame');
+
+    receiptModalTitle.textContent = saleCode ? ('Receipt - ' + saleCode) : 'Receipt';
+    receiptModalFrame.src = url + (url.includes('?') ? '&embed=1' : '?embed=1');
+
+    const modal = new bootstrap.Modal(receiptModalEl);
+    modal.show();
+}
+
 // Auto-show filter modal on first visit if no data
 document.addEventListener('DOMContentLoaded', function() {
     <?php if (empty($sales) && !$start_date): ?>
         showFilterModal();
     <?php endif; ?>
+
+    const receiptModalEl = document.getElementById('receiptModal');
+    if (receiptModalEl) {
+        receiptModalEl.addEventListener('hidden.bs.modal', function () {
+            const receiptModalFrame = document.getElementById('receiptModalFrame');
+            if (receiptModalFrame) {
+                receiptModalFrame.src = 'about:blank';
+            }
+        });
+    }
 });
 </script>
+
+<style>
+.sales-pagination .page-link {
+    background: transparent;
+    border: none;
+    color: #d7d9e4;
+    border-radius: 999px;
+    min-width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.75rem;
+}
+
+.sales-pagination .page-item.active .page-link {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.sales-pagination .page-item.disabled .page-link {
+    color: rgba(215, 217, 228, 0.45);
+}
+
+.sales-pagination .page-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+</style>
 
 <?= $this->include('layouts/footer') ?>

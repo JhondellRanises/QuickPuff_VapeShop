@@ -80,6 +80,45 @@ class Products extends BaseController
     }
 
     /**
+     * Lookup product details by barcode for quick add modal autofill.
+     */
+    public function barcodeLookup()
+    {
+        $barcode = trim((string) $this->request->getGet('barcode'));
+
+        if ($barcode === '') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Barcode is required.'
+            ]);
+        }
+
+        $product = $this->productModel
+            ->where('barcode', $barcode)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if (!$product) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No existing product found for this barcode.'
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'product' => [
+                'name' => (string) ($product['name'] ?? ''),
+                'category' => (string) ($product['category'] ?? ''),
+                'brand' => (string) ($product['brand'] ?? ''),
+                'price' => (float) ($product['price'] ?? 0),
+                'stock_qty' => (int) ($product['stock_qty'] ?? 0),
+                'is_active' => (int) ($product['is_active'] ?? 1),
+            ],
+        ]);
+    }
+
+    /**
      * Store new product.
      */
     public function store()
@@ -274,7 +313,7 @@ class Products extends BaseController
             $flavorInventoryRows
         );
 
-        if (!$this->validate($this->getValidationRules())) {
+        if (!$this->validate($this->getValidationRules((int) $id))) {
             session()->setFlashdata('error', $this->buildValidationMessage());
             return redirect()->to('/products/edit/' . $id)->withInput();
         }
@@ -456,11 +495,13 @@ class Products extends BaseController
     {
         $category = trim((string) $this->request->getPost('category'));
         $brand = trim((string) $this->request->getPost('brand'));
+        $barcode = trim((string) $this->request->getPost('barcode'));
         $flavor = trim((string) $this->request->getPost('flavor'));
         $puffs = trim((string) $this->request->getPost('puffs'));
 
         return [
             'name' => trim((string) $this->request->getPost('name')),
+            'barcode' => $barcode === '' ? null : $barcode,
             'category' => $category,
             'brand' => $brand === '' ? null : $brand,
             'price' => (float) $this->request->getPost('price'),
@@ -471,14 +512,19 @@ class Products extends BaseController
         ];
     }
 
-    private function getValidationRules(): array
+    private function getValidationRules(?int $ignoreProductId = null): array
     {
         $category = trim((string) $this->request->getPost('category'));
         $rows = $this->getFlavorInventoryRowsFromRequest();
         $usesFlavorInventory = $this->shouldUseFlavorInventoryEditor($category, $rows);
+        $barcodeRule = 'permit_empty|max_length[100]|is_unique[products.barcode]';
+        if ($ignoreProductId !== null && $ignoreProductId > 0) {
+            $barcodeRule = 'permit_empty|max_length[100]|is_unique[products.barcode,id,' . $ignoreProductId . ']';
+        }
 
         return [
             'name' => 'required|min_length[2]|max_length[255]',
+            'barcode' => $barcodeRule,
             'category' => 'required|min_length[2]|max_length[100]',
             'brand' => 'permit_empty|max_length[100]',
             'price' => $usesFlavorInventory ? 'permit_empty|numeric|greater_than_equal_to[0]' : 'required|numeric|greater_than_equal_to[0]',

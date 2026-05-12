@@ -19,6 +19,11 @@ class CreateProductsTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => 255,
             ],
+            'barcode' => [
+                'type' => 'VARCHAR',
+                'constraint' => 100,
+                'null' => true,
+            ],
             'category' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
@@ -69,6 +74,7 @@ class CreateProductsTable extends Migration
         ]);
         
         $this->forge->addPrimaryKey('id');
+        $this->forge->addUniqueKey('barcode', 'products_barcode_unique');
         $this->forge->createTable('products');
     }
 
