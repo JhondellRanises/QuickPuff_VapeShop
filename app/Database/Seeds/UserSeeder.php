@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
         $data = [
             [
                 'username' => 'admin',
-                'full_name' => 'System Administrator',
+                'full_name' => 'Administrator',
                 'password_hash' => password_hash('Admin123', PASSWORD_DEFAULT),
                 'role' => 'admin',
                 'is_active' => 1,
@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'username' => 'staff',
-                'full_name' => 'Store Staff',
+                'full_name' => 'Jhondell Ranises',
                 'password_hash' => password_hash('staff123', PASSWORD_DEFAULT),
                 'role' => 'staff',
                 'is_active' => 1,

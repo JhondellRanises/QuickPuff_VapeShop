@@ -220,10 +220,6 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
                                 <strong>Subtotal:</strong>
                                 <span id="subtotal">₱0.00</span>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <strong>Tax (10%):</strong>
-                                <span id="tax">₱0.00</span>
-                            </div>
                             <hr>
                             <div class="d-flex justify-content-between">
                                 <h5>Total:</h5>
@@ -417,27 +413,21 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 }
 
 @media print {
-    body.printing-receipt * {
-        visibility: hidden !important;
-    }
-
-    body.printing-receipt #posPrintArea,
-    body.printing-receipt #posPrintArea * {
-        visibility: visible !important;
+    body.printing-receipt > *:not(#posPrintArea) {
+        display: none !important;
     }
 
     body.printing-receipt #posPrintArea {
         display: block !important;
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100vw !important;
-        min-height: 100vh !important;
+        position: static !important;
+        width: auto !important;
+        min-height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
         overflow: visible !important;
         background: #ffffff !important;
         color: #000000 !important;
-        z-index: 2147483647 !important;
+        z-index: auto !important;
     }
 }
 
@@ -1119,6 +1109,7 @@ $defaultVapeImage = 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($defaultV
 
 <script>
 let cart = [];
+const currentCashierName = <?= json_encode((string) (session()->get('full_name') ?: session()->get('username') ?: 'Cashier')) ?>;
 let currentProductVariants = [];
 let selectedVariant = null;
 const flavorInventoryByCategory = <?= json_encode($flavorInventory ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
@@ -2322,7 +2313,6 @@ function updateCart() {
     const cartItems = document.getElementById('cartItems');
     const cartCount = document.getElementById('cartCount');
     const subtotal = document.getElementById('subtotal');
-    const tax = document.getElementById('tax');
     const total = document.getElementById('total');
     const processBtn = document.getElementById('processSaleBtn');
     
@@ -2330,7 +2320,6 @@ function updateCart() {
         cartItems.innerHTML = '<p class="text-muted text-center">Your cart is empty</p>';
         cartCount.textContent = '0';
         subtotal.textContent = '₱0.00';
-        tax.textContent = '₱0.00';
         total.textContent = '₱0.00';
         processBtn.disabled = true;
         
@@ -2383,13 +2372,11 @@ function updateCart() {
         `;
     });
     
-    const taxAmount = subtotalAmount * 0.1;
-    const totalAmount = subtotalAmount + taxAmount;
+    const totalAmount = subtotalAmount;
     
     cartItems.innerHTML = html;
     cartCount.textContent = totalItems;
     subtotal.textContent = `₱${subtotalAmount.toFixed(2)}`;
-    tax.textContent = `₱${taxAmount.toFixed(2)}`;
     total.textContent = `₱${totalAmount.toFixed(2)}`;
     processBtn.disabled = false;
     
@@ -2755,8 +2742,7 @@ function processSale() {
     cart.forEach(item => {
         subtotalAmount += item.price * item.quantity;
     });
-    const taxAmount = subtotalAmount * 0.1;
-    const totalAmount = subtotalAmount + taxAmount;
+    const totalAmount = subtotalAmount;
     
     if (amountPaid < totalAmount) {
         alert('Insufficient payment amount. Total is ₱' + totalAmount.toFixed(2) + ' but customer paid ₱' + amountPaid.toFixed(2));
@@ -2915,10 +2901,12 @@ function generateReceiptHTML(saleData) {
     items.forEach((item, index) => {
         console.log(`Processing item ${index}:`, item);
         const itemTotal = (parseFloat(item.price || 0) * (item.quantity || 0)).toFixed(2);
+        const unitPrice = parseFloat(item.price || 0).toFixed(2);
         itemsHTML += `
             <tr>
                 <td>${item.name || 'Unknown Product'}</td>
                 <td style="text-align: center;">${item.quantity || 0}</td>
+                <td style="text-align: right;">₱${unitPrice}</td>
                 <td style="text-align: right;">₱${itemTotal}</td>
             </tr>
         `;
@@ -3095,32 +3083,25 @@ function generateReceiptHTML(saleData) {
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <span class="receipt-label">Cashier:</span>
-                    <span class="receipt-value">Staff</span>
+                    <span class="receipt-value">${sale.cashier_name || currentCashierName}</span>
                 </div>
             </div>
 
             <table class="receipt-items-table">
                 <thead>
                     <tr>
-                        <th style="width: 50%;">Item</th>
-                        <th style="width: 15%; text-align: center;">Qty</th>
-                        <th style="width: 35%; text-align: right;">Total</th>
+                        <th style="width: 45%;">Item</th>
+                        <th style="width: 12%; text-align: center;">Qty</th>
+                        <th style="width: 18%; text-align: right;">Unit Price</th>
+                        <th style="width: 25%; text-align: right;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${itemsHTML || '<tr><td colspan="3" style="text-align: center; color: #000000;">No items found</td></tr>'}
+                    ${itemsHTML || '<tr><td colspan="4" style="text-align: center; color: #000000;">No items found</td></tr>'}
                 </tbody>
             </table>
 
             <div class="receipt-totals">
-                <div class="receipt-total-row">
-                    <span class="receipt-label">Subtotal:</span>
-                    <span class="receipt-value">₱${parseFloat(sale.subtotal || 0).toFixed(2)}</span>
-                </div>
-                <div class="receipt-total-row">
-                    <span class="receipt-label">Tax (10%):</span>
-                    <span class="receipt-value">₱${parseFloat(sale.tax_amount || 0).toFixed(2)}</span>
-                </div>
                 <div class="receipt-total-row">
                     <span class="receipt-label">TOTAL:</span>
                     <span class="receipt-value">₱${parseFloat(sale.total_amount || 0).toFixed(2)}</span>
@@ -3255,10 +3236,12 @@ function generatePrintReceiptHTML(saleData) {
     let itemsHTML = '';
     items.forEach((item, index) => {
         const itemTotal = (parseFloat(item.price || 0) * (item.quantity || 0)).toFixed(2);
+        const unitPrice = parseFloat(item.price || 0).toFixed(2);
         itemsHTML += `
             <tr>
                 <td>${item.name || 'Unknown Product'}</td>
                 <td style="text-align: center;">${item.quantity || 0}</td>
+                <td style="text-align: right;">₱${unitPrice}</td>
                 <td style="text-align: right;">₱${itemTotal}</td>
             </tr>
         `;
@@ -3292,32 +3275,25 @@ function generatePrintReceiptHTML(saleData) {
                 </div>
                 <div style="display: flex; justify-content: space-between;">
                     <span class="receipt-label">Cashier:</span>
-                    <span class="receipt-value">Staff</span>
+                    <span class="receipt-value">${sale.cashier_name || currentCashierName}</span>
                 </div>
             </div>
 
             <table class="receipt-items-table">
                 <thead>
                     <tr>
-                        <th style="width: 50%;">Item</th>
-                        <th style="width: 15%; text-align: center;">Qty</th>
-                        <th style="width: 35%; text-align: right;">Total</th>
+                        <th style="width: 45%;">Item</th>
+                        <th style="width: 12%; text-align: center;">Qty</th>
+                        <th style="width: 18%; text-align: right;">Unit Price</th>
+                        <th style="width: 25%; text-align: right;">Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${itemsHTML || '<tr><td colspan="3" style="text-align: center; color: #000000;">No items found</td></tr>'}
+                    ${itemsHTML || '<tr><td colspan="4" style="text-align: center; color: #000000;">No items found</td></tr>'}
                 </tbody>
             </table>
 
             <div class="receipt-totals">
-                <div class="receipt-total-row">
-                    <span class="receipt-label">Subtotal:</span>
-                    <span class="receipt-value">₱${parseFloat(sale.subtotal || 0).toFixed(2)}</span>
-                </div>
-                <div class="receipt-total-row">
-                    <span class="receipt-label">Tax (10%):</span>
-                    <span class="receipt-value">₱${parseFloat(sale.tax_amount || 0).toFixed(2)}</span>
-                </div>
                 <div class="receipt-total-row">
                     <span class="receipt-label">TOTAL:</span>
                     <span class="receipt-value">₱${parseFloat(sale.total_amount || 0).toFixed(2)}</span>

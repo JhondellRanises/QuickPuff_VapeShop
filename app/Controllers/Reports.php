@@ -34,8 +34,11 @@ class Reports extends BaseController
             'summary' => [
                 'total_sales' => 0,
                 'total_revenue' => 0,
-                'total_tax' => 0,
-                'total_subtotal' => 0
+                'total_subtotal' => 0,
+                'avg_sale_value' => 0,
+                'total_items_sold' => 0,
+                'top_product_name' => 'N/A',
+                'top_product_qty' => 0
             ]
         ];
 
@@ -44,21 +47,34 @@ class Reports extends BaseController
         $endDate = $this->request->getGet('end_date');
         $singleDate = $this->request->getGet('date');
 
-        // Set default dates (today)
-        if (!$singleDate && !$startDate) {
-            $singleDate = date('Y-m-d');
+        // Default range: start of current month up to today
+        if (!$singleDate && !$startDate && !$endDate) {
+            $startDate = date('Y-m-01');
+            $endDate = date('Y-m-d');
+            $singleDate = null;
         }
 
         if ($singleDate) {
             $startDate = $singleDate;
             $endDate = $singleDate;
+        } elseif ($startDate && !$endDate) {
+            $endDate = $startDate;
+        } elseif (!$startDate && $endDate) {
+            $startDate = $endDate;
         }
 
         // Get sales data
         if ($startDate) {
             $data['sales'] = $this->saleModel->getSalesReportPaginated($startDate, $endDate, $perPage, $currentPage);
             $data['pager'] = $this->saleModel->pager;
-            $data['summary'] = $this->saleModel->getSalesSummary($startDate, $endDate);
+            $summary = $this->saleModel->getSalesSummary($startDate, $endDate);
+            $insights = $this->saleModel->getSalesInsights($startDate, $endDate);
+            $totalSales = (int) ($summary['total_sales'] ?? 0);
+            $totalRevenue = (float) ($summary['total_revenue'] ?? 0);
+
+            $data['summary'] = array_merge($summary, $insights, [
+                'avg_sale_value' => $totalSales > 0 ? ($totalRevenue / $totalSales) : 0
+            ]);
         }
 
         // Pass filter values back to view
@@ -100,8 +116,8 @@ class Reports extends BaseController
             'Sale Code',
             'Date',
             'Cashier',
+            'Items',
             'Subtotal',
-            'Tax',
             'Total Amount',
             'Payment Method'
         ]);
@@ -112,9 +128,9 @@ class Reports extends BaseController
                 $sale['sale_code'],
                 date('Y-m-d H:i A', strtotime($sale['created_at'])),
                 $sale['cashier_name'],
+                $sale['items_summary'] ?? '',
                 $sale['subtotal'],
-                $sale['tax_amount'],
-                $sale['total_amount'],
+                $sale['subtotal'],
                 ucfirst($sale['payment_method'])
             ]);
         }
@@ -124,7 +140,6 @@ class Reports extends BaseController
         fputcsv($output, ['SUMMARY']);
         fputcsv($output, ['Total Sales', $summary['total_sales']]);
         fputcsv($output, ['Total Subtotal', $summary['total_subtotal']]);
-        fputcsv($output, ['Total Tax', $summary['total_tax']]);
         fputcsv($output, ['Total Revenue', $summary['total_revenue']]);
 
         fclose($output);

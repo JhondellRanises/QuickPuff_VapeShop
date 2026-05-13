@@ -310,7 +310,7 @@ class POS extends BaseController
             
             // Calculate totals
             $subtotal = 0;
-            $taxRate = 0.10; // 10% tax
+            $taxRate = 0.00; // tax disabled
             $taxAmount = 0;
             $totalAmount = 0;
             
@@ -354,6 +354,7 @@ class POS extends BaseController
                 'processed_by' => (int) (session()->get('user_id') ?? 1),
                 'created_at' => date('Y-m-d H:i:s')
             ];
+            $cashierName = (string) (session()->get('full_name') ?: session()->get('username') ?: 'Cashier');
             
             log_message('info', 'Inserting sale record');
             // Insert sale into database
@@ -441,6 +442,7 @@ class POS extends BaseController
                 'sale' => [
                     'sale_id' => $saleId,
                     'sale_code' => $saleCode,
+                    'cashier_name' => $cashierName,
                     'subtotal' => (float) $subtotal,
                     'tax_amount' => (float) $taxAmount,
                     'total_amount' => (float) $totalAmount,
@@ -457,6 +459,7 @@ class POS extends BaseController
             session()->set('last_sale', [
                 'sale_id' => $saleId,
                 'sale_code' => $saleCode,
+                'cashier_name' => $cashierName,
                 'subtotal' => $subtotal,
                 'tax_amount' => $taxAmount,
                 'total_amount' => $totalAmount,
@@ -502,9 +505,12 @@ class POS extends BaseController
             $sale = [
                 'id' => $lastSale['sale_id'],
                 'sale_code' => $lastSale['sale_code'],
+                'cashier_name' => $lastSale['cashier_name'] ?? (session()->get('full_name') ?: session()->get('username') ?: 'Cashier'),
                 'subtotal' => $lastSale['subtotal'],
                 'tax_amount' => $lastSale['tax_amount'],
                 'total_amount' => $lastSale['total_amount'],
+                'amount_paid' => $lastSale['amount_paid'] ?? 0,
+                'change_amount' => $lastSale['change_amount'] ?? 0,
                 'created_at' => $lastSale['created_at'],
                 'items' => $lastSale['items'],
                 'payment_method' => 'cash'
@@ -513,8 +519,17 @@ class POS extends BaseController
             // Get from database
             log_message('info', 'Fetching sale from database');
             $db = \Config\Database::connect();
-            $saleQuery = $db->query("SELECT * FROM sales WHERE id = ?", [$saleId]);
+            $saleQuery = $db->query(
+                "SELECT s.*, u.full_name AS cashier_name, u.username AS cashier_username
+                 FROM sales s
+                 LEFT JOIN users u ON u.id = s.processed_by
+                 WHERE s.id = ?",
+                [$saleId]
+            );
             $sale = $saleQuery->getRowArray();
+            if ($sale) {
+                $sale['cashier_name'] = $sale['cashier_name'] ?: ($sale['cashier_username'] ?? 'Cashier');
+            }
             
             if (!$sale) {
                 log_message('error', 'Sale not found: ' . $saleId);

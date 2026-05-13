@@ -99,11 +99,15 @@ class SaleModel extends Model
     // Get sales for reporting
     public function getSalesReport($startDate = null, $endDate = null)
     {
+        $saleItemsSummarySubquery = '(SELECT sale_id, GROUP_CONCAT(product_name ORDER BY id SEPARATOR ", ") AS items_summary FROM sale_items GROUP BY sale_id) sale_items_summary';
+
         $builder = $this->select('
             sales.*,
-            users.full_name as cashier_name
+            users.full_name as cashier_name,
+            COALESCE(sale_items_summary.items_summary, "") as items_summary
         ')
         ->join('users', 'users.id = sales.processed_by')
+        ->join($saleItemsSummarySubquery, 'sale_items_summary.sale_id = sales.id', 'left', false)
         ->orderBy('sales.created_at', 'DESC');
         
         if ($startDate) {
@@ -120,11 +124,15 @@ class SaleModel extends Model
     // Get paginated sales for reporting
     public function getSalesReportPaginated($startDate = null, $endDate = null, int $perPage = 10, int $page = 1)
     {
+        $saleItemsSummarySubquery = '(SELECT sale_id, GROUP_CONCAT(product_name ORDER BY id SEPARATOR ", ") AS items_summary FROM sale_items GROUP BY sale_id) sale_items_summary';
+
         $builder = $this->select('
             sales.*,
-            users.full_name as cashier_name
+            users.full_name as cashier_name,
+            COALESCE(sale_items_summary.items_summary, "") as items_summary
         ')
         ->join('users', 'users.id = sales.processed_by')
+        ->join($saleItemsSummarySubquery, 'sale_items_summary.sale_id = sales.id', 'left', false)
         ->orderBy('sales.created_at', 'DESC');
 
         if ($startDate) {
@@ -143,7 +151,7 @@ class SaleModel extends Model
     {
         $builder = $this->select('
             COUNT(*) as total_sales,
-            SUM(total_amount) as total_revenue,
+            SUM(subtotal) as total_revenue,
             SUM(tax_amount) as total_tax,
             SUM(subtotal) as total_subtotal
         ');
@@ -163,6 +171,51 @@ class SaleModel extends Model
             'total_revenue' => $result['total_revenue'] ?? 0,
             'total_tax' => $result['total_tax'] ?? 0,
             'total_subtotal' => $result['total_subtotal'] ?? 0,
+        ];
+    }
+
+    // Get additional KPI insights for sales report cards
+    public function getSalesInsights($startDate = null, $endDate = null)
+    {
+        $db = \Config\Database::connect();
+
+        $itemsBuilder = $db->table('sale_items si')
+            ->select('COALESCE(SUM(si.quantity), 0) AS total_items_sold', false)
+            ->join('sales s', 's.id = si.sale_id', 'inner');
+
+        if ($startDate) {
+            $itemsBuilder->where('DATE(s.created_at) >=', $startDate);
+        }
+
+        if ($endDate) {
+            $itemsBuilder->where('DATE(s.created_at) <=', $endDate);
+        }
+
+        $itemsResult = $itemsBuilder->get()->getRowArray();
+        $totalItemsSold = (int) ($itemsResult['total_items_sold'] ?? 0);
+
+        $topProductBuilder = $db->table('sale_items si')
+            ->select('si.product_name, SUM(si.quantity) AS total_qty', false)
+            ->join('sales s', 's.id = si.sale_id', 'inner')
+            ->groupBy('si.product_name')
+            ->orderBy('total_qty', 'DESC')
+            ->orderBy('si.product_name', 'ASC')
+            ->limit(1);
+
+        if ($startDate) {
+            $topProductBuilder->where('DATE(s.created_at) >=', $startDate);
+        }
+
+        if ($endDate) {
+            $topProductBuilder->where('DATE(s.created_at) <=', $endDate);
+        }
+
+        $topProduct = $topProductBuilder->get()->getRowArray();
+
+        return [
+            'total_items_sold' => $totalItemsSold,
+            'top_product_name' => $topProduct['product_name'] ?? 'N/A',
+            'top_product_qty' => (int) ($topProduct['total_qty'] ?? 0),
         ];
     }
 }

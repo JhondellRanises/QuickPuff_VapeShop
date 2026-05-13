@@ -5,21 +5,78 @@
 
 <style>
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
+    }
+
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
     body * {
         visibility: hidden;
     }
+
     #receiptContent, #receiptContent * {
         visibility: visible;
     }
+
     #receiptContent {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
-        padding: 20px;
+        max-width: 540px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        padding: 8px !important;
         background: white !important;
         color: black !important;
+        font-size: 12px !important;
+        line-height: 1.22 !important;
     }
+
+    .receipt-success-badge { font-size: 14px !important; padding: 8px 10px !important; margin-bottom: 8px !important; }
+    .receipt-shop-name { font-size: 20px !important; margin-bottom: 4px !important; }
+    .receipt-shop-address { font-size: 10.5px !important; margin-bottom: 2px !important; }
+    .receipt-header { padding-bottom: 8px !important; margin-bottom: 8px !important; }
+    .receipt-sale-info { padding: 8px 10px !important; margin-bottom: 8px !important; }
+    .receipt-info-row { font-size: 13px !important; margin-bottom: 3px !important; gap: 6px !important; }
+
+    .receipt-items-table { width: 100% !important; table-layout: fixed !important; margin-bottom: 8px !important; }
+    .receipt-items-table th,
+    .receipt-items-table td {
+        font-size: 11px !important;
+        padding: 4px 4px !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .receipt-items-table th:nth-child(1),
+    .receipt-items-table td:nth-child(1) { width: 36% !important; }
+    .receipt-items-table th:nth-child(2),
+    .receipt-items-table td:nth-child(2) { width: 10% !important; text-align: center !important; }
+    .receipt-items-table th:nth-child(3),
+    .receipt-items-table td:nth-child(3) { width: 24% !important; text-align: right !important; }
+    .receipt-items-table th:nth-child(4),
+    .receipt-items-table td:nth-child(4) { width: 30% !important; text-align: right !important; }
+
+    .receipt-total-row { font-size: 13px !important; margin-bottom: 2px !important; }
+    .receipt-grand-total { font-size: 16px !important; padding-top: 5px !important; }
+    .receipt-footer { padding-top: 8px !important; margin-top: 8px !important; }
+    .receipt-footer .headline { font-size: 17px !important; margin-bottom: 3px !important; }
+    .receipt-footer .subline { font-size: 13px !important; }
+
+    .card,
+    .card-body {
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
     .no-print {
         display: none !important;
     }
@@ -39,7 +96,75 @@ html, body {
 #receiptContent {
     max-width: 760px;
     margin: 0 auto;
-    padding: 18px 20px !important;
+    padding: 12px 14px !important;
+    font-size: 0.9rem !important;
+}
+
+/* Compact fit for Sales Report modal preview (iframe embed mode) */
+.receipt-success-badge {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.receipt-header {
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.receipt-shop-name {
+    font-size: 24px !important;
+    margin-bottom: 6px !important;
+}
+
+.receipt-shop-address {
+    font-size: 12px !important;
+    margin-bottom: 3px !important;
+}
+
+.receipt-sale-info {
+    padding: 10px 12px !important;
+    margin-bottom: 10px !important;
+}
+
+.receipt-info-row {
+    font-size: 16px !important;
+    margin-bottom: 4px !important;
+    gap: 10px !important;
+}
+
+.receipt-items-table {
+    margin-bottom: 10px !important;
+}
+
+.receipt-items-table th,
+.receipt-items-table td {
+    font-size: 13px !important;
+    padding: 7px 6px !important;
+}
+
+.receipt-total-row {
+    font-size: 16px !important;
+    margin-bottom: 3px !important;
+}
+
+.receipt-grand-total {
+    font-size: 21px !important;
+    padding-top: 7px !important;
+}
+
+.receipt-footer {
+    margin-top: 10px !important;
+    padding-top: 10px !important;
+}
+
+.receipt-footer .headline {
+    font-size: 19px !important;
+    margin-bottom: 4px !important;
+}
+
+.receipt-footer .subline {
+    font-size: 14px !important;
 }
 <?php endif; ?>
 
@@ -132,6 +257,12 @@ html, body {
 
 .receipt-items-table th:nth-child(3),
 .receipt-items-table td:nth-child(3) {
+    width: 150px;
+    text-align: right;
+}
+
+.receipt-items-table th:nth-child(4),
+.receipt-items-table td:nth-child(4) {
     width: 180px;
     text-align: right;
 }
@@ -238,7 +369,7 @@ html, body {
                         </div>
                         <div class="receipt-info-row">
                             <strong>Cashier:</strong>
-                            <span><?= session()->get('role') === 'admin' ? 'Admin' : 'Staff' ?></span>
+                            <span><?= esc($sale['cashier_name'] ?? (session()->get('full_name') ?: session()->get('username') ?: 'Cashier')) ?></span>
                         </div>
                     </div>
 
@@ -247,6 +378,7 @@ html, body {
                             <tr>
                                 <th>Item</th>
                                 <th>Qty</th>
+                                <th>Unit Price</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -256,26 +388,19 @@ html, body {
                                     <tr>
                                         <td><?= esc($item['product_name'] ?? $item['name'] ?? 'Unknown Product') ?></td>
                                         <td><?= (int) ($item['quantity'] ?? 0) ?></td>
+                                        <td>₱<?= number_format((float) ($item['price'] ?? 0), 2) ?></td>
                                         <td>₱<?= number_format((float) ($item['total'] ?? (($item['price'] ?? 0) * ($item['quantity'] ?? 0))), 2) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="3" style="text-align: center;">No items found</td>
+                                    <td colspan="4" style="text-align: center;">No items found</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
 
                     <div class="receipt-totals">
-                        <div class="receipt-total-row">
-                            <span>Subtotal:</span>
-                            <span>₱<?= number_format((float) ($sale['subtotal'] ?? 0), 2) ?></span>
-                        </div>
-                        <div class="receipt-total-row">
-                            <span>Tax (10%):</span>
-                            <span>₱<?= number_format((float) ($sale['tax_amount'] ?? 0), 2) ?></span>
-                        </div>
                         <div class="receipt-total-row">
                             <span>TOTAL:</span>
                             <span>₱<?= number_format((float) ($sale['total_amount'] ?? 0), 2) ?></span>
